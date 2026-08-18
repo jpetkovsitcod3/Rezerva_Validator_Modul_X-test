@@ -1,0 +1,134 @@
+/* ---- Google Fonts ---- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* ---- Reset & Base ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: #6366f1;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-bg: #0a0a0f;
+  --color-surface: #13131a;
+  --color-border: #2a2a3a;
+  --color-text: #e2e8f0;
+  --color-muted: #64748b;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+
+/* ---- Ant Design Overrides ---- */
+.ant-layout-sider-children { display: flex; flex-direction: column; }
+
+.ant-menu-item-selected {
+  background: rgba(99, 102, 241, 0.15) !important;
+  color: #818cf8 !important;
+}
+.ant-menu-item:hover {
+  background: rgba(99, 102, 241, 0.08) !important;
+  color: #94a3b8 !important;
+}
+.ant-menu-item { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+
+/* Input glow on focus */
+.ant-input:focus,
+.ant-input-affix-wrapper-focused {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+  border-color: #6366f1 !important;
+}
+
+/* Button hover glow */
+.ant-btn-primary:hover {
+  box-shadow: 0 0 24px rgba(99, 102, 241, 0.5) !important;
+  transform: translateY(-1px);
+}
+.ant-btn-primary { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
+
+/* Card hover */
+.ant-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+.ant-card:hover { border-color: rgba(99, 102, 241, 0.3) !important; }
+
+/* Progress bar */
+.ant-progress-inner { background: #1e1e2e !important; }
+
+/* Tag */
+.ant-tag { border-radius: 6px !important; font-weight: 500 !important; }
+
+/* Timeline */
+.ant-timeline-item-tail { border-left: 2px solid #1e1e2e !important; }
+
+/* Table */
+.ant-table-wrapper .ant-table { background: #13131a !important; }
+.ant-table-wrapper .ant-table-thead > tr > th {
+  background: #1a1a2e !important;
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  border-color: #2a2a3a !important;
+}
+.ant-table-wrapper .ant-table-tbody > tr > td {
+  border-color: #1e1e2e !important;
+  color: #e2e8f0 !important;
+}
+.ant-table-wrapper .ant-table-tbody > tr:hover > td {
+  background: rgba(99, 102, 241, 0.04) !important;
+}
+.ant-table-wrapper .ant-pagination { color: #64748b !important; }
+
+/* Dragger */
+.ant-upload-drag {
+  background: #0a0a0f !important;
+  border-color: #2a2a3a !important;
+  transition: all 0.2s !important;
+}
+.ant-upload-drag:hover {
+  border-color: #6366f1 !important;
+  background: rgba(99, 102, 241, 0.03) !important;
+}
+
+/* Notification */
+.ant-notification-notice {
+  background: #1a1a2e !important;
+  border: 1px solid #2a2a3a !important;
+  border-radius: 12px !important;
+}
+
+/* Selection */
+::selection { background: rgba(99, 102, 241, 0.3); color: #f1f5f9; }
+
+/* ---- Animations ---- */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(99, 102, 241, 0.3); }
+  50% { box-shadow: 0 0 24px rgba(99, 102, 241, 0.6); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.pulsing-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.floating { animation: float 3s ease-in-out infinite; }
