@@ -10,6 +10,7 @@ import time
 from .config import settings
 from .api.routes import router
 from .utils.logger import setup_logging
+from .db import repo
 
 # Setup structured logging
 setup_logging()
@@ -22,6 +23,21 @@ limiter = Limiter(key_func=get_remote_address)
 async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
     print(f"EmailValidator Pro v{settings.app_version} starting up...")
+    # Verify Supabase connectivity at boot (best-effort, never fatal)
+    if settings.supabase_configured:
+        try:
+            status = await repo.db_status()
+            if status.get("reachable"):
+                print(f"[DB] Supabase reachable — tables_ready={status.get('tables_ready')}")
+                if not status.get("tables_ready"):
+                    print("[DB] WARNING: run supabase/schema.sql in the Supabase SQL editor "
+                          "to create the tables.")
+            else:
+                print(f"[DB] WARNING: Supabase not reachable — {status.get('detail')}")
+        except Exception as exc:  # pragma: no cover - defensive
+            print(f"[DB] WARNING: DB check failed — {exc}")
+    else:
+        print("[DB] Supabase not configured — persistence disabled (see .env.example)")
     yield
     print("EmailValidator shutting down gracefully...")
 

@@ -20,22 +20,22 @@ def calculate_score(
     breakdown = {}
     warnings = []
 
-    # ---- Syntax (up to -50) ------------------------------------------
+    # ---- Syntax (hard fail → score 0) --------------------------------
     if not syntax.passed:
-        breakdown["syntax"] = -50
-        score -= 50
+        breakdown["syntax"] = -100
+        score -= 100
     else:
         breakdown["syntax"] = 0
 
-    # ---- Domain/MX (up to -30) ---------------------------------------
+    # ---- Domain/MX (hard fail → near zero) ------------------------------
     if dns:
         if not dns.domain_exists:
-            breakdown["domain"] = -30
-            score -= 30
+            breakdown["domain"] = -75
+            score -= 75
             warnings.append("Domain does not exist")
         elif not dns.has_mx_records:
-            breakdown["mx_records"] = -20
-            score -= 20
+            breakdown["mx_records"] = -70
+            score -= 70
             warnings.append("No MX records found — domain cannot receive email")
         else:
             breakdown["domain"] = 0

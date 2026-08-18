@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout, Menu, Badge, Typography, Space, Tooltip } from "antd";
 import {
   MailOutlined, DatabaseOutlined, GlobalOutlined, GithubOutlined,
-  MenuFoldOutlined, MenuUnfoldOutlined,
+  MenuFoldOutlined, MenuUnfoldOutlined, DashboardOutlined,
 } from "@ant-design/icons";
 import { motion, AnimatePresence } from "framer-motion";
+import { emailApi } from "../../services/api";
 
 const { Header, Sider, Content, Footer } = Layout;
 const { Text } = Typography;
 
 const NAV_ITEMS = [
+  { key: "dashboard", icon: <DashboardOutlined />, label: "Dashboard" },
   { key: "single", icon: <MailOutlined />, label: "Single Validate" },
   { key: "bulk", icon: <DatabaseOutlined />, label: "Bulk Validate" },
   { key: "domain", icon: <GlobalOutlined />, label: "Domain Info" },
@@ -17,6 +19,33 @@ const NAV_ITEMS = [
 
 export default function AppLayout({ activePage, setActivePage, children }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [dbState, setDbState] = useState({ loading: true, reachable: false, tablesReady: false });
+
+  // Live backend + Supabase status badge
+  useEffect(() => {
+    let cancelled = false;
+    const check = async () => {
+      try {
+        const health = await emailApi.health();
+        const db = health?.database || {};
+        if (!cancelled) {
+          setDbState({
+            loading: false,
+            reachable: db.reachable === true,
+            tablesReady: db.tables_ready === true,
+          });
+        }
+      } catch {
+        if (!cancelled) setDbState({ loading: false, reachable: false, tablesReady: false });
+      }
+    };
+    check();
+    const t = setInterval(check, 30000); // refresh every 30s
+    return () => { cancelled = true; clearInterval(t); };
+  }, []);
+
+  const apiOnline = !dbState.loading;
+  const dbOnline = dbState.reachable && dbState.tablesReady;
 
   return (
     <Layout style={{ minHeight: "100vh", background: "#0a0a0f" }}>
@@ -101,9 +130,17 @@ export default function AppLayout({ activePage, setActivePage, children }) {
           justifyContent: "space-between", height: 56, position: "sticky",
           top: 0, zIndex: 100,
         }}>
-          <Space>
-            <Badge status="processing" color="#10b981"
-              text={<Text style={{ color: "#64748b", fontSize: 12 }}>API Online</Text>} />
+          <Space size={16} wrap>
+            <Badge status={apiOnline ? "success" : "error"}
+              color={apiOnline ? "#10b981" : "#ef4444"}
+              text={<Text style={{ color: "#64748b", fontSize: 12 }}>
+                API {apiOnline ? "Online" : "Offline"}
+              </Text>} />
+            <Badge status={dbState.loading ? "processing" : (dbOnline ? "success" : "warning")}
+              color={dbState.loading ? "#6366f1" : (dbOnline ? "#10b981" : "#f59e0b")}
+              text={<Text style={{ color: "#64748b", fontSize: 12 }}>
+                Supabase {dbState.loading ? "…" : (dbOnline ? "Online" : "Setup needed")}
+              </Text>} />
           </Space>
 
           <Space>

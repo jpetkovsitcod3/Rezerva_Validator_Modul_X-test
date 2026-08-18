@@ -19,6 +19,14 @@ celery_app.conf.update(
     worker_concurrency=10,
     task_soft_time_limit=300,
     task_time_limit=600,
+    # Fail fast when Redis/broker is down instead of retrying forever
+    broker_connection_max_retries=1,
+    broker_connection_retry_on_startup=False,
+    task_publish_retry=False,
+    task_publish_retry_policy={"max_retries": 1},
+    result_backend_transport_options={
+        "retry_policy": {"max_retries": 1, "interval_start": 0, "interval_step": 1},
+    },
 )
 
 
@@ -29,6 +37,7 @@ def bulk_validate_task(self, emails: list, webhook_url: str = None):
     Runs synchronously inside Celery worker.
     """
     from ..validator.engine import EmailValidationEngine
+    from ..db import repo
 
     async def run():
         eng = EmailValidationEngine()
@@ -51,6 +60,13 @@ def bulk_validate_task(self, emails: list, webhook_url: str = None):
                     "status": "error"
                 })
 
+            # Persist incremental progress to Supabase (best-effort)
+            if (i + 1) % 10 == 0 or i + 1 == total:
+                try:
+                    repo.update_bulk_job_progress(self.request.id, i + 1, total)
+                except Exception:
+                    pass
+
         return results
 
     try:
@@ -58,6 +74,12 @@ def bulk_validate_task(self, emails: list, webhook_url: str = None):
         asyncio.set_event_loop(loop)
         results = loop.run_until_complete(run())
         loop.close()
+
+        # Persist finished job (best-effort)
+        try:
+            repo.finish_bulk_job(self.request.id, results)
+        except Exception:
+            pass
 
         # Webhook notification
         if webhook_url:

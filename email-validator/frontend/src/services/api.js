@@ -64,6 +64,14 @@ export const emailApi = {
   /** Health check */
   health: () =>
     apiClient.get("/health").then((r) => r.data),
+
+  /** Validation history persisted in Supabase */
+  getHistory: (limit = 50) =>
+    apiClient.get("/history", { params: { limit } }).then((r) => r.data),
+
+  /** Supabase connectivity + schema status */
+  getDbStatus: () =>
+    apiClient.get("/db/status").then((r) => r.data),
 };
 
 export default apiClient;

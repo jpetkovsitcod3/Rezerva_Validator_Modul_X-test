@@ -1,4 +1,5 @@
 import time
+import asyncio
 from typing import Optional
 from ..config import settings
 
@@ -75,3 +76,24 @@ async def set_cache(key: str, value: str, ttl: int = 86400):
     except Exception:
         pass
     _memory_set(key, value, ttl)
+
+
+async def redis_available(timeout: float = 1.5) -> bool:
+    """
+    Quick non-blocking check: can we talk to Redis?
+
+    Used to gate Celery .delay() calls so a missing Redis broker fails
+    fast instead of entering Celery's infinite reconnect/retry loop.
+    """
+    if not _HAS_REDIS:
+        return False
+    try:
+        client = await asyncio.wait_for(
+            get_redis(), timeout=timeout
+        )
+        if client is None:
+            return False
+        await asyncio.wait_for(client.ping(), timeout=timeout)
+        return True
+    except Exception:
+        return False

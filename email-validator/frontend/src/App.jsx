@@ -5,13 +5,15 @@ import AppLayout from "./components/Layout/AppLayout";
 import SingleValidator from "./components/Validator/SingleValidator";
 import BulkValidator from "./components/Validator/BulkValidator";
 import DomainInfo from "./components/Validator/DomainInfo";
+import DashboardPage from "./components/Dashboard/DashboardPage";
 import ParticleBackground from "./components/Common/ParticleBackground";
 import "./styles/global.css";
 
 export default function App() {
-  const [page, setPage] = useState("single");
+  const [page, setPage] = useState("dashboard");
 
   const pages = {
+    dashboard: <DashboardPage />,
     single: <SingleValidator />,
     bulk: <BulkValidator />,
     domain: <DomainInfo />,
