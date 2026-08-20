@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint src --ext js,jsx --report-unused-disable-directives"
+    "lint": "eslint src --report-unused-disable-directives"
   },
   "dependencies": {
     "@ant-design/colors": "^7.2.0",
@@ -23,10 +23,14 @@
     "recharts": "^2.13.3"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^8.0.1",
+    "@babel/plugin-syntax-jsx": "^8.0.1",
+    "@babel/preset-react": "^8.0.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
     "eslint": "^9.13.0",
+    "eslint-plugin-react": "^7.37.5",
     "vite": "^5.4.10"
   }
 }

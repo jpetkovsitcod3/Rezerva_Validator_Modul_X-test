@@ -95,5 +95,9 @@ async def redis_available(timeout: float = 1.5) -> bool:
             return False
         await asyncio.wait_for(client.ping(), timeout=timeout)
         return True
-    except Exception:
+    except asyncio.TimeoutError:
+        print("[REDIS] Connection timeout - Redis may not be running")
+        return False
+    except Exception as e:
+        print(f"[REDIS] Connection failed: {str(e)}")
         return False

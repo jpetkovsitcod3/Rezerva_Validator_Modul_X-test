@@ -7,15 +7,16 @@ import {
   LoadingOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
+import { DURATIONS, EASES } from "../../motion/tokens";
 
 const { Text } = Typography;
 
 const LayerIcon = ({ passed, loading }) => {
-  if (loading) return <LoadingOutlined style={{ color: "#6366f1" }} spin />;
-  if (passed === true) return <CheckCircleOutlined style={{ color: "#10b981" }} />;
-  if (passed === false) return <CloseCircleOutlined style={{ color: "#ef4444" }} />;
-  if (passed === "warn") return <WarningOutlined style={{ color: "#f59e0b" }} />;
-  return <QuestionCircleOutlined style={{ color: "#64748b" }} />;
+  if (loading) return <LoadingOutlined style={{ color: "#2CC9E8" }} spin />;
+  if (passed === true) return <CheckCircleOutlined style={{ color: "#34D399" }} />;
+  if (passed === false) return <CloseCircleOutlined style={{ color: "#F87171" }} />;
+  if (passed === "warn") return <WarningOutlined style={{ color: "#FBBF24" }} />;
+  return <QuestionCircleOutlined style={{ color: "#6B7785" }} />;
 };
 
 export default function LayerTimeline({ result, loading }) {
@@ -94,29 +95,41 @@ export default function LayerTimeline({ result, loading }) {
 
   const timelineItems = layers.map((layer, i) => ({
     dot: (
-      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: i * 0.12, type: "spring" }}>
+      <motion.div
+        custom={i}
+        variants={{
+          hidden: { scale: 0 },
+          visible: (index) => ({ scale: 1, transition: { delay: index * 0.08, duration: DURATIONS.enter, ease: EASES.enter } }),
+        }}
+        initial="hidden"
+        animate="visible"
+      >
         <LayerIcon passed={loading ? undefined : layer.passed} loading={loading && !result} />
       </motion.div>
     ),
     children: (
       <motion.div
-        initial={{ opacity: 0, x: -16 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: i * 0.12 + 0.1 }}
+        custom={i}
+        variants={{
+          hidden: { opacity: 0, x: -16 },
+          visible: (index) => ({ opacity: 1, x: 0, transition: { delay: index * 0.08 + 0.05, duration: DURATIONS.enter, ease: EASES.enter } }),
+        }}
+        initial="hidden"
+        animate="visible"
         style={{ paddingBottom: 8 }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-          <Text strong style={{ color: "#e2e8f0", fontSize: 13 }}>{layer.label}</Text>
+          <Text strong style={{ color: "#E6EDF3", fontSize: 13 }}>{layer.label}</Text>
           <Tag style={{
             fontSize: 10, padding: "0 6px",
-            background: "rgba(99,102,241,0.1)",
-            border: "1px solid rgba(99,102,241,0.25)",
-            color: "#818cf8", borderRadius: 4,
+            background: "rgba(44,201,232,0.1)",
+            border: "1px solid rgba(44,201,232,0.25)",
+            color: "#56D6EF", borderRadius: 4,
           }}>
             {layer.tag}
           </Tag>
         </div>
-        <Text style={{ fontSize: 12, color: "#64748b", fontFamily: "JetBrains Mono, monospace" }}>
+        <Text style={{ fontSize: 12, color: "#6B7785", fontFamily: "'JetBrains Mono', monospace" }}>
           {layer.desc}
         </Text>
       </motion.div>

@@ -1,6 +1,6 @@
 import {
   Card, Row, Col, Tag, Typography,
-  Divider, Space, Tooltip, Alert,
+  Divider, Space, Alert, Spin,
 } from "antd";
 import {
   CheckCircleFilled,
@@ -16,8 +16,26 @@ import { motion, AnimatePresence } from "framer-motion";
 import ScoreGauge from "./ScoreGauge";
 import LayerTimeline from "./LayerTimeline";
 import { STATUS_COLORS } from "../../theme/darkTheme";
+import { DURATIONS, EASES } from "../../motion/tokens";
 
 const { Text, Title } = Typography;
+
+const resultVariants = {
+  hidden: { opacity: 0, y: 24, scale: 0.97 },
+  visible: {
+    opacity: 1, y: 0, scale: 1,
+    transition: { duration: DURATIONS.enter, ease: EASES.enter },
+  },
+  exit: {
+    opacity: 0, y: -16, scale: 0.97,
+    transition: { duration: DURATIONS.exit, ease: EASES.exit },
+  },
+};
+
+const warningVariants = {
+  hidden: { opacity: 0, x: -12 },
+  visible: { opacity: 1, x: 0, transition: { duration: DURATIONS.enter, ease: EASES.enter } },
+};
 
 const StatusIcon = ({ status, size = 24 }) => {
   const icons = {
@@ -35,20 +53,20 @@ const CheckRow = ({ label, value, icon, positive }) => (
     padding: "8px 12px",
     background: positive === undefined
       ? "rgba(255,255,255,0.02)"
-      : positive ? "rgba(16,185,129,0.04)" : "rgba(239,68,68,0.04)",
+      : positive ? "rgba(52,211,153,0.04)" : "rgba(248,113,113,0.04)",
     borderRadius: 8, marginBottom: 6,
     border: "1px solid",
     borderColor: positive === undefined
-      ? "#1e1e2e"
-      : positive ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)",
+      ? "#181F2A"
+      : positive ? "rgba(52,211,153,0.15)" : "rgba(248,113,113,0.15)",
   }}>
     <Space size={8}>
       {icon}
-      <Text style={{ fontSize: 12, color: "#94a3b8" }}>{label}</Text>
+      <Text style={{ fontSize: 12, color: "#9AA7B8" }}>{label}</Text>
     </Space>
     <Text style={{
-      fontSize: 12, fontFamily: "JetBrains Mono, monospace",
-      color: positive === undefined ? "#64748b" : positive ? "#34d399" : "#f87171",
+      fontSize: 12, fontFamily: "'JetBrains Mono', monospace",
+      color: positive === undefined ? "#6B7785" : positive ? "#34D399" : "#F87171",
       fontWeight: 600,
     }}>
       {value}
@@ -59,7 +77,31 @@ const CheckRow = ({ label, value, icon, positive }) => (
 export default function ResultCard({ result, loading }) {
   if (!result && !loading) return null;
 
-  const colors = result ? STATUS_COLORS[result.status] : STATUS_COLORS.unknown;
+  // Loading with no result yet: render a placeholder card so the layout
+  // doesn't jump while the validation is in flight.
+  if (!result) {
+    return (
+      <Card
+        style={{
+          background: "#13131a",
+          border: "1px solid #2a2a3a",
+          borderRadius: 20,
+          marginBottom: 20,
+          boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+        }}
+      >
+        <div style={{
+          display: "flex", flexDirection: "column", alignItems: "center",
+          gap: 12, padding: "48px 0",
+        }}>
+          <Spin />
+          <Text style={{ color: "#6B7785", fontSize: 13 }}>Analyzing…</Text>
+        </div>
+      </Card>
+    );
+  }
+
+  const colors = STATUS_COLORS[result.status] || STATUS_COLORS.unknown;
   const score = result?.scoring?.score ?? 0;
   const domain = result?.syntax?.domain;
 
@@ -67,14 +109,14 @@ export default function ResultCard({ result, loading }) {
     <AnimatePresence mode="wait">
       <motion.div
         key={result?.email || "loading"}
-        initial={{ opacity: 0, y: 24, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: -16, scale: 0.97 }}
-        transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+        variants={resultVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
       >
         <Card
           style={{
-            background: "#13131a",
+            background: "#11141B",
             border: `1px solid ${colors.border}40`,
             borderRadius: 20,
             marginBottom: 20,
@@ -98,7 +140,7 @@ export default function ResultCard({ result, loading }) {
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
+                  transition={{ duration: DURATIONS.enter, ease: EASES.enter }}
                 >
                   <div style={{
                     display: "inline-flex", alignItems: "center", gap: 10,
@@ -119,8 +161,8 @@ export default function ResultCard({ result, loading }) {
                 <Title
                   level={3}
                   style={{
-                    color: "#f1f5f9", margin: "0 0 8px", wordBreak: "break-all",
-                    fontFamily: "JetBrains Mono, monospace",
+                    color: "#F2F6FC", margin: "0 0 8px", wordBreak: "break-all",
+                    fontFamily: "'JetBrains Mono', monospace",
                   }}
                 >
                   {result?.email || "Validating..."}
@@ -145,14 +187,14 @@ export default function ResultCard({ result, loading }) {
                 </Space>
 
                 {result?.processing_time_ms && (
-                  <Text style={{ color: "#475569", fontSize: 11 }}>
+                  <Text style={{ color: "#4A5260", fontSize: 11 }}>
                     <ThunderboltOutlined /> Validated in {result.processing_time_ms.toFixed(0)}ms
                   </Text>
                 )}
               </Col>
             </Row>
 
-            <Divider style={{ borderColor: "#1e1e2e", margin: "20px 0" }} />
+            <Divider style={{ borderColor: "#181F2A", margin: "20px 0" }} />
 
             <Row gutter={[16, 0]}>
               <Col xs={24} md={12}>
@@ -171,38 +213,38 @@ export default function ResultCard({ result, loading }) {
 
             {result?.scoring?.warnings?.length > 0 && (
               <>
-                <Divider style={{ borderColor: "#1e1e2e", margin: "20px 0 16px" }} />
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <Divider style={{ borderColor: "#181F2A", margin: "20px 0 16px" }} />
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
+                  style={{ display: "flex", flexDirection: "column", gap: 8 }}
+                >
                   {result.scoring.warnings.map((warn, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -12 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.5 + i * 0.08 }}
-                    >
+                    <motion.div key={i} variants={warningVariants}>
                       <Alert
                         message={warn}
                         type="warning"
                         showIcon
                         style={{
-                          background: "rgba(245,158,11,0.06)",
-                          border: "1px solid rgba(245,158,11,0.2)",
+                          background: "rgba(251,191,36,0.06)",
+                          border: "1px solid rgba(251,191,36,0.2)",
                           borderRadius: 8, fontSize: 12,
                         }}
                       />
                     </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </>
             )}
           </div>
         </Card>
 
         <Card
-          title={<Text style={{ color: "#94a3b8", fontSize: 13, fontWeight: 600 }}>
+          title={<Text style={{ color: "#9AA7B8", fontSize: 13, fontWeight: 600 }}>
             🔬 Validation Layer Analysis
           </Text>}
-          style={{ background: "#13131a", border: "1px solid #2a2a3a", borderRadius: 16 }}
+          style={{ background: "#11141B", border: "1px solid #222A36", borderRadius: 16 }}
         >
           <LayerTimeline result={result} loading={loading} />
         </Card>

@@ -1,134 +1,176 @@
-/* ---- Google Fonts ---- */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+/* ==========================================================================
+   EmailValidator Pro — global theme layer
+   One token system; darkTheme.js (antd ConfigProvider) mirrors these values.
+   No external font imports — system stacks only, layout survives fallbacks.
+   ========================================================================== */
 
-/* ---- Reset & Base ---- */
+/* ---- Reset ---- */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* ---- Design tokens (mirror src/theme/darkTheme.js) ---- */
 :root {
-  --color-primary: #6366f1;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-bg: #0a0a0f;
-  --color-surface: #13131a;
-  --color-border: #2a2a3a;
-  --color-text: #e2e8f0;
-  --color-muted: #64748b;
+  /* Brand — one electric indigo */
+  --color-primary: #7c86ff;
+  --color-primary-hover: #99a1ff;
+  --color-primary-edge: rgba(124, 134, 255, 0.5);
+  --color-primary-line: rgba(124, 134, 255, 0.28);
+  --color-soft: rgba(124, 134, 255, 0.10);
+
+  /* Semantics */
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+  --color-info: #38bdf8;
+
+  /* Neutral stack (blue-grey) */
+  --color-bg: #0b0e14;
+  --color-chrome: #0e1219;
+  --color-surface: #12161f;
+  --color-elevated: #181d2a;
+  --color-spotlight: #1e2433;
+  --color-border: #242b3d;
+  --color-border-hover: #333c52;
+  --color-divider: #1b2133;
+
+  /* Ink */
+  --color-text: #e6e9f0;
+  --color-heading: #f2f5fb;
+  --color-muted: #9aa3b8;   /* secondary text, >=3:1 everywhere */
+  --color-faint: #5c6577;   /* labels/placeholders/captions, >=3:1 */
+
+  /* Type — system stacks, style-matched fallbacks */
+  --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Courier New', monospace;
+
+  /* Geometry */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Elevation (quiet — no glows on chrome) */
+  --shadow-sm: 0 1px 2px rgba(4, 8, 18, 0.4);
+  --shadow-md: 0 6px 20px rgba(4, 8, 18, 0.45);
+
+  /* Motion — mirrors src/motion/tokens.js + antd motion tokens */
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --motion-enter: 0.25s;
+  --motion-exit: 0.18s;
+  --motion-hover: 0.15s;
 }
 
+/* ---- Base ---- */
 html, body, #root {
   height: 100%;
-  background: var(--color-bg);
+}
+
+body {
+  /* one quiet radial glow, kept deliberately dark */
+  background:
+    radial-gradient(1100px 520px at 72% -120px, rgba(124, 134, 255, 0.055), transparent 70%),
+    var(--color-bg);
+  background-attachment: fixed;
   color: var(--color-text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-body);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+code, pre, kbd, samp {
+  font-family: var(--font-mono);
+}
+
 /* ---- Scrollbar ---- */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #0a0a0f; }
-::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-divider); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary-edge); }
 
-/* ---- Ant Design Overrides ---- */
+/* ::selection uses a translucent wash — avoids unreadable selections
+   on any text color (inverted status colors, etc.) */
+::selection { background: rgba(124, 134, 255, 0.35); }
+
+/* ---- Ant Design refinements (specificity-based — no !important) ---- */
+/* Most component styling now comes from darkThemeConfig component tokens;
+   only structural/nudge rules remain here. */
+
 .ant-layout-sider-children { display: flex; flex-direction: column; }
 
-.ant-menu-item-selected {
-  background: rgba(99, 102, 241, 0.15) !important;
-  color: #818cf8 !important;
-}
-.ant-menu-item:hover {
-  background: rgba(99, 102, 241, 0.08) !important;
-  color: #94a3b8 !important;
-}
-.ant-menu-item { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important; }
-
-/* Input glow on focus */
-.ant-input:focus,
-.ant-input-affix-wrapper-focused {
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
-  border-color: #6366f1 !important;
+/* Menu sits on a transparent sider: items inset from the edge, radius from tokens */
+.ant-layout-sider .ant-menu-root.ant-menu-inline {
+  padding: 0 8px;
 }
 
-/* Button hover glow */
-.ant-btn-primary:hover {
-  box-shadow: 0 0 24px rgba(99, 102, 241, 0.5) !important;
-  transform: translateY(-1px);
+/* Card: gentle border response on hover; transform is motion-gated below */
+.ant-card {
+  transition: border-color var(--motion-hover) var(--ease-out-quint),
+              box-shadow var(--motion-hover) var(--ease-out-quint),
+              transform var(--motion-hover) var(--ease-out-quint);
 }
-.ant-btn-primary { transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important; }
+.ant-card:hover { border-color: var(--color-primary-edge); }
 
-/* Card hover */
-.ant-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; }
-.ant-card:hover { border-color: rgba(99, 102, 241, 0.3) !important; }
-
-/* Progress bar */
-.ant-progress-inner { background: #1e1e2e !important; }
-
-/* Tag */
-.ant-tag { border-radius: 6px !important; font-weight: 500 !important; }
-
-/* Timeline */
-.ant-timeline-item-tail { border-left: 2px solid #1e1e2e !important; }
-
-/* Table */
-.ant-table-wrapper .ant-table { background: #13131a !important; }
-.ant-table-wrapper .ant-table-thead > tr > th {
-  background: #1a1a2e !important;
-  color: #94a3b8 !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.5px !important;
-  text-transform: uppercase !important;
-  border-color: #2a2a3a !important;
+.ant-btn-primary {
+  position: relative;
+  transition: transform var(--motion-hover) var(--ease-out-quint);
 }
-.ant-table-wrapper .ant-table-tbody > tr > td {
-  border-color: #1e1e2e !important;
-  color: #e2e8f0 !important;
+.ant-btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 22px var(--color-primary-edge);
+  opacity: 0;
+  transition: opacity var(--motion-hover) var(--ease-out-quint);
+  pointer-events: none;
 }
-.ant-table-wrapper .ant-table-tbody > tr:hover > td {
-  background: rgba(99, 102, 241, 0.04) !important;
-}
-.ant-table-wrapper .ant-pagination { color: #64748b !important; }
+.ant-btn-primary:hover { transform: translateY(-1px); }
+.ant-btn-primary:hover::after { opacity: 1; }
 
-/* Dragger */
-.ant-upload-drag {
-  background: #0a0a0f !important;
-  border-color: #2a2a3a !important;
-  transition: all 0.2s !important;
-}
-.ant-upload-drag:hover {
-  border-color: #6366f1 !important;
-  background: rgba(99, 102, 241, 0.03) !important;
+/* Uppercase micro-labels used by stat cards / badges */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-faint);
 }
 
-/* Notification */
-.ant-notification-notice {
-  background: #1a1a2e !important;
-  border: 1px solid #2a2a3a !important;
-  border-radius: 12px !important;
-}
+/* Monospace data cells (emails, scores, durations) */
+.mono { font-family: var(--font-mono); }
 
-/* Selection */
-::selection { background: rgba(99, 102, 241, 0.3); color: #f1f5f9; }
-
-/* ---- Animations ---- */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(99, 102, 241, 0.3); }
-  50% { box-shadow: 0 0 24px rgba(99, 102, 241, 0.6); }
-}
+/* ---- Motion ---- */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
 }
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 1px var(--color-primary-line), var(--shadow-sm); }
+  50% { box-shadow: 0 0 0 1px var(--color-primary-edge), var(--shadow-md); }
 }
-.pulsing-glow { animation: pulse-glow 2s ease-in-out infinite; }
-.floating { animation: float 3s ease-in-out infinite; }
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+/* Animations only when the user allows them; lift state too */
+@media (prefers-reduced-motion: no-preference) {
+  .floating { animation: float 4s var(--ease-in-out-cubic) infinite alternate; }
+  .pulsing-glow { animation: pulse-glow 2.4s var(--ease-in-out-cubic) infinite; }
+  .ant-card:hover { transform: translateY(-1px); }
+}
+
+/* Belt-and-braces: kill all animating transitions/motion for reduced users */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.001ms;
+  }
+  .floating, .pulsing-glow { animation: none; }
+}

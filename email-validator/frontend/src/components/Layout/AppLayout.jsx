@@ -6,6 +6,8 @@ import {
 } from "@ant-design/icons";
 import { motion, AnimatePresence } from "framer-motion";
 import { emailApi } from "../../services/api";
+import BridgeMark from "../Common/BridgeMark";
+import { DURATIONS, EASES } from "../../motion/tokens";
 
 const { Header, Sider, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -17,9 +19,15 @@ const NAV_ITEMS = [
   { key: "domain", icon: <GlobalOutlined />, label: "Domain Info" },
 ];
 
+const pageVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: DURATIONS.enter, ease: EASES.inout } },
+  exit: { opacity: 0, y: -8, transition: { duration: DURATIONS.exit, ease: EASES.exit } },
+};
+
 export default function AppLayout({ activePage, setActivePage, children }) {
   const [collapsed, setCollapsed] = useState(false);
-  const [dbState, setDbState] = useState({ loading: true, reachable: false, tablesReady: false });
+  const [apiStatus, setApiStatus] = useState({ loading: true, healthy: false, db: { loading: true, reachable: false, tablesReady: false } });
 
   // Live backend + Supabase status badge
   useEffect(() => {
@@ -27,57 +35,52 @@ export default function AppLayout({ activePage, setActivePage, children }) {
     const check = async () => {
       try {
         const health = await emailApi.health();
-        const db = health?.database || {};
         if (!cancelled) {
-          setDbState({
+          const db = health?.database || {};
+          setApiStatus({
             loading: false,
-            reachable: db.reachable === true,
-            tablesReady: db.tables_ready === true,
+            healthy: health?.status === "healthy",
+            db: {
+              loading: false,
+              reachable: db.reachable === true,
+              tablesReady: db.tables_ready === true,
+            },
           });
         }
       } catch {
-        if (!cancelled) setDbState({ loading: false, reachable: false, tablesReady: false });
+        if (!cancelled) setApiStatus((s) => ({ ...s, loading: false, healthy: false }));
       }
     };
     check();
-    const t = setInterval(check, 30000); // refresh every 30s
+    const t = setInterval(check, 30000);
     return () => { cancelled = true; clearInterval(t); };
   }, []);
 
-  const apiOnline = !dbState.loading;
+  const apiOnline = apiStatus.healthy;
+  const dbState = apiStatus.db;
   const dbOnline = dbState.reachable && dbState.tablesReady;
 
   return (
-    <Layout style={{ minHeight: "100vh", background: "#0a0a0f" }}>
+    <Layout style={{ minHeight: "100vh", background: "#0A0B0E" }}>
       <Sider
         collapsible
         collapsed={collapsed}
         trigger={null}
         width={220}
         style={{
-          background: "#0d0d17", borderRight: "1px solid #1e1e2e",
+          background: "#0C0F15", borderRight: "1px solid #181F2A",
           position: "sticky", top: 0, height: "100vh", overflow: "auto",
         }}
       >
-        <div style={{
-          padding: collapsed ? "20px 16px" : "20px 24px",
-          borderBottom: "1px solid #1e1e2e",
-          display: "flex", alignItems: "center", gap: 12, cursor: "pointer",
-          transition: "all 0.3s",
-        }}>
-          <motion.div
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            style={{
-              width: 36, height: 36,
-              background: "linear-gradient(135deg, #6366f1, #a855f7)",
-              borderRadius: 10, display: "flex", alignItems: "center",
-              justifyContent: "center", fontSize: 18, flexShrink: 0,
-              boxShadow: "0 0 16px rgba(99,102,241,0.5)",
-            }}
-          >
-            🔍
-          </motion.div>
+        <div
+          style={{
+            padding: collapsed ? "20px 16px" : "20px 24px",
+            borderBottom: "1px solid #181F2A",
+            display: "flex", alignItems: "center", gap: 12, cursor: "pointer",
+            transition: "padding var(--motion-enter) var(--ease-in-out-cubic), border-color var(--motion-enter) var(--ease-in-out-cubic)",
+          }}
+        >
+          <BridgeMark size={36} />
 
           <AnimatePresence>
             {!collapsed && (
@@ -85,13 +88,15 @@ export default function AppLayout({ activePage, setActivePage, children }) {
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: "auto" }}
                 exit={{ opacity: 0, width: 0 }}
-                transition={{ duration: 0.25 }}
+                transition={{ duration: DURATIONS.enter, ease: EASES.enter }}
                 style={{ overflow: "hidden" }}
               >
-                <Text strong style={{ color: "#e2e8f0", fontSize: 14, display: "block", whiteSpace: "nowrap" }}>
-                  EmailValidator
+                <Text strong style={{ color: "#F2F6FC", fontSize: 15, display: "block", whiteSpace: "nowrap", letterSpacing: -0.3 }}>
+                  BRIDGE
                 </Text>
-                <Text style={{ color: "#6366f1", fontSize: 10, fontWeight: 600 }}>PRO v2.0</Text>
+                <Text style={{ color: "#2CC9E8", fontSize: 10, fontWeight: 600, letterSpacing: 2, fontFamily: "'JetBrains Mono', monospace" }}>
+                  MODUL — X
+                </Text>
               </motion.div>
             )}
           </AnimatePresence>
@@ -106,7 +111,7 @@ export default function AppLayout({ activePage, setActivePage, children }) {
             key: item.key,
             icon: item.icon,
             label: item.label,
-            style: { color: "#64748b", borderRadius: 8, margin: "2px 8px", width: "auto" },
+            style: { color: "#6B7785", borderRadius: 8, margin: "2px 8px", width: "auto" },
           }))}
         />
 
@@ -117,36 +122,36 @@ export default function AppLayout({ activePage, setActivePage, children }) {
             display: "flex", justifyContent: "center", cursor: "pointer",
           }}
         >
-          <div style={{ padding: "8px 12px", background: "rgba(99,102,241,0.08)", borderRadius: 8, color: "#6366f1", fontSize: 16 }}>
+          <div style={{ padding: "8px 12px", background: "rgba(44,201,232,0.08)", borderRadius: 8, color: "#2CC9E8", fontSize: 16, transition: "background 0.2s" }}>
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </div>
         </div>
       </Sider>
 
-      <Layout style={{ background: "#0a0a0f" }}>
+      <Layout style={{ background: "#0A0B0E" }}>
         <Header style={{
-          background: "#0d0d17", borderBottom: "1px solid #1e1e2e",
+          background: "#0C0F15", borderBottom: "1px solid #181F2A",
           padding: "0 32px", display: "flex", alignItems: "center",
           justifyContent: "space-between", height: 56, position: "sticky",
           top: 0, zIndex: 100,
         }}>
           <Space size={16} wrap>
-            <Badge status={apiOnline ? "success" : "error"}
-              color={apiOnline ? "#10b981" : "#ef4444"}
-              text={<Text style={{ color: "#64748b", fontSize: 12 }}>
-                API {apiOnline ? "Online" : "Offline"}
+            <Badge status={apiStatus.loading ? "processing" : (apiOnline ? "success" : "error")}
+              color={apiStatus.loading ? "#2CC9E8" : (apiOnline ? "#34D399" : "#F87171")}
+              text={<Text style={{ color: "#6B7785", fontSize: 12 }}>
+                API {apiStatus.loading ? "…" : (apiOnline ? "Online" : "Offline")}
               </Text>} />
             <Badge status={dbState.loading ? "processing" : (dbOnline ? "success" : "warning")}
-              color={dbState.loading ? "#6366f1" : (dbOnline ? "#10b981" : "#f59e0b")}
-              text={<Text style={{ color: "#64748b", fontSize: 12 }}>
-                Supabase {dbState.loading ? "…" : (dbOnline ? "Online" : "Setup needed")}
+              color={dbState.loading ? "#2CC9E8" : (dbOnline ? "#34D399" : "#FBBF24")}
+              text={<Text style={{ color: "#6B7785", fontSize: 12 }}>
+                Supabase {dbState.loading ? "…" : (dbOnline ? "Online" : (dbState.reachable ? "No tables" : "Offline"))}
               </Text>} />
           </Space>
 
           <Space>
             <Tooltip title="View on GitHub">
               <GithubOutlined
-                style={{ color: "#64748b", fontSize: 18, cursor: "pointer" }}
+                style={{ color: "#6B7785", fontSize: 18, cursor: "pointer" }}
                 onClick={() => window.open("https://github.com", "_blank")}
               />
             </Tooltip>
@@ -160,10 +165,10 @@ export default function AppLayout({ activePage, setActivePage, children }) {
           <AnimatePresence mode="wait">
             <motion.div
               key={activePage}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.3 }}
+              variants={pageVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
               {children}
             </motion.div>
@@ -171,11 +176,11 @@ export default function AppLayout({ activePage, setActivePage, children }) {
         </Content>
 
         <Footer style={{
-          background: "#0d0d17", borderTop: "1px solid #1e1e2e",
+          background: "#0C0F15", borderTop: "1px solid #181F2A",
           textAlign: "center", padding: "12px 24px", height: 48,
         }}>
-          <Text style={{ color: "#334155", fontSize: 11 }}>
-            EmailValidator Pro v2.0 · Built with FastAPI + Ant Design 5 · 7-Layer Validation Engine
+          <Text style={{ color: "#353B47", fontSize: 11 }}>
+            BRIDGE Modul - X · 7-Layer Email Validation Engine · Built with FastAPI + Ant Design 5
           </Text>
         </Footer>
       </Layout>

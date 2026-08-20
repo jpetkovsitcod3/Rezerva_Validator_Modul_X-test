@@ -115,10 +115,4 @@ class TaskStatusResponse(BaseModel):
     status: str
     progress: Optional[int] = None
     total: Optional[int] = None
-class DBStatus(BaseModel):
-    enabled: bool
-    configured: bool
-    reachable: bool
-    tables_ready: bool
-    detail: Optional[str] = None
     results: Optional[List[ValidationResult]] = None

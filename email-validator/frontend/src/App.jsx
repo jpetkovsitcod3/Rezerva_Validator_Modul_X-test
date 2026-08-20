@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ConfigProvider } from "antd";
+import { MotionConfig } from "framer-motion";
 import { darkThemeConfig } from "./theme/darkTheme";
 import AppLayout from "./components/Layout/AppLayout";
 import SingleValidator from "./components/Validator/SingleValidator";
@@ -21,12 +22,14 @@ export default function App() {
 
   return (
     <ConfigProvider theme={darkThemeConfig}>
-      <ParticleBackground />
-      <AppLayout activePage={page} setActivePage={setPage}>
-        <div style={{ position: "relative", zIndex: 1 }}>
-          {pages[page] || <SingleValidator />}
-        </div>
-      </AppLayout>
+      <MotionConfig reducedMotion="user">
+        <ParticleBackground />
+        <AppLayout activePage={page} setActivePage={setPage}>
+          <div style={{ position: "relative", zIndex: 1 }}>
+            {pages[page]}
+          </div>
+        </AppLayout>
+      </MotionConfig>
     </ConfigProvider>
   );
 }

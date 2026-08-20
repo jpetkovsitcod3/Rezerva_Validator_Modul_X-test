@@ -22,7 +22,7 @@ limiter = Limiter(key_func=get_remote_address)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
-    print(f"EmailValidator Pro v{settings.app_version} starting up...")
+    print(f"BRIDGE Modul - X v{settings.app_version} starting up...")
     # Verify Supabase connectivity at boot (best-effort, never fatal)
     if settings.supabase_configured:
         try:
@@ -39,14 +39,14 @@ async def lifespan(app: FastAPI):
     else:
         print("[DB] Supabase not configured — persistence disabled (see .env.example)")
     yield
-    print("EmailValidator shutting down gracefully...")
+    print("BRIDGE Modul - X shutting down...")
 
 
 # Create FastAPI app
 app = FastAPI(
     title=settings.app_name,
     description="""
-EmailValidator Pro — 7-Layer Email Validation Engine.
+BRIDGE Modul - X — 7-Layer Email Validation Engine.
 
 Features:
 - Layer 1 — RFC 5321/5322 Syntax Validation

@@ -1,0 +1,344 @@
+What “email validation” actually means
+Syntax-level: Is the string a legal email per RFC 5322/5321 (and optionally 6531/6532 for non‑ASCII)?
+Domain-level: Does the domain resolve properly (MX, or fallback A/AAAA per RFC 5321)? Does it look intentionally configured (SPF/DMARC, DNSSEC)?
+Mailbox-level: Will the MX accept RCPT TO for this mailbox right now? Caveats: catch‑alls, greylisting, “accept-then-bounce,” temporary blocks, and rate limits.
+Deliverability risk: Heuristics like disposable domains, role accounts, typos, domain age, and provider quirks.
+Outcome categories most teams ship: valid, invalid, catch-all, unknown, plus a confidence score and reason codes.
+Recommended multi-layer model
+Layer 0: Syntax/normalization
+RFC-compliant parser, Unicode normalization, IDNA/punycode handling.
+Only enable SMTPUTF8 if you truly must accept non‑ASCII local parts; many MTAs still mishandle those.
+Layer 1: Disposable/role/typo
+Disposable domains: daily-updated list; O(1) membership check.
+Role/spamtrap patterns: sales@, admin@, abuse@, no‑reply@.
+Common typos and suggestions: gmai.com → gmail.com, hotnail.com → hotmail.com.
+Layer 2: DNS and domain health
+MX lookup; fallback to A/AAAA if no MX (flag “risky”).
+Optional TXT checks: SPF/DMARC presence suggests deliberate mail setup. DKIM key presence is a weak but useful hint.
+DNSSEC AD bit or validating resolver if you need higher integrity.
+Layer 3: Mailbox existence over SMTP
+TCP 25, EHLO, optional STARTTLS, MAIL FROM (use a real domain you control), RCPT TO target.
+Interpret codes: 250 (~exists), 550/551/553 (unknown/user not found), 4xx (temporary).
+Don’t use VRFY/EXPN; they’re almost always disabled and can get you throttled.
+Layer 4: Advanced heuristics
+Catch‑all detection: RCPT another random user at the same domain; if both 250, mark catch‑all.
+Greylisting detection and scheduled retries with jitter.
+Provider-specific reply patterns; normalize to reason codes.
+Layer 5 (optional but powerful): Deliverability feedback
+If you also send mail, feed bounce logs back into a scoring model to learn accept‑then‑bounce domains and boost accuracy.
+The best (pragmatic) stack
+Language/runtime
+Python 3.11+ for rich ecosystem and solid async IO. For ultra‑high throughput, write the hot path in Go or Rust and expose over gRPC; keep Python for orchestration.
+API
+FastAPI + Uvicorn for async endpoints and OpenAPI docs.
+Workers/queue
+Celery or RQ with Redis broker so slow SMTP probes don’t block API threads.
+Storage
+Postgres (results, jobs, reason codes), Redis (TTL caches for DNS answers, greylist state, per‑MX concurrency budgets).
+DNS
+dnspython’s async resolver or aiodns; ideally fronted by a local Unbound/Bind recursive resolver to reduce latency and respect cache TTLs.
+SMTP client
+aiosmtplib for async STARTTLS‑capable probes.
+Deployments
+Full validation needs outbound TCP/25. Many public clouds block 25 by default—request an unblock or run on a VPS/provider that allows it.
+If you can’t get port 25: offer “syntax + DNS only” mode.
+Observability
+Prometheus + Grafana; blackbox TCP/25 modules; logs with structured reason codes; Sentry or similar for exceptions.
+Python libraries you’ll actually use
+Syntax/IDN: email-validator, idna, tldextract
+DNS: dnspython (dns.asyncresolver), optionally aiodns
+SMTP: aiosmtplib (async), smtplib (sync fallback)
+Proxies/transports: PySocks (sync), aiohttp-socks (async CONNECT/SOCKS; note: most proxies block 25 and hurt reputation)
+Caching: cachetools (TTLCache) or aiocache
+API/server: fastapi, uvicorn[standard]
+Queue/storage/ORM: celery[redis], redis, sqlalchemy[asyncio], asyncpg or psycopg[binary,pool]
+Data utils: python-levenshtein or rapidfuzz (typo suggest), publicsuffix2 (or use tldextract)
+Monitoring: prometheus-client, structlog or loguru
+Networking and proxy strategy (the unglamorous “secret”)
+Use clean IP space with correct reverse DNS (PTR) that matches your EHLO/HELO.
+Keep a consistent MAIL FROM domain you own; it reduces policy blocks.
+Prefer STARTTLS if advertised; some providers are more tolerant when you encrypt.
+Throttle hard:
+Per-MX host concurrency (start with 2–5 simultaneous connections).
+Per /24 and per ASN rate limits. Add jitter to retries.
+Avoid residential/DATACENTER proxies for SMTP; they’re often blocked on 25 and can poison your reputation. If you must proxy non‑SMTP egress, encapsulate cleanly (SOCKS5/CONNECT), but expect port‑25 to be denied.
+Provider quirks to handle
+Gmail/Google Workspace
+Clear 550 5.1.1 for non‑existent users. Cold IPs sometimes see “accept-then-bounce”; use TLS and PTR, keep concurrency low, and back off on 4xx.
+Microsoft 365/Outlook
+550 5.4.x codes blur policy blocks vs invalid recipients. Keep a regex map to classify reason codes conservatively; err to “unknown” on policy rejections.
+Yahoo/AOL
+554 messages like “dd … doesn’t have account here.” Often straight‑forward but rate limits kick in quickly—throttle.
+Corporate/self‑hosted
+Catch‑alls are common; some vary by time of day. Re‑check during off‑hours to reduce false “valid.”
+Requirements checklist
+Functional
+Validate single address, bulk files, and list deduplication.
+Return status, reason, normalized address, suggestions, and confidence score.
+Web UI + REST API + webhooks or SSE for streaming results.
+Non‑functional
+Throughput target (e.g., 1k–10k checks/min) with bounded error rates.
+Timeouts (DNS 2–5s, SMTP connect 5–10s, overall 15–30s).
+Privacy: hash or tokenize stored addresses; retention windows.
+Compliance/ethics
+Don’t send DATA in probes. Respect provider AUPs. Allow opt‑out.
+GDPR/CCPA: document data usage; allow deletion.
+Result taxonomy and scoring
+Status: valid | invalid | catch-all | unknown
+Reason codes (short, machine‑readable): bad_syntax, no_mx, a_fallback_only, spf_absent, dmarc_absent, rcpt_2xx, rcpt_550, rcpt_4xx, greylisted, throttled, network_error, starttls_required, provider_policy, catch_all_detected
+Confidence: 0.0–1.0 from weighted signals (e.g., rcpt_2xx + spf_present + domain_age > 180d → high; catch_all + disposable + no_spf → low)
+Example: end-to-end Python validator (minimal but production-shaped)
+Requirements:
+pip install email-validator dnspython aiosmtplib cachetools tldextract idna
+
+Code:
+
+Python
+
+import asyncio, random, secrets, socket, ssl
+from dataclasses import dataclass
+from typing import List, Optional, Tuple
+import tldextract
+from email_validator import validate_email as ev, EmailNotValidError
+import dns.asyncresolver as adns
+from cachetools import TTLCache
+import aiosmtplib
+
+DNS_CACHE = TTLCache(maxsize=100_000, ttl=300)  # 5 min TTL
+
+@dataclass
+class ValidationResult:
+    email: str
+    status: str              # valid | invalid | catch-all | unknown
+    reason: str              # machine-readable reason
+    normalized: Optional[str] = None
+    suggestion: Optional[str] = None
+    details: dict = None
+    confidence: float = 0.0
+
+def suggest_typo(domain: str) -> Optional[str]:
+    # tiny demo: real impl should use rapidfuzz against a curated domain list
+    common = {"gmai.com":"gmail.com","gnail.com":"gmail.com","hotnail.com":"hotmail.com","yaho.com":"yahoo.com"}
+    return common.get(domain)
+
+async def dns_mx(domain: str, timeout: float = 5.0) -> Tuple[List[Tuple[int, str]], dict]:
+    key = f"MX:{domain}"
+    if key in DNS_CACHE:
+        return DNS_CACHE[key]
+    res = {"spf": False, "dmarc": False, "a_fallback": False}
+    resolver = adns.Resolver()
+    mx_records = []
+    try:
+        ans = await resolver.resolve(domain, "MX", lifetime=timeout)
+        for r in ans:
+            mx_records.append((r.preference, r.exchange.to_text(omit_final_dot=True)))
+        mx_records.sort()
+    except Exception:
+        mx_records = []
+
+    if not mx_records:
+        # Fallback to A/AAAA as RFC allows; mark risky
+        for rrtype in ("A", "AAAA"):
+            try:
+                ans = await resolver.resolve(domain, rrtype, lifetime=timeout)
+                if ans:
+                    res["a_fallback"] = True
+                    mx_records = [(0, domain)]
+                    break
+            except Exception:
+                pass
+
+    # Lightweight TXT checks
+    try:
+        ans = await resolver.resolve(domain, "TXT", lifetime=timeout)
+        txts = [b"".join(r.strings).decode("utf-8", errors="ignore") for r in ans]
+        res["spf"] = any(t.startswith("v=spf1") for t in txts)
+    except Exception:
+        pass
+
+    try:
+        dmarc_dom = f"_dmarc.{domain}"
+        ans = await resolver.resolve(dmarc_dom, "TXT", lifetime=timeout)
+        txts = [b"".join(r.strings).decode("utf-8", errors="ignore") for r in ans]
+        res["dmarc"] = any("v=DMARC1" in t for t in txts)
+    except Exception:
+        pass
+
+    DNS_CACHE[key] = (mx_records, res)
+    return mx_records, res
+
+async def smtp_rcpt_probe(target: str, mx_host: str, mail_from: str, timeout: float = 10.0) -> Tuple[int, str, dict]:
+    ctx = ssl.create_default_context()
+    # For STARTTLS: we’ll negotiate if offered; keep cert verification on by default
+    smtp = aiosmtplib.SMTP(hostname=mx_host, port=25, timeout=timeout, start_tls=True, tls_context=ctx, source_address=None)
+    meta = {"starttls": False, "banner": None}
+    try:
+        await smtp.connect()
+        meta["banner"] = smtp.server_auth_methods  # aiosmtplib stores EHLO response features
+        if "starttls" in (smtp.esmtp_features or {}):
+            meta["starttls"] = True
+        await smtp.ehlo()
+        code, _ = await smtp.mail(mail_from)
+        if code >= 400:
+            await smtp.quit()
+            return code, "MAIL_FROM_rejected", meta
+        code, msg = await smtp.rcpt(target)
+        await smtp.quit()
+        return code, msg.decode() if isinstance(msg, (bytes, bytearray)) else str(msg), meta
+    except (aiosmtplib.errors.SMTPTimeoutError, asyncio.TimeoutError):
+        return 0, "timeout", meta
+    except (ConnectionRefusedError, socket.gaierror, OSError) as e:
+        return 0, f"net_error:{e.__class__.__name__}", meta
+    except Exception as e:
+        return 0, f"unexpected:{e.__class__.__name__}", meta
+
+async def validate(email: str, mail_from_domain: str = "probe.example") -> ValidationResult:
+    # Layer 0: syntax + normalization
+    try:
+        info = ev(email, allow_smtputf8=False)  # flip to True if you must accept Unicode local parts
+        normalized = info.email
+        local = info.local_part
+        domain = info.domain
+    except EmailNotValidError as e:
+        return ValidationResult(email=email, status="invalid", reason="bad_syntax", details={"error": str(e)})
+
+    # Quick typo/disposable/role checks (stubbed here)
+    sug = suggest_typo(domain)
+    if sug:
+        return ValidationResult(email=email, status="invalid", reason="domain_typo", suggestion=f"{local}@{sug}", normalized=normalized)
+
+    # Layer 2: DNS
+    mx, dns_meta = await dns_mx(domain)
+    if not mx:
+        return ValidationResult(email=email, status="invalid", reason="no_mx_no_a", normalized=normalized, details=dns_meta)
+    if dns_meta.get("a_fallback"):
+        # carry on but with a risk flag
+        pass
+
+    # Layer 3: SMTP probe (single MX first, add retries across MX if you want)
+    # Use a real domain you control as MAIL FROM; match PTR/HELO in production
+    mail_from = f"validator@{mail_from_domain}"
+    pref, host = mx[0]
+    code, msg, meta = await smtp_rcpt_probe(normalized, host, mail_from)
+
+    # Interpret
+    if code >= 500:
+        return ValidationResult(email=email, status="invalid", reason="rcpt_5xx", normalized=normalized, details={"mx": host, "code": code, "msg": msg, **dns_meta})
+    if 200 <= code < 300:
+        # Catch-all test
+        rand_local = f"{secrets.token_hex(5)}"
+        rand_addr = f"{rand_local}@{domain}"
+        code2, msg2, _ = await smtp_rcpt_probe(rand_addr, host, mail_from)
+        if 200 <= code2 < 300:
+            return ValidationResult(email=email, status="catch-all", reason="catch_all_detected", normalized=normalized, details={"mx": host, "msg": msg, **dns_meta}, confidence=0.6)
+        return ValidationResult(email=email, status="valid", reason="rcpt_2xx", normalized=normalized, details={"mx": host, "msg": msg, **dns_meta}, confidence=0.9)
+    if code == 0:
+        return ValidationResult(email=email, status="unknown", reason=msg, normalized=normalized, details={"mx": host, **dns_meta}, confidence=0.4)
+    if 400 <= code < 500:
+        return ValidationResult(email=email, status="unknown", reason="rcpt_4xx", normalized=normalized, details={"mx": host, "code": code, "msg": msg, **dns_meta}, confidence=0.5)
+
+    # Fallback
+    return ValidationResult(email=email, status="unknown", reason="ambiguous", normalized=normalized, details={"mx": host, "code": code, "msg": msg, **dns_meta}, confidence=0.5)
+
+# Quick demo
+if __name__ == "__main__":
+    import sys
+    async def main():
+        for addr in sys.argv[1:]:
+            res = await validate(addr)
+            print(res)
+    asyncio.run(main())
+Notes:
+
+Real implementation should iterate MX hosts with backoff, classify provider‑specific strings, and pool connections with per‑host concurrency limits.
+Don’t over‑promise: if RCPT says 2xx but the domain is catch‑all or policy‑accepting, return catch‑all or valid with moderate confidence.
+Building the full web app
+Minimal endpoints
+POST /validate {email} → returns ValidationResult immediately if only syntax + DNS, or returns job_id and streams SMTP outcome via SSE/WebSocket.
+GET /job/{id} → status.
+POST /bulk → CSV upload, returns batch_id and progress stream.
+Background jobs
+Celery task runs validate(); set max retries for “unknown” with delays (15 min → 1 hr → 6 hr).
+Data model
+addresses(id, email_hash, created_at)
+validations(id, address_id, status, reason, confidence, normalized, domain, mx_host, meta_json, created_at)
+jobs(id, user_id, status, progress, created_at)
+Caches
+DNS answers (TTL from records, bounded by max 15m).
+Greylist/backoff state per MX and per ASN.
+Front-end UX
+Instant syntax feedback locally (email-validator can run client-side via WASM or do a quick roundtrip).
+Progress states: “checking DNS…” → “probing mailbox…” → “valid ✅/catch‑all ⚠️/unknown ⏳/invalid ❌”.
+Risk labels and tooltips so “catch‑all” isn’t mistaken for guaranteed deliverability.
+Throughput and scaling tips
+Use a local validating resolver (Unbound) on the same host as workers; it will honor TTLs and avoid DNS rate limits.
+Concurrency budgeter:
+Track active connects per MX; start with 2–5, grow cautiously on success, shrink on 4xx/421/timeout spikes.
+Circuit breaker per provider: if temporary errors > X% in Y minutes, pause that bucket for Z minutes.
+Connection reuse doesn’t help with SMTP on port 25 the way it does with HTTP; keep sessions short.
+Async all the way: DNS and SMTP operations as coroutines; limit thread usage.
+Automation and lifecycle
+Retry matrix
+unknown/rcpt_4xx/timeout → exponential backoff + jitter (e.g., 15m, 60m, 6h, then give up).
+valid/catch-all → optional recheck every 90–180 days or on send.
+Metrics to track
+DNS latency and NXDOMAIN rate; per‑MX 2xx/4xx/5xx rates; unknown ratio; timeouts; job backlog length; average validation time.
+Alerting
+Spike in 4xx for a single ASN or MX family; DNS timeouts above baseline; queue starvation; memory growth in caches.
+Data sources you’ll want to maintain
+Disposable domain list (merge several OSS lists; update daily).
+Role/spamtrap local parts.
+Typo map for top MX providers and popular domains.
+Provider reply regexes mapping to normalized reason codes.
+Public Suffix List (via tldextract) for solid eTLD+1 parsing.
+Security, privacy, and legal
+Hash or HMAC emails at rest; store only normalized forms you need.
+Mask most of the local part in logs; never log raw SMTP transcripts with full addresses in production.
+Consent/notice: if you validate user-provided emails, document what checks you perform and why. Offer opt‑out for bulk lists where appropriate.
+Proxy engine and other services
+SMTP over proxies: generally a bad idea; most SOCKS/HTTP networks block 25 or are on blocklists. If you must, only use for DNS/HTTP metadata and originate SMTP from clean, reputationally warm IPs with correct PTR.
+DNS: prefer a local Unbound; if you must use public resolvers, set sane timeouts and rotate endpoints. Respect negative caching TTLs.
+The real “secrets” behind high-accuracy validators
+Clean network identity: PTR matches EHLO; consistent MAIL FROM domain; start TLS when offered; modern ciphers.
+Conscientious throttling: keep per‑MX concurrency small and jitter retries; don’t pipeline commands unless the server advertises PIPELINING.
+Conservative classification: better to return unknown than false‑valid. Catch‑alls are common; document them clearly in the UI/API.
+Provider‑aware parsing: normalize their eclectic error strings to reason codes.
+Feedback loop: if you also send mail, use bounce data to tune scoring, especially for domains that accept‑then‑bounce.
+Operational hygiene: local DNS cache, good timeouts, blackbox monitoring, and automatic circuit breakers will save your IPs and your accuracy.
+One-shot copy/paste API starter
+Requirements:
+pip install fastapi uvicorn[standard] email-validator dnspython aiosmtplib cachetools
+
+app.py:
+
+Python
+
+import asyncio
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import Optional
+from validator_core import validate  # put the earlier validate() into validator_core.py
+
+app = FastAPI(title="Email Validator")
+
+class ValidateReq(BaseModel):
+    email: str
+    mail_from_domain: Optional[str] = "probe.example"
+
+@app.post("/validate")
+async def validate_endpoint(req: ValidateReq):
+    res = await validate(req.email, mail_from_domain=req.mail_from_domain)
+    return res.__dict__
+
+# run: uvicorn app:app --host 0.0.0.0 --port 8000
+validator_core.py:
+
+Paste the “end-to-end Python validator” code block above into this file.
+This gives you a working async API you can deploy immediately. Add Celery for background jobs, Redis/Postgres for persistence, and Prometheus for metrics as you grow.
+
+Want me to:
+
+add a docker-compose with Postgres/Redis + API + worker,
+include a provider‑specific regex map,
+or wire in a disposable domain dataset?
+Say the word and I’ll extend this into a full, ready‑to‑run stack.

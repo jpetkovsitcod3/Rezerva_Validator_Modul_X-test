@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   Upload, Button, Table, Tag, Progress, Typography,
-  Space, Row, Col, Divider, Input,
+  Row, Col, Divider, Input, Empty, Spin,
 } from "antd";
 import {
   UploadOutlined, ThunderboltOutlined, DownloadOutlined,
@@ -11,6 +11,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Papa from "papaparse";
 import { useBulkValidation } from "../../hooks/useValidation";
+import { DURATIONS, EASES } from "../../motion/tokens";
 
 const { Title, Text, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -22,15 +23,18 @@ const STATUS_TAG = {
   unknown: <Tag icon={<QuestionCircleOutlined />} color="default">Unknown</Tag>,
 };
 
+const scoreColor = (score) =>
+  score >= 75 ? "#34D399" : score >= 45 ? "#FBBF24" : "#F87171";
+
 const TABLE_COLUMNS = [
   {
     title: "#", dataIndex: "index", key: "index", width: 50,
-    render: (_, __, i) => <Text style={{ color: "#475569", fontSize: 12 }}>{i + 1}</Text>,
+    render: (_, __, i) => <Text style={{ color: "#4A5260", fontSize: 12 }}>{i + 1}</Text>,
   },
   {
     title: "Email", dataIndex: "email", key: "email",
     render: (email) => (
-      <Text copyable style={{ fontFamily: "JetBrains Mono, monospace", fontSize: 12, color: "#e2e8f0" }}>
+      <Text copyable style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "#E6EDF3" }}>
         {email}
       </Text>
     ),
@@ -50,12 +54,12 @@ const TABLE_COLUMNS = [
     title: "Score", dataIndex: ["scoring", "score"], key: "score", width: 110,
     sorter: (a, b) => (a.scoring?.score || 0) - (b.scoring?.score || 0),
     render: (score) => {
-      const color = score >= 75 ? "#10b981" : score >= 45 ? "#f59e0b" : "#ef4444";
+      const color = scoreColor(score);
       return (
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Progress
             percent={score} showInfo={false} strokeColor={color}
-            trailColor="#1e1e2e" size="small" style={{ width: 50, margin: 0 }}
+            trailColor="#181F2A" size="small" style={{ width: 50, margin: 0 }}
           />
           <Text style={{ color, fontSize: 11, fontWeight: 700 }}>{score}</Text>
         </div>
@@ -64,7 +68,7 @@ const TABLE_COLUMNS = [
   },
   {
     title: "MX", dataIndex: ["dns", "has_mx_records"], key: "mx", width: 50,
-    render: (v) => v ? <Text style={{ color: "#10b981" }}>✓</Text> : <Text style={{ color: "#ef4444" }}>✗</Text>,
+    render: (v) => v ? <Text style={{ color: "#34D399" }}>✓</Text> : <Text style={{ color: "#F87171" }}>✗</Text>,
   },
   {
     title: "Disposable", dataIndex: ["disposable", "is_disposable"], key: "disposable", width: 90,
@@ -73,14 +77,14 @@ const TABLE_COLUMNS = [
   {
     title: "Time (ms)", dataIndex: "processing_time_ms", key: "time", width: 90,
     sorter: (a, b) => (a.processing_time_ms || 0) - (b.processing_time_ms || 0),
-    render: (ms) => <Text style={{ color: "#475569", fontSize: 11 }}>{ms ? ms.toFixed(0) : "—"}</Text>,
+    render: (ms) => <Text style={{ color: "#4A5260", fontSize: 11 }}>{ms ? ms.toFixed(0) : "—"}</Text>,
   },
 ];
 
 export default function BulkValidator() {
   const [emailText, setEmailText] = useState("");
   const [fileEmails, setFileEmails] = useState([]);
-  const { taskId, status, results, progress, total, startBulk, reset } = useBulkValidation();
+  const { status, results, progress, total, startBulk, reset } = useBulkValidation();
 
   const emailList = [
     ...emailText.split(/[\n,;]/).map((e) => e.trim()).filter(Boolean),
@@ -141,10 +145,10 @@ export default function BulkValidator() {
         animate={{ opacity: 1, y: 0 }}
         style={{ marginBottom: 32 }}
       >
-        <Title level={2} style={{ color: "#f1f5f9", margin: 0 }}>
+        <Title level={2} style={{ color: "#F2F6FC", margin: 0 }}>
           📋 Bulk Email Validator
         </Title>
-        <Paragraph style={{ color: "#64748b", marginTop: 6 }}>
+        <Paragraph style={{ color: "#6B7785", marginTop: 6 }}>
           Validate thousands of emails simultaneously. Upload CSV or paste directly.
         </Paragraph>
       </motion.div>
@@ -154,8 +158,8 @@ export default function BulkValidator() {
           <motion.div key="input" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Row gutter={[20, 20]}>
               <Col xs={24} md={14}>
-                <div style={{ background: "#13131a", border: "1px solid #2a2a3a", borderRadius: 16, padding: 24 }}>
-                  <Text strong style={{ color: "#94a3b8", display: "block", marginBottom: 12 }}>
+                <div style={{ background: "#11141B", border: "1px solid #222A36", borderRadius: 16, padding: 24 }}>
+                  <Text strong style={{ color: "#9AA7B8", display: "block", marginBottom: 12 }}>
                     Paste Emails (one per line, comma or semicolon separated)
                   </Text>
                   <TextArea
@@ -164,41 +168,42 @@ export default function BulkValidator() {
                     placeholder={`user@example.com\ntest@gmail.com\nadmin@company.io`}
                     rows={10}
                     style={{
-                      background: "#0a0a0f", border: "1px solid #2a2a3a",
-                      color: "#e2e8f0", fontFamily: "JetBrains Mono, monospace",
+                      background: "#0A0B0E", border: "1px solid #222A36",
+                      color: "#E6EDF3", fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 12, resize: "vertical", borderRadius: 8,
                     }}
                   />
-                  <Text style={{ color: "#475569", fontSize: 11, marginTop: 8, display: "block" }}>
-                    {emailText.split(/[\n,;]/).filter((e) => e.trim().includes("@")).length} emails detected
+                  <Text style={{ color: "#4A5260", fontSize: 11, marginTop: 8, display: "block" }}>
+                    {/* B10: use uniqueEmails (text + file) so the hint matches the actual count */}
+                    {uniqueEmails.length} emails detected
                   </Text>
                 </div>
               </Col>
 
               <Col xs={24} md={10}>
-                <div style={{ background: "#13131a", border: "1px solid #2a2a3a", borderRadius: 16, padding: 24, height: "100%" }}>
-                  <Text strong style={{ color: "#94a3b8", display: "block", marginBottom: 12 }}>
+                <div style={{ background: "#11141B", border: "1px solid #222A36", borderRadius: 16, padding: 24, height: "100%" }}>
+                  <Text strong style={{ color: "#9AA7B8", display: "block", marginBottom: 12 }}>
                     Upload CSV / TXT File
                   </Text>
                   <Upload.Dragger
                     accept=".csv,.txt"
                     beforeUpload={handleCSVUpload}
                     showUploadList={false}
-                    style={{ background: "#0a0a0f", border: "1px dashed #2a2a3a", borderRadius: 10 }}
+                    style={{ background: "#0A0B0E", border: "1px dashed #222A36", borderRadius: 10 }}
                   >
-                    <p style={{ color: "#6366f1", fontSize: 28 }}><UploadOutlined /></p>
-                    <p style={{ color: "#64748b", fontSize: 13 }}>Drop CSV/TXT file here or click to browse</p>
+                    <p style={{ color: "#2CC9E8", fontSize: 28 }}><UploadOutlined /></p>
+                    <p style={{ color: "#6B7785", fontSize: 13 }}>Drop CSV/TXT file here or click to browse</p>
                     {fileEmails.length > 0 && (
                       <Tag color="geekblue" style={{ marginTop: 8 }}>{fileEmails.length} emails loaded</Tag>
                     )}
                   </Upload.Dragger>
 
-                  <Divider style={{ borderColor: "#1e1e2e" }} />
+                  <Divider style={{ borderColor: "#181F2A" }} />
 
                   <div style={{ marginBottom: 16 }}>
-                    <Text style={{ color: "#64748b", fontSize: 13 }}>
+                    <Text style={{ color: "#6B7785", fontSize: 13 }}>
                       Total unique emails:{" "}
-                      <Text strong style={{ color: "#6366f1" }}>{uniqueEmails.length}</Text>
+                      <Text strong style={{ color: "#2CC9E8" }}>{uniqueEmails.length}</Text>
                     </Text>
                   </div>
 
@@ -211,9 +216,7 @@ export default function BulkValidator() {
                     disabled={uniqueEmails.length === 0}
                     block
                     style={{
-                      background: uniqueEmails.length === 0 ? undefined : "linear-gradient(135deg, #6366f1, #8b5cf6)",
-                      border: "none", fontWeight: 700, height: 48,
-                      boxShadow: uniqueEmails.length > 0 ? "0 0 20px rgba(99,102,241,0.4)" : undefined,
+                      fontWeight: 700, height: 48,
                     }}
                   >
                     Start Bulk Validation
@@ -223,19 +226,60 @@ export default function BulkValidator() {
             </Row>
           </motion.div>
         ) : (
-          <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <motion.div
+            key="results"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: DURATIONS.exit, ease: EASES.exit } }}
+          >
             {status === "processing" && (
-              <div style={{ background: "#13131a", border: "1px solid #2a2a3a", borderRadius: 16, padding: 24, marginBottom: 20 }}>
+              <div style={{ background: "#11141B", border: "1px solid #222A36", borderRadius: 16, padding: 24, marginBottom: 20 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                  <Text strong style={{ color: "#e2e8f0" }}>🔄 Processing {total} emails...</Text>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <Spin size="small" />
+                    <Text strong style={{ color: "#E6EDF3" }}>Processing {total} emails...</Text>
+                  </div>
                   <Button size="small" onClick={reset}>Cancel</Button>
                 </div>
                 <Progress
                   percent={Math.round((progress / total) * 100) || 0}
-                  strokeColor={{ "0%": "#6366f1", "100%": "#10b981" }}
-                  trailColor="#1e1e2e"
+                  strokeColor={{ "0%": "#2CC9E8", "100%": "#34D399" }}
+                  trailColor="#181F2A"
                   status="active"
                 />
+                <Text style={{ color: "#6B7785", fontSize: 12, display: "block", marginBottom: 12 }}>
+                  Validating layer by layer — {progress} of {total} processed
+                </Text>
+                {/* Placeholder rows so the results area has visual weight while processing */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      style={{
+                        height: 44, borderRadius: 8,
+                        background: "#181F2A", border: "1px solid #222A36",
+                        opacity: 1 - i * 0.25,
+                        position: "relative", overflow: "hidden",
+                      }}
+                    >
+                      <div style={{
+                        position: "absolute", inset: 0,
+                        background: "linear-gradient(90deg, transparent, rgba(44,201,232,0.06), transparent)",
+                        animation: `shimmer 1.6s ${i * 0.15}s infinite`,
+                      }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {status === "completed" && results.length === 0 && (
+              <div style={{ background: "#11141B", border: "1px solid #222A36", borderRadius: 16, padding: "40px 24px" }}>
+                <Empty description="No results returned" />
+                <div style={{ textAlign: "center", marginTop: 16 }}>
+                  <Button icon={<ThunderboltOutlined />} onClick={reset}>New Validation</Button>
+                </div>
               </div>
             )}
 
@@ -243,27 +287,27 @@ export default function BulkValidator() {
               <>
                 <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
                   {[
-                    { label: "✅ Valid", key: "valid", color: "#10b981" },
-                    { label: "❌ Invalid", key: "invalid", color: "#ef4444" },
-                    { label: "⚠️ Risky", key: "risky", color: "#f59e0b" },
-                    { label: "❓ Unknown", key: "unknown", color: "#64748b" },
+                    { label: "✅ Valid", key: "valid", color: "#34D399" },
+                    { label: "❌ Invalid", key: "invalid", color: "#F87171" },
+                    { label: "⚠️ Risky", key: "risky", color: "#FBBF24" },
+                    { label: "❓ Unknown", key: "unknown", color: "#6B7785" },
                   ].map(({ label, key, color }) => (
                     <Col xs={12} sm={6} key={key}>
                       <motion.div
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        transition={{ type: "spring" }}
+                        transition={{ duration: DURATIONS.enter, ease: EASES.enter }}
                         style={{
-                          background: "#13131a", border: `1px solid ${color}30`,
+                          background: "#11141B", border: `1px solid ${color}30`,
                           borderRadius: 12, padding: "16px 20px", textAlign: "center",
                           boxShadow: `0 0 20px ${color}10`,
                         }}
                       >
-                        <div style={{ fontSize: 28, fontWeight: 800, color, fontFamily: "JetBrains Mono, monospace" }}>
+                        <div style={{ fontSize: 28, fontWeight: 800, color, fontFamily: "'JetBrains Mono', monospace" }}>
                           {stats[key]}
                         </div>
-                        <div style={{ fontSize: 11, color: "#64748b", marginTop: 4 }}>{label}</div>
-                        <div style={{ fontSize: 11, color: "#475569" }}>
+                        <div style={{ fontSize: 11, color: "#6B7785", marginTop: 4 }}>{label}</div>
+                        <div style={{ fontSize: 11, color: "#4A5260" }}>
                           {((stats[key] / results.length) * 100).toFixed(1)}%
                         </div>
                       </motion.div>
@@ -272,7 +316,7 @@ export default function BulkValidator() {
                 </Row>
 
                 <div style={{ display: "flex", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
-                  <Button icon={<DownloadOutlined />} onClick={handleExportCSV} style={{ borderColor: "#2a2a3a", color: "#94a3b8" }}>
+                  <Button icon={<DownloadOutlined />} onClick={handleExportCSV} style={{ borderColor: "#222A36", color: "#9AA7B8" }}>
                     Export CSV
                   </Button>
                   <Button onClick={reset}>New Validation</Button>
@@ -284,7 +328,7 @@ export default function BulkValidator() {
                   size="small"
                   scroll={{ x: 800 }}
                   pagination={{ pageSize: 20, showTotal: (t) => `${t} emails`, showSizeChanger: true }}
-                  style={{ background: "#13131a", borderRadius: 12, overflow: "hidden", border: "1px solid #2a2a3a" }}
+                  style={{ background: "#11141B", borderRadius: 12, overflow: "hidden", border: "1px solid #222A36" }}
                 />
               </>
             )}

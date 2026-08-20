@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     )
 
     # App
-    app_name: str = "EmailValidator Pro"
-    app_version: str = "2.0.0"
+    app_name: str = "BRIDGE Modul - X"
+    app_version: str = "2.1.0"
     debug: bool = True
     secret_key: str = "change-me-in-production"
 
@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     dns_timeout: int = 5
     max_bulk_emails: int = 10000
     rate_limit_per_minute: int = 60
+    bulk_sync_chunk_size: int = 50  # Process this many emails at a time in sync mode
 
     # Proxy
     use_proxies: bool = False

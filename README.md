@@ -1,7 +1,7 @@
-# 🔍 EmailValidator Pro — Full-Stack Email Validation Web App
+# 🔍 BRIDGE Modul - X — 7-Layer Email Validation Web App
 
 A production-ready, full-stack email validation web application with a **7-layer validation engine**.
-Built with **FastAPI** (Python) on the backend and **React + Ant Design 5 (dark theme)** on the frontend.
+Built with **FastAPI** (Python) on the backend and **React + Ant Design 5 (2026 dark theme)** on the frontend.
 
 > 📄 A regenerated, one-shot copy-paste **build prompt** (compressed, no empty lines) lives in **[PROMPT.txt](./PROMPT.txt)**.
 

@@ -1,26 +1,31 @@
-import { useState, useCallback, useRef } from "react";
-import { emailApi } from "../services/api";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { notification } from "antd";
+import { emailApi } from "../services/api";
 
 export function useSingleValidation() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
-  const abortRef = useRef(null);
+  // B5: guard against out-of-order responses so a quick re-validate can't
+  // overwrite a fresh result with a stale one that resolved later.
+  const reqIdRef = useRef(0);
 
   const validate = useCallback(async (email, deep = true) => {
     if (!email?.trim()) return;
+    const myId = ++reqIdRef.current;
     setLoading(true);
     setError(null);
     setResult(null);
 
     try {
       const data = await emailApi.validateSingle(email.trim(), deep);
+      if (myId !== reqIdRef.current) return; // a newer request superseded this one
       setResult(data);
       setHistory((prev) => [data, ...prev].slice(0, 50));
       return data;
     } catch (err) {
+      if (myId !== reqIdRef.current) return;
       const msg = err.message || "Validation failed";
       setError(msg);
       notification.error({
@@ -30,11 +35,12 @@ export function useSingleValidation() {
         duration: 4,
       });
     } finally {
-      setLoading(false);
+      if (myId === reqIdRef.current) setLoading(false);
     }
   }, []);
 
   const reset = useCallback(() => {
+    reqIdRef.current++;
     setResult(null);
     setError(null);
   }, []);
@@ -50,6 +56,12 @@ export function useBulkValidation() {
   const [total, setTotal] = useState(0);
   const pollRef = useRef(null);
 
+  // B4: clear the polling interval on unmount so we never setState on an
+  // unmounted component or leave a zombie timer.
+  useEffect(() => () => {
+    if (pollRef.current) clearInterval(pollRef.current);
+  }, []);
+
   const startBulk = useCallback(async (emails) => {
     setStatus("submitting");
     setResults([]);
@@ -61,15 +73,15 @@ export function useBulkValidation() {
       setTaskId(response.task_id);
       setStatus("processing");
 
-      // Poll for results
       if (response.task_id !== "sync") {
         pollRef.current = setInterval(async () => {
           try {
             const statusData = await emailApi.getBulkStatus(response.task_id);
-            if (statusData.progress) setProgress(statusData.progress);
+            if (statusData.total) setTotal(statusData.total);
+            if (statusData.progress != null) setProgress(statusData.progress);
 
             if (statusData.status === "success" || statusData.status === "completed") {
-              clearInterval(pollRef.current);
+              if (pollRef.current) clearInterval(pollRef.current);
               setResults(statusData.results || []);
               setStatus("completed");
               notification.success({
@@ -77,16 +89,17 @@ export function useBulkValidation() {
                 description: `Processed ${emails.length} emails`,
               });
             } else if (statusData.status === "failure") {
-              clearInterval(pollRef.current);
+              if (pollRef.current) clearInterval(pollRef.current);
               setStatus("error");
             }
-          } catch (err) {
-            clearInterval(pollRef.current);
+          } catch {
+            if (pollRef.current) clearInterval(pollRef.current);
             setStatus("error");
           }
         }, 2000);
       } else if (response.results) {
         setResults(response.results);
+        setProgress(response.results.length);
         setStatus("completed");
       }
     } catch (err) {

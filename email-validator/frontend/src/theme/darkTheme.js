@@ -1,75 +1,271 @@
 import { theme } from "antd";
+import {
+  CheckCircleFilled,
+  CloseCircleFilled,
+  WarningFilled,
+  QuestionCircleFilled,
+} from "@ant-design/icons";
 
 /**
- * EmailValidator Pro — Custom Dark Theme
- * Built on Ant Design 5 darkAlgorithm with custom tokens
+ * EmailValidator Pro — dark theme, single token source.
+ *
+ * Identity: quiet blue-charcoal neutrals + ONE electric-indigo accent.
+ * Every value in this file derives from the palette below; the :root block
+ * in src/styles/global.css mirrors the same values (keep the two in sync).
+ *
+ * Contrast (WCAG-AA):
+ *   text  #e6e9f0 on bg/surface  ≈ 16:1 / 7.2:1
+ *   muted #9aa3b8 on surface     ≈ 7.2:1
+ *   faint #5c6577 on bg          ≈ 3.3:1  (secondary/UI text only)
+ *   primary button ink #0b0e14 on #7c86ff ≈ 6.4:1
  */
+
+// ─────────────────────────────────────────────────────────────
+// 1. Palette — single source of truth
+// ─────────────────────────────────────────────────────────────
+
+// Neutral stack (blue-grey, lifted off pure black)
+const BG = "#0b0e14";        // app background
+const CHROME = "#0e1219";    // header / sider / footer chrome
+const SURFACE = "#12161f";   // cards, tables
+const ELEVATED = "#181d2a";  // inputs, table headers, segmented tracks
+const SPOTLIGHT = "#1e2433"; // popovers, tooltips, notifications
+const BORDER = "#242b3d";    // default 1px borders
+const BORDER_HOVER = "#333c52";
+const DIVIDER = "#1b2133";   // hairlines, row splits
+
+// Ink stack
+const TEXT = "#e6e9f0";
+const HEADING = "#f2f5fb";
+const MUTED = "#9aa3b8";     // ≥3:1 everywhere — safe secondary text
+const FAINT = "#5c6577";     // ≥3:1 on bg — labels, placeholders, captions
+const QUATERNARY = "#3e4759"; // decorative marks
+const DISABLED = "#2f3849";   // disabled ink / scrollbars
+const INK_ON_PRIMARY = "#0b0e14"; // readable ink for solid primary buttons
+
+// Brand: ONE electric indigo — all violet/cyan duplicates removed
+const PRIMARY = "#7c86ff";
+const PRIMARY_TEXT = "#b3baff"; // bright variant for text/link/chart use
+const PRIMARY_RGB = "124, 134, 255";
+const PRIMARY_SOFT = `rgba(${PRIMARY_RGB}, 0.10)`;   // washes, row hover
+const PRIMARY_FAINTER = `rgba(${PRIMARY_RGB}, 0.05)`; // table row hover
+const PRIMARY_TINT = `rgba(${PRIMARY_RGB}, 0.14)`;   // selected menu item
+const PRIMARY_LINE = `rgba(${PRIMARY_RGB}, 0.28)`;   // focus rings, hairlines
+const PRIMARY_EDGE = `rgba(${PRIMARY_RGB}, 0.50)`;   // hover borders
+
+// Semantic status (green / amber / red kept; tuned for dark surfaces)
+const SUCCESS = "#34d399";
+const WARNING = "#fbbf24";
+const ERROR = "#f87171";
+const INFO = "#38bdf8";
+
+// Subdued glow variants — STATUS_COLORS.glow values are 6-digit hex on
+// purpose: consumers append an alpha suffix (e.g. `${glow}15`).
+const SUCCESS_GLOW = "#256f5c";
+const ERROR_GLOW = "#7d434a";
+const WARNING_GLOW = "#7e6627";
+const UNKNOWN = "#5c6577";
+
+// Motion (mirrors src/motion/tokens.js + :root in global.css)
+const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";     // enter (out-quint)
+const EASE_IN = "cubic-bezier(0.4, 0, 1, 1)";          // exit
+const EASE_IN_OUT = "cubic-bezier(0.645, 0.045, 0.355, 1)";
+const EASE_OUT_BACK = "cubic-bezier(0.34, 1.4, 0.64, 1)";
+
+// Shadows (quiet — no outer glows on chrome)
+const SHADOW_SM = "0 1px 2px rgba(4, 8, 18, 0.4)";
+const SHADOW_MD = "0 6px 20px rgba(4, 8, 18, 0.45)";
+
+// Fonts — system stacks only (no CDN font imports; falls back cleanly)
+const FONT_BODY = "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif";
+const FONT_MONO = "'JetBrains Mono', 'SFMono-Regular', Consolas, 'Courier New', monospace";
+
+// ─────────────────────────────────────────────────────────────
+// 2. Derived maps
+// ─────────────────────────────────────────────────────────────
+
+/** Flat brand/status reference used by ad-hoc inline styles. */
+export const THEME = {
+  // Brand
+  accent: PRIMARY,
+  accentHover: PRIMARY_EDGE,
+  accentActive: PRIMARY_LINE,
+  accentGlow: PRIMARY_LINE,
+  accentSoft: PRIMARY_SOFT,
+  accentLine: PRIMARY_LINE,
+
+  // Neutrals
+  bgBase: BG,
+  bgLayout: BG,
+  bgContainer: SURFACE,
+  bgElevated: ELEVATED,
+  bgSpotlight: SPOTLIGHT,
+  chrome: CHROME,
+
+  text: TEXT,
+  textSecondary: MUTED,
+  textTertiary: FAINT,
+  textHeading: HEADING,
+
+  border: BORDER,
+  borderSecondary: DIVIDER,
+
+  // Functional
+  success: SUCCESS,
+  warning: WARNING,
+  error: ERROR,
+  info: INFO,
+};
+
+/**
+ * Status palette for charts / stat cards.
+ * `warning` + `error` kept for dashboard pass-rate encodings.
+ */
+export const STATUS_HEX = {
+  valid: SUCCESS,
+  invalid: ERROR,
+  risky: WARNING,
+  unknown: UNKNOWN,
+  warning: WARNING,
+  error: ERROR,
+};
+
+/**
+ * Status skin map (bg/border/text/glow) consumed by ResultCard et al.
+ * `glow` stays 6-digit hex: callers append alpha suffixes to it.
+ */
+export const STATUS_COLORS = {
+  valid: {
+    bg: "rgba(52, 211, 153, 0.08)",
+    border: SUCCESS,
+    text: SUCCESS,
+    glow: SUCCESS_GLOW,
+  },
+  invalid: {
+    bg: "rgba(248, 113, 113, 0.08)",
+    border: ERROR,
+    text: ERROR,
+    glow: ERROR_GLOW,
+  },
+  risky: {
+    bg: "rgba(251, 191, 36, 0.08)",
+    border: WARNING,
+    text: WARNING,
+    glow: WARNING_GLOW,
+  },
+  unknown: {
+    bg: "rgba(92, 101, 119, 0.10)",
+    border: UNKNOWN,
+    text: MUTED,
+    glow: UNKNOWN,
+  },
+};
+
+/**
+ * Status icons — antd icon COMPONENTS (render as <Icon />; no emoji).
+ * Exporting components instead of emoji keeps them colorable via props.
+ */
+export const STATUS_ICONS = {
+  valid: CheckCircleFilled,
+  invalid: CloseCircleFilled,
+  risky: WarningFilled,
+  unknown: QuestionCircleFilled,
+};
+
+/** Recharts palette + motion tokens. */
+export const CHART = {
+  isAnimationActive: true,
+  animationDuration: 700,
+  animationEasing: "ease-out",
+  grid: DIVIDER,
+  axis: BORDER_HOVER,
+  tick: FAINT,
+  // bright accent for line/area strokes; `cyan` kept for back-compat
+  cyan: PRIMARY_TEXT,
+  primary: PRIMARY_TEXT,
+};
+
+// ─────────────────────────────────────────────────────────────
+// 3. antd v5 ConfigProvider theme (verified token set only)
+// ─────────────────────────────────────────────────────────────
 
 export const darkThemeConfig = {
   algorithm: theme.darkAlgorithm,
 
   token: {
-    colorPrimary: "#6366f1",
-    colorSuccess: "#10b981",
-    colorWarning: "#f59e0b",
-    colorError: "#ef4444",
-    colorInfo: "#3b82f6",
-    colorLink: "#818cf8",
+    // Brand / semantic seeds
+    colorPrimary: PRIMARY,
+    colorSuccess: SUCCESS,
+    colorWarning: WARNING,
+    colorError: ERROR,
+    colorInfo: INFO,
+    colorLink: PRIMARY_TEXT,
 
-    colorBgBase: "#0a0a0f",
-    colorBgContainer: "#13131a",
-    colorBgElevated: "#1a1a2e",
-    colorBgLayout: "#0a0a0f",
-    colorBgSpotlight: "#16213e",
-    colorBgMask: "rgba(0, 0, 0, 0.75)",
+    // Backgrounds
+    colorBgBase: BG,
+    colorBgContainer: SURFACE,
+    colorBgElevated: ELEVATED,
+    colorBgLayout: "transparent", // lets the quiet body gradient show through
+    colorBgSpotlight: SPOTLIGHT,
+    colorBgMask: "rgba(4, 7, 14, 0.72)",
 
-    colorTextBase: "#e2e8f0",
-    colorText: "#e2e8f0",
-    colorTextSecondary: "#94a3b8",
-    colorTextTertiary: "#64748b",
-    colorTextQuaternary: "#475569",
-    colorTextDisabled: "#334155",
-    colorTextHeading: "#f1f5f9",
-    colorTextLabel: "#94a3b8",
+    // Ink
+    colorTextBase: TEXT,
+    colorText: TEXT,
+    colorTextSecondary: MUTED,
+    colorTextTertiary: FAINT,
+    colorTextQuaternary: QUATERNARY,
+    colorTextDisabled: DISABLED,
+    colorTextHeading: HEADING,
+    colorTextLabel: MUTED,
 
-    colorBorder: "#2a2a3a",
-    colorBorderSecondary: "#1e1e2e",
-    colorSplit: "#1e1e2e",
-
-    colorFillAlter: "rgba(99, 102, 241, 0.06)",
-    colorFillContent: "rgba(255, 255, 255, 0.04)",
+    // Borders & fills
+    colorBorder: BORDER,
+    colorBorderSecondary: DIVIDER,
+    colorSplit: DIVIDER,
+    colorFillAlter: "rgba(255, 255, 255, 0.04)",
+    colorFillContent: "rgba(255, 255, 255, 0.08)",
     colorFillSecondary: "rgba(255, 255, 255, 0.06)",
     colorFillTertiary: "rgba(255, 255, 255, 0.03)",
 
-    fontFamily: "'Inter', 'JetBrains Mono', -apple-system, BlinkMacSystemFont, sans-serif",
-    fontFamilyCode: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
+    // Type
+    fontFamily: FONT_BODY,
+    fontFamilyCode: FONT_MONO,
     fontSize: 14,
-    fontSizeHeading1: 38,
-    fontSizeHeading2: 30,
-    fontSizeHeading3: 24,
+    fontSizeHeading1: 36,
+    fontSizeHeading2: 28,
+    fontSizeHeading3: 22,
     fontSizeLG: 16,
     fontSizeSM: 12,
     fontSizeXL: 20,
     lineHeight: 1.6,
-    lineHeightHeading1: 1.2,
 
-    borderRadius: 12,
-    borderRadiusLG: 16,
+    // Geometry
+    borderRadius: 10,
+    borderRadiusLG: 14,
     borderRadiusSM: 8,
     borderRadiusXS: 4,
     borderRadiusOuter: 20,
+    controlHeight: 40,
+    controlHeightLG: 48,
+    controlHeightSM: 32,
+    lineWidth: 1,
+    lineType: "solid",
 
-    boxShadow: "0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.5)",
-    boxShadowSecondary: "0 4px 16px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4)",
+    // Elevation (quiet, no glows)
+    boxShadow: SHADOW_SM,
+    boxShadowSecondary: SHADOW_MD,
 
+    // Motion — mirrors src/motion/tokens.js + global.css
     motionDurationFast: "0.15s",
     motionDurationMid: "0.25s",
-    motionDurationSlow: "0.40s",
-    motionEaseInOut: "cubic-bezier(0.4, 0, 0.2, 1)",
-    motionEaseOut: "cubic-bezier(0, 0, 0.2, 1)",
-    motionEaseIn: "cubic-bezier(0.4, 0, 1, 1)",
-    motionEaseOutBack: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+    motionDurationSlow: "0.4s",
+    motionEaseInOut: EASE_IN_OUT,
+    motionEaseOut: EASE_OUT,
+    motionEaseIn: EASE_IN,
+    motionEaseOutBack: EASE_OUT_BACK,
 
+    // Rhythm
     padding: 16,
     paddingLG: 24,
     paddingXL: 32,
@@ -81,110 +277,127 @@ export const darkThemeConfig = {
     marginSM: 12,
     marginXS: 8,
 
-    controlHeight: 40,
-    controlHeightLG: 48,
-    controlHeightSM: 32,
-    lineWidth: 1,
-    lineType: "solid",
-
     zIndexBase: 0,
     zIndexPopupBase: 1000,
   },
 
   components: {
     Layout: {
-      headerBg: "#0d0d17",
-      siderBg: "#0d0d17",
-      bodyBg: "#0a0a0f",
-      footerBg: "#0d0d17",
-      triggerBg: "#1a1a2e",
+      headerBg: CHROME,
+      siderBg: CHROME,
+      bodyBg: "transparent",
+      footerBg: CHROME,
+      triggerBg: ELEVATED,
+      triggerColor: MUTED,
+      headerColor: MUTED,
     },
+
+    // Sidebar identity moved to tokens — replaces the old !important overrides
+    Menu: {
+      itemBorderRadius: 8,
+      itemColor: MUTED,
+      itemHoverColor: TEXT,
+      itemHoverBg: `rgba(${PRIMARY_RGB}, 0.06)`,
+      itemSelectedColor: PRIMARY_TEXT,
+      itemSelectedBg: PRIMARY_TINT,
+      itemActiveBg: PRIMARY_LINE,
+      itemMarginInline: 8,
+      groupTitleColor: FAINT,
+    },
+
     Card: {
-      colorBgContainer: "#13131a",
-      colorBorderSecondary: "#2a2a3a",
+      colorBgContainer: SURFACE,
+      colorBorderSecondary: BORDER,
       paddingLG: 24,
-      borderRadiusLG: 16,
-      boxShadow: "0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(99,102,241,0.05)",
+      borderRadiusLG: 14,
+      boxShadow: SHADOW_SM,
     },
+
     Button: {
-      colorPrimary: "#6366f1",
-      colorPrimaryHover: "#818cf8",
-      colorPrimaryActive: "#4f46e5",
+      colorPrimary: PRIMARY,
+      primaryColor: INK_ON_PRIMARY, // dark ink on electric indigo ≈ 6.4:1
+      primaryShadow: `0 4px 14px rgba(${PRIMARY_RGB}, 0.25)`,
+      fontWeight: 600,
       borderRadius: 10,
       controlHeight: 44,
       controlHeightLG: 52,
-      fontWeight: 600,
-      primaryShadow: "0 0 20px rgba(99,102,241,0.4), 0 4px 14px rgba(99,102,241,0.3)",
     },
+
     Input: {
-      colorBgContainer: "#1a1a2e",
-      colorBorder: "#2a2a3a",
-      colorBorderHover: "#6366f1",
-      activeBorderColor: "#6366f1",
-      activeShadow: "0 0 0 3px rgba(99,102,241,0.2)",
+      colorBgContainer: ELEVATED,
+      colorBorder: BORDER,
+      hoverBorderColor: PRIMARY_EDGE,
+      activeBorderColor: PRIMARY,
+      activeShadow: `0 0 0 3px rgba(${PRIMARY_RGB}, 0.18)`,
+      colorTextPlaceholder: FAINT,
       borderRadius: 10,
       controlHeight: 48,
       fontSize: 15,
-      colorTextPlaceholder: "#475569",
       paddingInline: 16,
     },
-    Table: {
-      colorBgContainer: "#13131a",
-      headerBg: "#1a1a2e",
-      rowHoverBg: "rgba(99,102,241,0.06)",
-      borderColor: "#2a2a3a",
-      headerSplitColor: "#2a2a3a",
-    },
-    Tag: { borderRadius: 6, fontSizeSM: 11 },
-    Progress: { colorSuccess: "#10b981" },
-    Tabs: {
-      colorBorderSecondary: "#2a2a3a",
-      itemColor: "#64748b",
-      itemHoverColor: "#94a3b8",
-      itemSelectedColor: "#6366f1",
-      inkBarColor: "#6366f1",
-    },
-    Statistic: {
-      colorTextHeading: "#e2e8f0",
-      colorTextDescription: "#64748b",
-    },
-    Tooltip: { colorBgSpotlight: "#1e1e3a", colorTextLightSolid: "#e2e8f0" },
+
     Select: {
-      colorBgContainer: "#1a1a2e",
-      colorBorder: "#2a2a3a",
-      colorBorderHover: "#6366f1",
-      optionActiveBg: "rgba(99,102,241,0.1)",
-      optionSelectedBg: "rgba(99,102,241,0.15)",
+      colorBgContainer: ELEVATED,
+      colorBorder: BORDER,
+      hoverBorderColor: PRIMARY_EDGE,
+      optionActiveBg: PRIMARY_SOFT,
+      optionSelectedBg: PRIMARY_TINT,
     },
+
+    Table: {
+      colorBgContainer: SURFACE,
+      headerBg: ELEVATED,
+      headerColor: FAINT,
+      rowHoverBg: PRIMARY_FAINTER,
+      borderColor: DIVIDER,
+      headerSplitColor: DIVIDER,
+    },
+
+    Tag: { borderRadius: 6, fontSizeSM: 11 },
+
+    Progress: { colorSuccess: SUCCESS, colorPrimary: PRIMARY },
+
+    Tabs: {
+      colorBorderSecondary: DIVIDER,
+      itemColor: FAINT,
+      itemHoverColor: TEXT,
+      itemSelectedColor: PRIMARY_TEXT,
+      inkBarColor: PRIMARY,
+    },
+
+    Statistic: {
+      colorTextHeading: HEADING,
+      colorTextDescription: FAINT,
+    },
+
+    Tooltip: { colorBgSpotlight: SPOTLIGHT, colorTextLightSolid: TEXT },
+
     Timeline: { colorBgContainer: "transparent" },
-    Upload: { colorBorder: "#2a2a3a", colorBgContainer: "#1a1a2e" },
-    Notification: { colorBgElevated: "#1a1a2e", colorBorder: "#2a2a3a" },
-    Message: { colorBgElevated: "#1a1a2e" },
-    Spin: { colorPrimary: "#6366f1" },
+
+    Upload: {
+      colorBorder: BORDER,
+      colorBgContainer: "transparent",
+    },
+
+    Notification: { colorBgElevated: SPOTLIGHT, colorBorder: BORDER },
+    Message: { colorBgElevated: SPOTLIGHT },
+    Spin: { colorPrimary: PRIMARY },
+
     Alert: {
-      colorInfoBg: "rgba(59,130,246,0.08)",
-      colorInfoBorder: "rgba(59,130,246,0.2)",
-      colorSuccessBg: "rgba(16,185,129,0.08)",
-      colorSuccessBorder: "rgba(16,185,129,0.2)",
-      colorWarningBg: "rgba(245,158,11,0.08)",
-      colorWarningBorder: "rgba(245,158,11,0.2)",
-      colorErrorBg: "rgba(239,68,68,0.08)",
-      colorErrorBorder: "rgba(239,68,68,0.2)",
+      colorInfoBg: "rgba(56, 189, 248, 0.08)",
+      colorInfoBorder: "rgba(56, 189, 248, 0.18)",
+      colorSuccessBg: "rgba(52, 211, 153, 0.08)",
+      colorSuccessBorder: "rgba(52, 211, 153, 0.18)",
+      colorWarningBg: "rgba(251, 191, 36, 0.08)",
+      colorWarningBorder: "rgba(251, 191, 36, 0.18)",
+      colorErrorBg: "rgba(248, 113, 113, 0.08)",
+      colorErrorBorder: "rgba(248, 113, 113, 0.18)",
+    },
+
+    Segmented: {
+      trackBg: SURFACE,
+      itemSelectedBg: PRIMARY_TINT,
+      itemSelectedColor: PRIMARY_TEXT,
     },
   },
-};
-
-// Status color map used across components
-export const STATUS_COLORS = {
-  valid: { bg: "#10b98115", border: "#10b981", text: "#34d399", glow: "#10b981" },
-  invalid: { bg: "#ef444415", border: "#ef4444", text: "#f87171", glow: "#ef4444" },
-  risky: { bg: "#f59e0b15", border: "#f59e0b", text: "#fbbf24", glow: "#f59e0b" },
-  unknown: { bg: "#64748b15", border: "#64748b", text: "#94a3b8", glow: "#64748b" },
-};
-
-export const STATUS_ICONS = {
-  valid: "✅",
-  invalid: "❌",
-  risky: "⚠️",
-  unknown: "❓",
 };

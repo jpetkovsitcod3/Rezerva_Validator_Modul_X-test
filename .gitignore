@@ -26,3 +26,11 @@ dist-ssr/
 
 # Local env (use .env.example)
 .env
+.env.*
+!.env.example
+
+# Agent tooling / local workspace state (never commit these)
+.autoclaw/
+.mimocode/
+.devin/
+.fast-agent/
