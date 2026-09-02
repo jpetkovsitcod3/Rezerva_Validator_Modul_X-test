@@ -30,13 +30,13 @@ async def process_bulk_sync(emails: list, webhook_url: str = None) -> dict:
         tasks = [engine.validate(email, deep=False) for email in chunk]
         chunk_results = await asyncio.gather(*tasks, return_exceptions=True)
         
-        for result in chunk_results:
+        for email, result in zip(chunk, chunk_results):
             if isinstance(result, ValidationResult):
                 results.append(result.model_dump())
             else:
                 # Handle exceptions
                 results.append({
-                    "email": "unknown",
+                    "email": email,
                     "error": str(result) if result else "Unknown error",
                     "status": "error"
                 })
@@ -45,7 +45,8 @@ async def process_bulk_sync(emails: list, webhook_url: str = None) -> dict:
     if webhook_url:
         import httpx
         try:
-            httpx.post(webhook_url, json={"results": results}, timeout=10)
+            async with httpx.AsyncClient(timeout=10) as client:
+                await client.post(webhook_url, json={"results": results})
         except Exception:
             pass
     

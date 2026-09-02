@@ -44,6 +44,19 @@ def _insert(table: str, payload: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         return None
 
 
+def _upsert(table: str, payload: Dict[str, Any], on_conflict: str = "id") -> Optional[Dict[str, Any]]:
+    client = _client()
+    if client is None:
+        return None
+    try:
+        resp = client.table(table).upsert(payload, on_conflict=on_conflict).execute()
+        data = resp.data or []
+        return data[0] if data else None
+    except Exception as exc:
+        logger.warning("supabase_upsert_failed", table=table, error=str(exc))
+        return None
+
+
 def _select(table: str, columns: str, limit: int, order: Optional[str] = None,
             eq: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     client = _client()
@@ -55,7 +68,14 @@ def _select(table: str, columns: str, limit: int, order: Optional[str] = None,
             for col, val in eq.items():
                 query = query.eq(col, val)
         if order:
-            query = query.order(order)
+            if order.endswith(".desc"):
+                col = order[:-5]
+                query = query.order(col, desc=True)
+            elif order.endswith(".asc"):
+                col = order[:-4]
+                query = query.order(col, desc=False)
+            else:
+                query = query.order(order)
         resp = query.limit(limit).execute()
         return resp.data or []
     except Exception as exc:
@@ -199,4 +219,4 @@ def save_domain_record(domain: str, dns_result: Any) -> Optional[Dict[str, Any]]
         "dmarc_record": dns_result.dmarc_record if dns_result else None,
         "has_dkim": bool(dns_result and dns_result.has_dkim),
     }
-    return _insert("domain_records", payload)
+    return _upsert("domain_records", payload, on_conflict="domain")
