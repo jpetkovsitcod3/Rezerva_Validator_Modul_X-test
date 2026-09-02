@@ -423,33 +423,33 @@ export default function PipelineScene() {
     <section id="pipeline" className="relative px-5 py-20 md:px-10 md:py-24">
       <div className="mx-auto max-w-6xl">
         <div className="text-center">
-          <h2 className="font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-bold text-[#eaf5f2]">
+          <h2 className="font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-bold text-[var(--text-1)]">
             <KineticText text="7-Layer Validation Pipeline" delay={0.05} />
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-[13.5px] leading-relaxed text-[#7A7250]">
+          <p className="mx-auto mt-3 max-w-md text-[13.5px] leading-relaxed text-[var(--text-3)]">
             A sequential, rigorous process designed to filter invalid data{" "}
-            <span className="font-semibold text-[#D45B3D]">with extreme prejudice.</span>
+            <span className="font-semibold text-[var(--color-status-error)]">with extreme prejudice.</span>
           </p>
         </div>
 
         {/* ============ the scene ============ */}
-        <div ref={viewRef} className="relative mt-10 border border-[rgba(235,227,167,.14)] bg-[#0d1413] shadow-[0_0_60px_rgba(235,125,0,.07)]">
+        <div ref={viewRef} className="relative mt-10 border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-[0_0_60px_rgba(79,138,255,.08)]">
           {/* corner brackets */}
           {["-left-px -top-px border-l-2 border-t-2", "-right-px -top-px border-r-2 border-t-2", "-bottom-px -left-px border-b-2 border-l-2", "-bottom-px -right-px border-b-2 border-r-2"].map((pos) => (
-            <span key={pos} className={`absolute ${pos} z-30 h-4 w-4 border-[#EB7D00]`} aria-hidden />
+            <span key={pos} className={`absolute ${pos} z-30 h-4 w-4 border-[var(--color-accent-primary)]/60`} aria-hidden />
           ))}
 
           <div ref={stageRef} className="relative aspect-[3/2] w-full overflow-hidden">
             <img src="img/pipeline.jpg" alt="Isometric factory scene: a conveyor belt carrying data packets through seven validation stations" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[rgba(6,10,9,.7)] via-transparent to-[rgba(6,10,9,.4)]" aria-hidden />
+            <div className="absolute inset-0 bg-gradient-to-t from-[rgba(7,9,11,.75)] via-transparent to-[rgba(7,9,11,.45)]" aria-hidden />
 
             {/* station ambience */}
             {gatePos[0] && (
-              <div className="pv-sweep absolute w-[26px] bg-gradient-to-t from-transparent via-[rgba(235,125,0,.45)] to-transparent blur-[2px]" style={{ left: `${(gatePos[0].x / VB_W) * 100}%`, top: `${(gatePos[0].y / VB_H) * 100 - 15}%`, height: "15%", transformOrigin: "bottom" }} aria-hidden />
+              <div className="pv-sweep absolute w-[26px] bg-gradient-to-t from-transparent via-[rgba(79,138,255,.45)] to-transparent blur-[2px]" style={{ left: `${(gatePos[0].x / VB_W) * 100}%`, top: `${(gatePos[0].y / VB_H) * 100 - 15}%`, height: "15%", transformOrigin: "bottom" }} aria-hidden />
             )}
             {gatePos[1] && (
               <div className="pv-ringpulse absolute" style={{ left: `${(gatePos[1].x / VB_W) * 100}%`, top: `${(gatePos[1].y / VB_H) * 100 - 4}%` }} aria-hidden>
-                <div className="h-24 w-24 rounded-full border border-dashed border-[rgba(235,125,0,.3)] md:h-32 md:w-32" />
+                <div className="h-24 w-24 rounded-full border border-dashed border-[var(--color-accent-primary)]/35 md:h-32 md:w-32" />
               </div>
             )}
 
@@ -470,13 +470,13 @@ export default function PipelineScene() {
               {/* invisible reference path for LUT */}
               <path ref={pathRef} d={PATH_D} fill="none" stroke="transparent" />
               {/* wide soft glow */}
-              <path d={PATH_D} fill="none" stroke="#EB7D00" strokeOpacity="0.1" strokeWidth="20" filter="url(#pv-soft)" />
+              <path d={PATH_D} fill="none" stroke="#7AB7FF" strokeOpacity="0.12" strokeWidth="20" filter="url(#pv-soft)" />
               {/* medium glow */}
-              <path d={PATH_D} fill="none" stroke="#EB7D00" strokeOpacity="0.2" strokeWidth="6" filter="url(#pv-glow)" />
+              <path d={PATH_D} fill="none" stroke="#7AB7FF" strokeOpacity="0.28" strokeWidth="6" filter="url(#pv-glow)" />
               {/* core dashed belt */}
-              <path d={PATH_D} fill="none" stroke="#EB7D00" strokeOpacity="0.8" strokeWidth="2" strokeDasharray="10 20" className="pv-dashflow" />
+              <path d={PATH_D} fill="none" stroke="#7AB7FF" strokeOpacity="0.85" strokeWidth="2" strokeDasharray="10 20" className="pv-dashflow" />
               {/* bright center line */}
-              <path d={PATH_D} fill="none" stroke="#EBE3A7" strokeOpacity="0.35" strokeWidth="0.8" />
+              <path d={PATH_D} fill="none" stroke="#A8C7FF" strokeOpacity="0.4" strokeWidth="0.8" />
             </svg>
 
             {/* imperative cube + trail + ping layer */}
@@ -501,29 +501,29 @@ export default function PipelineScene() {
                   <div className="relative flex flex-col items-center">
                     {above && (
                       <div className="mb-1 flex flex-col items-center">
-                        <div className="border border-[rgba(235,125,0,.3)] bg-[rgba(6,10,9,.85)] px-2 py-1 text-center backdrop-blur-sm">
-                          <div className="font-data text-[9px] font-semibold leading-none text-[#EB7D00] md:text-[10px]">L{i + 1}</div>
-                          <div className="font-data mt-0.5 hidden text-[8px] uppercase leading-tight tracking-wider text-[#B8AD7A] md:block">{LAYERS[i].title}</div>
+                        <div className="border border-[var(--color-accent-primary)]/35 bg-[var(--color-bg-primary)]/88 px-2 py-1 text-center backdrop-blur-sm">
+                          <div className="font-data text-[9px] font-semibold leading-none text-[var(--palette-teal-300)] md:text-[10px]">L{i + 1}</div>
+                          <div className="font-data mt-0.5 hidden text-[8px] uppercase leading-tight tracking-wider text-[var(--text-2)] md:block">{LAYERS[i].title}</div>
                         </div>
-                        <div className="h-3 w-px bg-[rgba(235,125,0,.5)]" />
+                        <div className="h-3 w-px bg-[var(--color-accent-primary)]/55" />
                       </div>
                     )}
                     <span ref={(el) => { dotRefs.current[i] = el; }} className="gate-dot block" />
                     {!above && (
                       <div className="mt-1 flex flex-col items-center">
-                        <div className="h-3 w-px bg-[rgba(235,125,0,.5)]" />
-                        <div className="border border-[rgba(235,125,0,.3)] bg-[rgba(6,10,9,.85)] px-2 py-1 text-center backdrop-blur-sm">
-                          <div className="font-data text-[9px] font-semibold leading-none text-[#EB7D00] md:text-[10px]">L{i + 1}</div>
-                          <div className="font-data mt-0.5 hidden text-[8px] uppercase leading-tight tracking-wider text-[#B8AD7A] md:block">{LAYERS[i].title}</div>
+                        <div className="h-3 w-px bg-[var(--color-accent-primary)]/55" />
+                        <div className="border border-[var(--color-accent-primary)]/35 bg-[var(--color-bg-primary)]/88 px-2 py-1 text-center backdrop-blur-sm">
+                          <div className="font-data text-[9px] font-semibold leading-none text-[var(--palette-teal-300)] md:text-[10px]">L{i + 1}</div>
+                          <div className="font-data mt-0.5 hidden text-[8px] uppercase leading-tight tracking-wider text-[var(--text-2)] md:block">{LAYERS[i].title}</div>
                         </div>
                       </div>
                     )}
 
                     {hoverGate === i && (
-                      <div className={`absolute left-1/2 z-40 w-60 -translate-x-1/2 border border-[rgba(235,125,0,.4)] bg-[rgba(6,10,9,.95)] p-3 shadow-[0_0_30px_rgba(235,125,0,.15)] backdrop-blur ${above ? "top-full mt-2" : "bottom-full mb-2"}`}>
-                        <div className="font-display text-xs font-bold uppercase tracking-wider text-[#EB7D00]">Layer {i + 1} — {LAYERS[i].title}</div>
-                        <p className="mt-1.5 text-[11px] leading-relaxed text-[#B8AD7A]">{LAYERS[i].detail}</p>
-                        <div className="font-data mt-2 border-t border-[rgba(235,227,167,.1)] pt-1.5 text-[10px] text-[#D45B3D]">rejects: {LAYERS[i].fail}</div>
+                      <div className={`absolute left-1/2 z-40 w-60 -translate-x-1/2 border border-[var(--color-accent-primary)]/45 bg-[var(--color-bg-canvas)]/96 p-3 shadow-[0_0_30px_rgba(79,138,255,.18)] backdrop-blur ${above ? "top-full mt-2" : "bottom-full mb-2"}`}>
+                        <div className="font-display text-xs font-bold uppercase tracking-wider text-[var(--palette-teal-300)]">Layer {i + 1} — {LAYERS[i].title}</div>
+                        <p className="mt-1.5 text-[11px] leading-relaxed text-[var(--text-2)]">{LAYERS[i].detail}</p>
+                        <div className="font-data mt-2 border-t border-[var(--color-border-secondary)] pt-1.5 text-[10px] text-[var(--color-status-error)]">rejects: {LAYERS[i].fail}</div>
                       </div>
                     )}
                   </div>
@@ -533,79 +533,79 @@ export default function PipelineScene() {
 
             {/* HUD counters */}
             <div className="font-data absolute top-3 left-3 z-30 md:top-5 md:left-5">
-              <div className="flex items-center gap-2 border border-[rgba(235,227,167,.14)] bg-[rgba(6,10,9,.8)] px-2.5 py-1 backdrop-blur">
-                <span className="text-[10px] uppercase tracking-widest text-[#7A7250]">inbound</span>
-                <SlidingNumber value={stats.inbound} className="text-sm font-semibold text-[#eaf5f2]" />
+              <div className="flex items-center gap-2 border border-[var(--color-border-primary)] bg-[var(--color-bg-canvas)]/85 px-2.5 py-1 backdrop-blur">
+                <span className="text-[10px] uppercase tracking-widest text-[var(--text-3)]">inbound</span>
+                <SlidingNumber value={stats.inbound} className="text-sm font-semibold text-[var(--text-1)]" />
               </div>
             </div>
             <div className="font-data absolute top-3 right-3 z-30 md:top-5 md:right-5">
-              <div className="flex items-center gap-2 border border-[rgba(248,113,113,.4)] bg-[rgba(6,10,9,.8)] px-2.5 py-1 backdrop-blur">
-                <Trash2 className="h-3.5 w-3.5 text-[#D45B3D]" aria-hidden />
-                <span className="text-[10px] uppercase tracking-widest text-[rgba(248,113,113,.8)]">rejected</span>
-                <SlidingNumber value={stats.rejected} className="text-sm font-semibold text-[#D45B3D]" />
+              <div className="flex items-center gap-2 border border-[var(--color-error-border)]/70 bg-[var(--color-bg-canvas)]/85 px-2.5 py-1 backdrop-blur">
+                <Trash2 className="h-3.5 w-3.5 text-[var(--color-status-error)]" aria-hidden />
+                <span className="text-[10px] uppercase tracking-widest text-[var(--color-status-error)]">rejected</span>
+                <SlidingNumber value={stats.rejected} className="text-sm font-semibold text-[var(--color-status-error)]" />
               </div>
             </div>
             <div className="font-data absolute bottom-3 left-3 z-30 md:bottom-5 md:left-5">
-              <div className="flex items-center gap-2 border border-[rgba(251,191,36,.4)] bg-[rgba(6,10,9,.8)] px-2.5 py-1 backdrop-blur">
-                <Gauge className="h-3.5 w-3.5 text-[#C4A35A]" aria-hidden />
-                <span className="text-[10px] uppercase tracking-widest text-[rgba(251,191,36,.8)]">trusted</span>
-                <SlidingNumber value={stats.trusted} className="text-sm font-semibold text-[#C4A35A]" />
+              <div className="flex items-center gap-2 border border-[var(--color-success-border)]/70 bg-[var(--color-bg-canvas)]/85 px-2.5 py-1 backdrop-blur">
+                <Gauge className="h-3.5 w-3.5 text-[var(--color-status-success)]" aria-hidden />
+                <span className="text-[10px] uppercase tracking-widest text-[var(--color-status-success)]">trusted</span>
+                <SlidingNumber value={stats.trusted} className="text-sm font-semibold text-[var(--color-status-success)]" />
               </div>
             </div>
 
             {/* legend */}
-            <div className="font-data absolute right-3 bottom-3 z-30 hidden flex-col gap-1 border border-[rgba(235,227,167,.14)] bg-[rgba(6,10,9,.8)] px-3 py-2 text-[10px] backdrop-blur md:flex md:right-5 md:bottom-5">
-              <span className="flex items-center gap-2 text-[#B8AD7A]"><span className="h-2 w-2 bg-[#EB7D00] shadow-[0_0_6px_#EB7D00]" /> raw packet</span>
-              <span className="flex items-center gap-2 text-[#B8AD7A]"><span className="h-2 w-2 bg-[#D45B3D] shadow-[0_0_6px_#D45B3D]" /> filtered</span>
-              <span className="flex items-center gap-2 text-[#B8AD7A]"><span className="h-2 w-2 bg-[#C4A35A] shadow-[0_0_6px_#C4A35A]" /> trusted</span>
+            <div className="font-data absolute right-3 bottom-3 z-30 hidden flex-col gap-1 border border-[var(--color-border-primary)] bg-[var(--color-bg-canvas)]/85 px-3 py-2 text-[10px] backdrop-blur md:flex md:right-5 md:bottom-5">
+              <span className="flex items-center gap-2 text-[var(--text-2)]"><span className="h-2 w-2 bg-[var(--palette-teal-300)] shadow-[0_0_6px_var(--palette-teal-300)]" /> raw packet</span>
+              <span className="flex items-center gap-2 text-[var(--text-2)]"><span className="h-2 w-2 bg-[var(--color-status-error)] shadow-[0_0_6px_var(--color-status-error)]" /> filtered</span>
+              <span className="flex items-center gap-2 text-[var(--text-2)]"><span className="h-2 w-2 bg-[var(--color-status-success)] shadow-[0_0_6px_var(--color-status-success)]" /> trusted</span>
             </div>
           </div>
         </div>
 
         {/* ============ log + gate inspector ============ */}
         <div className="mt-6 grid gap-4 lg:grid-cols-5">
-          <section className="border border-[rgba(235,227,167,.12)] bg-[#0d1413] lg:col-span-3">
-            <div className="flex items-center justify-between border-b border-[rgba(235,227,167,.1)] px-4 py-2.5">
-              <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-[#EBE3A7]">Validation event log</h3>
-              <span className="font-data flex items-center gap-1.5 text-[10px] uppercase text-[#7A7250]">
-                <span className={`h-1.5 w-1.5 rounded-full ${running ? "pv-blink bg-[#6B9F78]" : "bg-[#7A7250]"}`} />
+          <section className="border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] lg:col-span-3">
+            <div className="flex items-center justify-between border-b border-[var(--color-border-secondary)] px-4 py-2.5">
+              <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-[var(--text-1)]">Validation event log</h3>
+              <span className="font-data flex items-center gap-1.5 text-[10px] uppercase text-[var(--text-3)]">
+                <span className={`h-1.5 w-1.5 rounded-full ${running ? "pv-blink bg-[var(--color-status-success)]" : "bg-[var(--text-3)]"}`} />
                 {running ? "streaming" : "scroll to activate"}
               </span>
             </div>
             <div className="font-data h-[230px] overflow-hidden px-4 py-3 text-[11px] leading-relaxed">
               {log.length === 0 ? (
-                <p className="text-[#7A7250]">awaiting first packet…</p>
+                <p className="text-[var(--text-3)]">awaiting first packet…</p>
               ) : (
                 log.map((l, i) => (
                   <p key={`${l.label}-${l.t}`} className="transition-opacity duration-300" style={{ opacity: Math.max(0.35, 1 - i * 0.09) }}>
-                    <span className="text-[#7A7250]">[{l.t}]</span> <span className="text-[#B8AD7A]">{l.label}</span>{" "}
-                    <span className={l.kind === "fail" ? "text-[#D45B3D]" : "text-[#6B9F78]"}>{l.msg}</span>
+                    <span className="text-[var(--text-3)]">[{l.t}]</span> <span className="text-[var(--text-2)]">{l.label}</span>{" "}
+                    <span className={l.kind === "fail" ? "text-[var(--color-status-error)]" : "text-[var(--color-status-success)]"}>{l.msg}</span>
                   </p>
                 ))
               )}
             </div>
           </section>
 
-          <section className="border border-[rgba(235,227,167,.12)] bg-[#0d1413] p-5 lg:col-span-2">
-            <p className="font-data text-[10px] font-bold uppercase tracking-[0.24em] text-[#EB7D00]">gate inspector</p>
+          <section className="border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] p-5 lg:col-span-2">
+            <p className="font-data text-[10px] font-bold uppercase tracking-[0.24em] text-[var(--palette-teal-300)]">gate inspector</p>
             {layer ? (
               <div key={inspected} className="slide-up mt-3">
                 <div className="flex items-center gap-3">
-                  <span className="flex size-10 items-center justify-center border border-[rgba(235,125,0,.4)] bg-[rgba(235,125,0,.08)] text-[#EB7D00]">
+                  <span className="flex size-10 items-center justify-center border border-[var(--color-accent-primary)]/45 bg-[var(--color-accent-primary)]/10 text-[var(--palette-teal-300)]">
                     <LayerIcon className="h-5 w-5" aria-hidden />
                   </span>
                   <div>
-                    <h3 className="font-display text-[15px] font-bold text-[#eaf5f2]">{layer.title}</h3>
-                    <p className="font-data text-[9.5px] uppercase tracking-wider text-[#7A7250]">{layer.short} · {layer.ms}</p>
+                    <h3 className="font-display text-[15px] font-bold text-[var(--text-1)]">{layer.title}</h3>
+                    <p className="font-data text-[9.5px] uppercase tracking-wider text-[var(--text-3)]">{layer.short} · {layer.ms}</p>
                   </div>
                 </div>
-                <p className="mt-3 text-[12.5px] leading-relaxed text-[#B8AD7A]">{layer.detail}</p>
-                <p className="font-data mt-3 border-t border-[rgba(235,227,167,.1)] pt-2.5 text-[10.5px] text-[#D45B3D]">
-                  <span className="text-[#7A7250]">eject condition:</span> {layer.fail}
+                <p className="mt-3 text-[12.5px] leading-relaxed text-[var(--text-2)]">{layer.detail}</p>
+                <p className="font-data mt-3 border-t border-[var(--color-border-secondary)] pt-2.5 text-[10.5px] text-[var(--color-status-error)]">
+                  <span className="text-[var(--text-3)]">eject condition:</span> {layer.fail}
                 </p>
               </div>
             ) : (
-              <p className="mt-3 text-[12.5px] leading-relaxed text-[#7A7250]">
+              <p className="mt-3 text-[12.5px] leading-relaxed text-[var(--text-3)]">
                 Hover or focus any gate on the belt — or wait for a packet to trigger one — to read its rule here.
               </p>
             )}
@@ -616,31 +616,31 @@ export default function PipelineScene() {
         <div role="list" className="mt-5 grid grid-cols-1 gap-2 lg:hidden">
           {LAYERS.map((s, i) => (
             <MItem key={s.id}>
-              <div role="listitem" className="flex items-center gap-3 rounded-lg border border-[rgba(235,227,167,.1)] bg-[#0d1413] px-3.5 py-2.5">
-                <span className="font-data w-5 text-[10px] text-[#7A7250]">{String(i + 1).padStart(2, "0")}</span>
-                <s.icon className="h-4 w-4 shrink-0 text-[#EB7D00]" aria-hidden />
+              <div role="listitem" className="flex items-center gap-3 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-3.5 py-2.5">
+                <span className="font-data w-5 text-[10px] text-[var(--text-3)]">{String(i + 1).padStart(2, "0")}</span>
+                <s.icon className="h-4 w-4 shrink-0 text-[var(--palette-teal-300)]" aria-hidden />
                 <span className="flex-1">
-                  <span className="block text-[12.5px] font-semibold text-[#EBE3A7]">{s.title}</span>
-                  <span className="font-data block text-[9.5px] text-[#7A7250]">{s.ms}</span>
+                  <span className="block text-[12.5px] font-semibold text-[var(--text-1)]">{s.title}</span>
+                  <span className="font-data block text-[9.5px] text-[var(--text-3)]">{s.ms}</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="pulse-green size-1.5 rounded-full bg-[#6B9F78]" />
-                  <span className="font-data text-[8px] font-bold tracking-[0.18em] text-[#B8AD7A]">PASS</span>
+                  <span className="pulse-green size-1.5 rounded-full bg-[var(--color-status-success)]" />
+                  <span className="font-data text-[8px] font-bold tracking-[0.18em] text-[var(--text-2)]">PASS</span>
                 </span>
               </div>
             </MItem>
           ))}
         </div>
 
-        <Stagger className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[rgba(235,227,167,.1)] pt-5" stagger={0.08}>
+        <Stagger className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-border-secondary)] pt-5" stagger={0.08}>
           <MItem>
-            <span className="font-data text-[10px] uppercase tracking-widest text-[#7A7250]">
+            <span className="font-data text-[10px] uppercase tracking-widest text-[var(--text-3)]">
               7-layer validation pipeline · data filtered with extreme prejudice
             </span>
           </MItem>
           <MItem>
-            <span className="font-data flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-[#7A7250]">
-              <span className={`pv-blink h-1.5 w-1.5 rounded-full ${running ? "bg-[#EB7D00]" : "bg-[#7A7250]"}`} />
+            <span className="font-data flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-[var(--text-3)]">
+              <span className={`pv-blink h-1.5 w-1.5 rounded-full ${running ? "bg-[var(--palette-teal-300)]" : "bg-[var(--text-3)]"}`} />
               {running ? "pipeline nominal" : "awaiting scroll"}
             </span>
           </MItem>
@@ -657,7 +657,7 @@ export default function PipelineScene() {
           height: 3px;
           pointer-events: none;
           will-change: transform, opacity;
-          background: linear-gradient(90deg, transparent, rgba(94,234,212,0.5));
+          background: linear-gradient(90deg, transparent, rgba(79,138,255,0.55));
           border-radius: 2px;
           transform-origin: 0 50%;
           z-index: 9;

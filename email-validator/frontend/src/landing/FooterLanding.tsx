@@ -29,7 +29,7 @@ const COLS: { title: string; links: [string, string][] }[] = [
 
 export default function FooterLanding() {
   return (
-    <footer className="relative bg-[#090e0d] px-5 py-14 md:px-10">
+    <footer className="relative bg-[var(--color-bg-canvas)] px-5 py-14 md:px-10">
       <div className="grad-pan absolute inset-x-0 top-0 h-px" aria-hidden />
       <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <MReveal>
@@ -39,11 +39,11 @@ export default function FooterLanding() {
               Hardware-accelerated validation infrastructure for modern enterprises.
             </p>
             <p className="font-data mt-4 flex items-center gap-2 text-[9px] font-semibold tracking-[0.16em] text-[var(--text-3)] uppercase">
-              <span className="pulse-green size-1.5 rounded-full bg-[var(--palette-teal-400)]" />
+              <span className="pulse-green size-1.5 rounded-full bg-[var(--color-status-success)]" />
               All 7 layers operational
             </p>
-            <p className="font-data mt-5 text-[9.5px] tracking-[0.14em] text-[#4c5f5b] uppercase">
-              &copy; 2026 BRIDGE Modul X
+            <p className="font-data mt-5 text-[9.5px] tracking-[0.14em] text-[var(--text-3)] uppercase">
+              &copy; 2026 Bridge Modul X
             </p>
           </div>
         </MReveal>

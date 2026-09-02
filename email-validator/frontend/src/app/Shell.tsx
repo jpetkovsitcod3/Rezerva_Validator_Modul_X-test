@@ -63,7 +63,7 @@ function SideLink({ item, active }: { item: NavItem; active: boolean }) {
       />
       <span>{item.label}</span>
       {active && (
-        <span className="ml-auto size-1.5 rounded-full bg-[var(--palette-teal-400)] shadow-[0_0_6px_rgba(212,175,55,0.7)]" />
+        <span className="ml-auto size-1.5 rounded-full bg-[var(--palette-teal-400)] shadow-[0_0_6px_rgba(79,138,255,0.7)]" />
       )}
     </a>
   );
@@ -80,7 +80,7 @@ function ControlSlider({ label, value }: { label: string; value: string }) {
         </svg>
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full border border-[#333] bg-[#111]">
-        <div className="relative h-full bg-[var(--palette-teal-400)] shadow-[0_0_10px_rgba(212,175,55,0.5)]" style={{ width: value }}>
+        <div className="relative h-full bg-[var(--palette-teal-400)] shadow-[0_0_10px_rgba(79,138,255,0.5)]" style={{ width: value }}>
           <div className="absolute right-0 top-1/2 -translate-y-1/2 rounded-sm bg-white shadow-md" style={{ width: 8, height: 12 }} />
         </div>
       </div>
@@ -107,7 +107,7 @@ function ThroughputChart() {
             className={cn(
               "w-full rounded-t-sm transition-colors hover:bg-[var(--palette-teal-400)]",
               i === 4
-                ? "bg-[var(--palette-teal-400)] shadow-[0_0_10px_rgba(212,175,55,0.5)]"
+                ? "bg-[var(--palette-teal-400)] shadow-[0_0_10px_rgba(79,138,255,0.5)]"
                 : "bg-[var(--palette-teal-400)]/40"
             )}
             style={{ height: `${h}%` }}
@@ -164,7 +164,7 @@ export default function Shell({
         {/* brand */}
         <div className="metallic-panel flex items-center gap-3 p-4">
           <span className="screw-bottom" />
-          <span className="flex size-8 items-center justify-center rounded bg-[var(--palette-teal-400)] font-bold text-black shadow-[0_0_10px_rgba(212,175,55,0.5)]">
+          <span className="flex size-8 items-center justify-center rounded bg-[var(--palette-teal-400)] font-bold text-black shadow-[0_0_10px_rgba(79,138,255,0.5)]">
             B
           </span>
           <div>
@@ -242,7 +242,7 @@ export default function Shell({
           <div className="flex items-center gap-3">
             <div className="metallic-panel flex items-center gap-2 border-[var(--palette-teal-400)]/50 px-4 py-2 inner-glow">
               <span className="screw-bottom" />
-              <span className="size-2 animate-pulse rounded-full bg-[var(--palette-teal-400)] shadow-[0_0_6px_rgba(212,175,55,0.7)]" />
+              <span className="size-2 animate-pulse rounded-full bg-[var(--palette-teal-400)] shadow-[0_0_6px_rgba(79,138,255,0.7)]" />
               <span className="text-glow text-sm font-bold uppercase tracking-wider text-[var(--palette-teal-400)]">Core Stable</span>
             </div>
             <div className="relative">

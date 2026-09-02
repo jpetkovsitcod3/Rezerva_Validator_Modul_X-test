@@ -6,31 +6,36 @@
 @source "./**/*.{ts,tsx}";
 
 /* ============================================================
-   Tailwind v4 theme extension — Premium Black + Gold tokens.
+   Tailwind v4 theme extension — Bridge Modul X tokens.
    Exposes the design system as Tailwind utilities (bg-void,
    text-gold, border-gold, etc.) for component classes.
    ============================================================ */
 @theme {
-  --color-void: #050505;
-  --color-surface: #0c0c0c;
-  --color-elevated: #141414;
-  --color-elevated-2: #1a1a1a;
-  --color-gold: #d4af37;
-  --color-gold-soft: #c9a227;
-  --color-gold-glow: rgba(212, 175, 55, 0.22);
-  --color-champagne: #f0d78c;
-  --color-text: #f7f7f5;
-  --color-text-muted: #a8a29e;
-  --color-text-dim: #78716c;
-  --color-success: #4ade80;
-  --color-border: rgba(212, 175, 55, 0.12);
+  --color-void: #07090B;
+  --color-surface: #0F1216;
+  --color-elevated: #161B22;
+  --color-elevated-2: #1E2530;
+  --color-gold: #4F8AFF;
+  --color-gold-soft: #7AB7FF;
+  --color-gold-glow: rgba(79, 138, 255, 0.28);
+  --color-champagne: #C8A24A;
+  --color-text: #E8ECEF;
+  --color-text-muted: #9AA3AE;
+  --color-text-dim: #5C6571;
+  --color-success: #5DD39E;
+  --color-border: rgba(120, 145, 200, 0.14);
   --radius: 14px;
 }
 
 /* ============================================================
-   BRIDGE MODUL X — Premium Black + Gold Design System
-   Philosophy: Luxury dark control panel. Deep void blacks with
-   metallic gold + champagne accents. Sophisticated layered depth.
+   BRIDGE MODUL X — Design System
+   Philosophy: a quiet, signal-blue control panel. Deep neutral
+   surfaces with one signal hue and one warm note, reserved for
+   moments that need to read as data, not decoration.
+
+   The variable names `--palette-teal-*` are historical and kept
+   for component compatibility; their values are now a
+   signal-blue, not gold.
 
    Contrast contract:
    - text-primary, text-secondary, text-tertiary, and text-link are
@@ -43,57 +48,57 @@
 :root {
   color-scheme: dark;
 
-  /* ---------- raw palette: neutral / void blacks ---------- */
-  --palette-neutral-50: #f7f7f5;
-  --palette-neutral-100: #e7e7e3;
-  --palette-neutral-200: #c8c8c2;
-  --palette-neutral-300: #a8a29e;
-  --palette-neutral-400: #78716c;
-  --palette-neutral-500: #57534e;
-  --palette-neutral-600: #3f3f3b;
-  --palette-neutral-700: #2a2a28;
-  --palette-neutral-800: #1a1a1a;
-  --palette-neutral-900: #141414;
-  --palette-neutral-950: #0c0c0c;
+  /* ---------- raw palette: neutral / cool ink ---------- */
+  --palette-neutral-50: #FFFFFF;
+  --palette-neutral-100: #E8ECEF;
+  --palette-neutral-200: #C9D0D8;
+  --palette-neutral-300: #9AA3AE;
+  --palette-neutral-400: #6E7783;
+  --palette-neutral-500: #4F5862;
+  --palette-neutral-600: #3A414B;
+  --palette-neutral-700: #2A323F;
+  --palette-neutral-800: #1E2530;
+  --palette-neutral-900: #161B22;
+  --palette-neutral-950: #0F1216;
 
-  /* ---------- raw palette: brand / primary gold ---------- */
-  --palette-teal-50: #fdf9ec;
-  --palette-teal-100: #f8efd0;
-  --palette-teal-200: #f0d78c;
-  --palette-teal-300: #e6c766;
-  --palette-teal-400: #d4af37;
-  --palette-teal-500: #c9a227;
-  --palette-teal-600: #a8861f;
-  --palette-teal-700: #866a18;
-  --palette-teal-800: #644e11;
-  --palette-teal-900: #42330b;
-  --palette-teal-950: #2a2007;
+  /* ---------- raw palette: brand / primary signal-blue ---------- */
+  --palette-teal-50: #EAF1FF;
+  --palette-teal-100: #CFE0FF;
+  --palette-teal-200: #A8C7FF;
+  --palette-teal-300: #7AB7FF;
+  --palette-teal-400: #4F8AFF;
+  --palette-teal-500: #2E6FE8;
+  --palette-teal-600: #1F55C7;
+  --palette-teal-700: #173F9A;
+  --palette-teal-800: #102E72;
+  --palette-teal-900: #0B1F4D;
+  --palette-teal-950: #060F26;
 
-  /* ---------- raw palette: secondary neutral-gray ---------- */
-  --palette-sky-50: #f5f5f3;
-  --palette-sky-100: #e0e0dc;
-  --palette-sky-200: #c0c0ba;
-  --palette-sky-300: #999993;
-  --palette-sky-400: #777771;
-  --palette-sky-500: #555550;
-  --palette-sky-600: #444440;
-  --palette-sky-700: #333330;
-  --palette-sky-800: #2a2a28;
-  --palette-sky-900: #222220;
-  --palette-sky-950: #1a1a18;
+  /* ---------- raw palette: secondary sky-cool ---------- */
+  --palette-sky-50: #F1F4F7;
+  --palette-sky-100: #DDE3EA;
+  --palette-sky-200: #BAC5D1;
+  --palette-sky-300: #8E9DAE;
+  --palette-sky-400: #6E7E92;
+  --palette-sky-500: #4E5E72;
+  --palette-sky-600: #3B4756;
+  --palette-sky-700: #2B343F;
+  --palette-sky-800: #1F262E;
+  --palette-sky-900: #161B22;
+  --palette-sky-950: #0F1216;
 
-  /* ---------- raw palette: accent champagne ---------- */
-  --palette-amber-50: #fdf9ec;
-  --palette-amber-100: #f8efd0;
-  --palette-amber-200: #f0d78c;
-  --palette-amber-300: #e6c766;
-  --palette-amber-400: #d4af37;
-  --palette-amber-500: #c9a227;
-  --palette-amber-600: #a8861f;
-  --palette-amber-700: #866a18;
-  --palette-amber-800: #644e11;
-  --palette-amber-900: #42330b;
-  --palette-amber-950: #2a2007;
+  /* ---------- raw palette: warm champagne (used sparingly) ---------- */
+  --palette-amber-50: #FBF4E2;
+  --palette-amber-100: #F4E5BC;
+  --palette-amber-200: #E8D28B;
+  --palette-amber-300: #D6B65E;
+  --palette-amber-400: #C8A24A;
+  --palette-amber-500: #A8852F;
+  --palette-amber-600: #856A22;
+  --palette-amber-700: #624E19;
+  --palette-amber-800: #42330F;
+  --palette-amber-900: #241B07;
+  --palette-amber-950: #130E03;
 
   /* ---------- raw palette: semantic hues ---------- */
   --palette-green-50: #e8fdf3;
@@ -132,68 +137,68 @@
   --palette-purple-900: #2e2464;
   --palette-purple-950: #1f1646;
 
-  /* ---------- semantic roles: dark (Premium Black + Gold) ---------- */
-  --color-bg-canvas: #050505;
-  --color-bg-primary: #0c0c0c;
-  --color-bg-secondary: #141414;
-  --color-bg-tertiary: #1a1a1a;
-  --color-bg-elevated: #1a1a1a;
+  /* ---------- semantic roles: dark (Signal-Blue) ---------- */
+  --color-bg-canvas: #07090B;
+  --color-bg-primary: #0F1216;
+  --color-bg-secondary: #161B22;
+  --color-bg-tertiary: #1E2530;
+  --color-bg-elevated: #1E2530;
   --color-bg-inverse: var(--palette-neutral-50);
 
-  --color-text-primary: var(--palette-neutral-50);
-  --color-text-secondary: var(--palette-neutral-200);
+  --color-text-primary: var(--palette-neutral-100);
+  --color-text-secondary: var(--palette-neutral-300);
   --color-text-tertiary: var(--palette-neutral-400);
-  --color-text-inverse: #0c0c0c;
-  --color-text-link: var(--palette-teal-400);
-  --color-text-on-accent: #0c0c0c;
+  --color-text-inverse: #0F1216;
+  --color-text-link: var(--palette-teal-300);
+  --color-text-on-accent: #07090B;
 
-  --color-border-primary: rgba(212, 175, 55, 0.12);
-  --color-border-secondary: rgba(212, 175, 55, 0.08);
-  --color-border-focus: var(--palette-teal-400);
+  --color-border-primary: rgba(120, 145, 200, 0.14);
+  --color-border-secondary: rgba(120, 145, 200, 0.08);
+  --color-border-focus: var(--palette-teal-300);
 
   --color-accent-primary: var(--palette-teal-400);
-  --color-accent-primary-hover: var(--palette-teal-500);
-  --color-accent-primary-active: var(--palette-teal-600);
+  --color-accent-primary-hover: var(--palette-teal-300);
+  --color-accent-primary-active: var(--palette-teal-500);
   --color-accent-secondary: var(--palette-amber-400);
-  --color-action-danger: #ef4444;
-  --color-action-danger-hover: #dc2626;
-  --color-action-danger-active: #b91c1c;
+  --color-action-danger: #F26B5E;
+  --color-action-danger-hover: #E55B4E;
+  --color-action-danger-active: #C84B3F;
 
   /* Each status exposes background, foreground, border, and icon roles. */
-  --color-success-bg: var(--palette-green-950);
-  --color-success-fg: var(--palette-green-300);
-  --color-success-border: var(--palette-green-500);
-  --color-success-icon: var(--palette-green-200);
-  --color-warning-bg: var(--palette-amber-950);
-  --color-warning-fg: var(--palette-amber-300);
-  --color-warning-border: var(--palette-amber-600);
-  --color-warning-icon: var(--palette-amber-200);
-  --color-error-bg: var(--palette-red-950);
-  --color-error-fg: var(--palette-red-300);
-  --color-error-border: var(--palette-red-500);
-  --color-error-icon: var(--palette-red-200);
-  --color-info-bg: var(--palette-sky-950);
-  --color-info-fg: var(--palette-sky-300);
-  --color-info-border: var(--palette-sky-600);
-  --color-info-icon: var(--palette-sky-200);
+  --color-success-bg: #06241A;
+  --color-success-fg: #5DD39E;
+  --color-success-border: #2A8A60;
+  --color-success-icon: #8AE5BC;
+  --color-warning-bg: #2A1E08;
+  --color-warning-fg: #F5C66B;
+  --color-warning-border: #9A6F1F;
+  --color-warning-icon: #F8D88A;
+  --color-error-bg: #2B0F0E;
+  --color-error-fg: #F26B5E;
+  --color-error-border: #A03A30;
+  --color-error-icon: #F5938A;
+  --color-info-bg: #0D1A2B;
+  --color-info-fg: #7AB7FF;
+  --color-info-border: #2E5B95;
+  --color-info-icon: #A8C7FF;
 
   --color-status-success: var(--color-success-fg);
   --color-status-warning: var(--color-warning-fg);
   --color-status-error: var(--color-error-fg);
   --color-status-info: var(--color-info-fg);
-  --color-surface-overlay: rgb(17 17 17 / 0.92);
+  --color-surface-overlay: rgb(15 18 22 / 0.92);
 
   /* ---------- extended palette ---------- */
-  --color-data-1: var(--palette-teal-400);
+  --color-data-1: var(--palette-teal-300);
   --color-data-2: var(--palette-sky-300);
   --color-data-3: var(--palette-amber-300);
-  --color-data-4: var(--palette-purple-300);
-  --color-data-5: var(--palette-green-300);
-  --color-data-6: var(--palette-red-300);
-  --color-illustration-grid: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
-  --color-illustration-glow: color-mix(in srgb, var(--palette-teal-400) 18%, transparent);
-  --gradient-brand: linear-gradient(110deg, var(--palette-teal-400), var(--palette-amber-400) 58%, var(--palette-red-400));
-  --gradient-signal: linear-gradient(110deg, var(--palette-teal-400), var(--palette-green-300));
+  --color-data-4: #B5A0FF;
+  --color-data-5: #5DD39E;
+  --color-data-6: #F26B5E;
+  --color-illustration-grid: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+  --color-illustration-glow: color-mix(in srgb, var(--palette-teal-400) 22%, transparent);
+  --gradient-brand: linear-gradient(110deg, var(--palette-teal-400), var(--palette-amber-400) 58%, var(--color-status-error));
+  --gradient-signal: linear-gradient(110deg, var(--palette-teal-400), #5DD39E);
   --gradient-surface: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-bg-secondary));
 
   /* Spacing - balanced 4px base */
@@ -212,10 +217,15 @@
   --space-12: 64px;
   --space-13: 96px;
 
-  /* Typography */
-  --font-family-display: "Share Tech Mono", "JetBrains Mono", ui-monospace, monospace;
-  --font-family-body: "Share Tech Mono", "JetBrains Mono", ui-monospace, monospace;
-  --font-family-mono: "Share Tech Mono", "JetBrains Mono", ui-monospace, monospace;
+  /* Typography — two-register system:
+     display/body = a modern humanist sans, rendered with a system
+     stack so the design never depends on a network font;
+     mono        = reserved for data, counters, log lines, and HUD
+     chips. Mono-everywhere made the product read as a hacker
+     terminal; splitting the registers makes the data read as data. */
+  --font-family-display: "Avenir Next", "Segoe UI Variable", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-family-body: "Avenir Next", "Segoe UI Variable", "Segoe UI", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-family-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, ui-monospace, monospace;
   --font-size-xs: 0.6875rem;
   --font-size-sm: 0.8125rem;
   --font-size-base: 0.9375rem;
@@ -358,56 +368,56 @@
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-bg-canvas: #050505;
-  --color-bg-primary: #0c0c0c;
-  --color-bg-secondary: #141414;
-  --color-bg-tertiary: #1a1a1a;
-  --color-bg-elevated: #1a1a1a;
+  --color-bg-canvas: #07090B;
+  --color-bg-primary: #0F1216;
+  --color-bg-secondary: #161B22;
+  --color-bg-tertiary: #1E2530;
+  --color-bg-elevated: #1E2530;
   --color-bg-inverse: var(--palette-neutral-50);
-  --color-text-primary: var(--palette-neutral-50);
-  --color-text-secondary: var(--palette-neutral-200);
+  --color-text-primary: var(--palette-neutral-100);
+  --color-text-secondary: var(--palette-neutral-300);
   --color-text-tertiary: var(--palette-neutral-400);
-  --color-text-inverse: #0c0c0c;
-  --color-text-link: var(--palette-teal-400);
-  --color-text-on-accent: #0c0c0c;
-  --color-border-primary: rgba(212, 175, 55, 0.12);
-  --color-border-secondary: rgba(212, 175, 55, 0.08);
-  --color-border-focus: var(--palette-teal-400);
+  --color-text-inverse: #0F1216;
+  --color-text-link: var(--palette-teal-300);
+  --color-text-on-accent: #07090B;
+  --color-border-primary: rgba(120, 145, 200, 0.14);
+  --color-border-secondary: rgba(120, 145, 200, 0.08);
+  --color-border-focus: var(--palette-teal-300);
   --color-accent-primary: var(--palette-teal-400);
-  --color-accent-primary-hover: var(--palette-teal-500);
-  --color-accent-primary-active: var(--palette-teal-600);
+  --color-accent-primary-hover: var(--palette-teal-300);
+  --color-accent-primary-active: var(--palette-teal-500);
   --color-accent-secondary: var(--palette-amber-400);
-  --color-action-danger: #ef4444;
-  --color-action-danger-hover: #dc2626;
-  --color-action-danger-active: #b91c1c;
-  --color-success-bg: var(--palette-green-950);
-  --color-success-fg: var(--palette-green-300);
-  --color-success-border: var(--palette-green-500);
-  --color-success-icon: var(--palette-green-200);
-  --color-warning-bg: var(--palette-amber-950);
-  --color-warning-fg: var(--palette-amber-300);
-  --color-warning-border: var(--palette-amber-600);
-  --color-warning-icon: var(--palette-amber-200);
-  --color-error-bg: var(--palette-red-950);
-  --color-error-fg: var(--palette-red-300);
-  --color-error-border: var(--palette-red-500);
-  --color-error-icon: var(--palette-red-200);
-  --color-info-bg: var(--palette-sky-950);
-  --color-info-fg: var(--palette-sky-300);
-  --color-info-border: var(--palette-sky-600);
-  --color-info-icon: var(--palette-sky-200);
+  --color-action-danger: #F26B5E;
+  --color-action-danger-hover: #E55B4E;
+  --color-action-danger-active: #C84B3F;
+  --color-success-bg: #06241A;
+  --color-success-fg: #5DD39E;
+  --color-success-border: #2A8A60;
+  --color-success-icon: #8AE5BC;
+  --color-warning-bg: #2A1E08;
+  --color-warning-fg: #F5C66B;
+  --color-warning-border: #9A6F1F;
+  --color-warning-icon: #F8D88A;
+  --color-error-bg: #2B0F0E;
+  --color-error-fg: #F26B5E;
+  --color-error-border: #A03A30;
+  --color-error-icon: #F5938A;
+  --color-info-bg: #0D1A2B;
+  --color-info-fg: #7AB7FF;
+  --color-info-border: #2E5B95;
+  --color-info-icon: #A8C7FF;
   --color-status-success: var(--color-success-fg);
   --color-status-warning: var(--color-warning-fg);
   --color-status-error: var(--color-error-fg);
   --color-status-info: var(--color-info-fg);
-  --color-surface-overlay: rgb(5 5 5 / 0.92);
-  --color-illustration-grid: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
-  --color-illustration-glow: color-mix(in srgb, var(--palette-teal-400) 18%, transparent);
+  --color-surface-overlay: rgb(7 9 11 / 0.92);
+  --color-illustration-grid: color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+  --color-illustration-glow: color-mix(in srgb, var(--palette-teal-400) 22%, transparent);
   --gradient-surface: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-bg-secondary));
   --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.4), 0 1px 2px rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 16px rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.35);
   --shadow-lg: 0 16px 48px rgb(0 0 0 / 0.6), 0 6px 20px rgb(0 0 0 / 0.4);
-  --shadow-focus: 0 0 0 3px rgb(212 175 55 / 0.3);
+  --shadow-focus: 0 0 0 3px rgb(79 138 255 / 0.32);
 }
 
 /* ---------- base ---------- */
@@ -416,10 +426,10 @@ html {
   scroll-padding-top: 96px;
 }
 body {
-  background: #050505;
+  background: #07090B;
   background-image:
-    radial-gradient(circle at 50% 0%, #141414 0%, transparent 70%),
-    linear-gradient(to bottom, #0c0c0c, #050505);
+    radial-gradient(circle at 50% 0%, #161B22 0%, transparent 60%),
+    linear-gradient(to bottom, #0F1216, #07090B);
   color: var(--color-text-primary);
   font-family: var(--font-family-body);
   font-size: var(--font-size-base);
@@ -428,11 +438,11 @@ body {
   overflow-x: hidden;
 }
 ::selection {
-  background: color-mix(in srgb, var(--palette-teal-400) 30%, transparent);
+  background: color-mix(in srgb, var(--palette-teal-400) 32%, transparent);
   color: var(--color-text-primary);
 }
 :focus-visible {
-  outline: 2px solid var(--palette-teal-400);
+  outline: 2px solid var(--palette-teal-300);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -441,12 +451,12 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0c0c0c;
+  background: #0F1216;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3a3a36;
+  background: #2A323F;
   border-radius: var(--border-radius-full);
-  border: 2px solid #0c0c0c;
+  border: 2px solid #0F1216;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--palette-teal-400);
@@ -520,10 +530,10 @@ h1, h2, .font-display {
 
 /* ---------- reactor metallic panel ---------- */
 .metallic-panel {
-  background: linear-gradient(145deg, #1a1a1a, #141414);
-  border: 1px solid rgba(212, 175, 55, 0.12);
+  background: linear-gradient(145deg, #1E2530, #161B22);
+  border: 1px solid rgba(120, 145, 200, 0.14);
   border-radius: 8px;
-  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05), 0 5px 15px rgba(0,0,0,0.5);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.04), 0 5px 15px rgba(0,0,0,0.5);
   position: relative;
 }
 .metallic-panel::before,
@@ -532,9 +542,9 @@ h1, h2, .font-display {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: #3a3a36;
+  background: #2A323F;
   border-radius: 50%;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.15);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.1);
   z-index: 1;
 }
 .metallic-panel::before { top: 6px; left: 6px; }
@@ -545,9 +555,9 @@ h1, h2, .font-display {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: #3a3a36;
+  background: #2A323F;
   border-radius: 50%;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.15);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.1);
   z-index: 1;
 }
 .metallic-panel > .screw-bottom::before { bottom: 6px; left: 6px; }
@@ -555,21 +565,21 @@ h1, h2, .font-display {
 
 /* ---------- reactor text glow ---------- */
 .text-glow {
-  text-shadow: 0 0 5px rgba(212, 175, 55, 0.7);
+  text-shadow: 0 0 5px rgba(79, 138, 255, 0.55);
 }
 .text-glow-strong {
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.9), 0 0 20px rgba(212, 175, 55, 0.5);
+  text-shadow: 0 0 10px rgba(79, 138, 255, 0.8), 0 0 20px rgba(79, 138, 255, 0.4);
 }
 
 /* ---------- reactor glow on interactive ---------- */
 .glow-amber {
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 10px rgba(79, 138, 255, 0.45);
 }
 .glow-amber-strong {
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 20px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 10px rgba(79, 138, 255, 0.45), 0 0 20px rgba(79, 138, 255, 0.28);
 }
 .inner-glow {
-  box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.2);
+  box-shadow: inset 0 0 10px rgba(79, 138, 255, 0.18);
 }
 
 /* ---------- scroll progress ---------- */
@@ -579,7 +589,7 @@ h1, h2, .font-display {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--palette-teal-400), var(--palette-amber-300) 55%, var(--palette-amber-200));
+  background: linear-gradient(90deg, var(--palette-teal-400), #5DD39E 55%, var(--palette-teal-200));
   transform-origin: 0 50%;
   transform: scaleX(0);
   z-index: 90;
@@ -640,7 +650,7 @@ h1, h2, .font-display {
 /* ---------- engine / demo ---------- */
 .caret::after {
   content: "▍";
-  color: var(--cyan);
+  color: var(--palette-teal-300);
   animation: blink 1s steps(1) infinite;
 }
 @keyframes blink { 50% { opacity: 0; } }
@@ -755,7 +765,7 @@ h1, h2, .font-display {
 
 /* gradient pan (footer line, borders) */
 .grad-pan {
-  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-secondary), var(--color-text-primary), var(--color-accent-primary));
+  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-secondary), #5DD39E, var(--color-accent-primary));
   background-size: 300% 100%;
   animation: grad-pan 8s linear infinite;
 }

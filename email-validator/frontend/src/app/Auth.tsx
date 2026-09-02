@@ -16,7 +16,7 @@ function AuthFrame({ children, side }: { children: React.ReactNode; side: React.
         <div className="hero-grid absolute inset-0" aria-hidden />
         <div className="relative flex h-full flex-col justify-between p-10">
           <a href="#/" className="flex w-fit items-center gap-2.5">
-            <span className="flex size-9 items-center justify-center rounded-xl border border-[rgba(212,175,55,.25)] bg-[var(--bg-3)]">
+            <span className="flex size-9 items-center justify-center rounded-xl border border-[rgba(79,138,255,.25)] bg-[var(--bg-3)]">
               <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden>
                 <rect x="4" y="7" width="24" height="18" rx="3.5" stroke="var(--palette-teal-400)" strokeWidth="2.4" />
                 <path d="m4 11 12 8 12-8" stroke="var(--palette-teal-400)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />

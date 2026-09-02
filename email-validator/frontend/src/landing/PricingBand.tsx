@@ -34,7 +34,7 @@ const TIERS = [
 
 export default function PricingBand() {
   return (
-    <section id="pricing" className="border-t border-[rgba(46,205,179,.06)] px-5 py-20 md:px-10 md:py-24">
+    <section id="pricing" className="border-t border-[var(--color-border-secondary)] px-5 py-20 md:px-10 md:py-24">
       <div className="mx-auto max-w-5xl">
         <Stagger className="grid gap-4 md:grid-cols-3" stagger={0.1}>
           {TIERS.map((t) => (
@@ -43,25 +43,25 @@ export default function PricingBand() {
                 className={cn(
                   "relative flex h-full flex-col rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1",
                   t.featured
-                    ? "border-[rgba(46,205,179,.35)] bg-[#0e1a17]"
-                    : "border-[rgba(46,205,179,.08)] bg-[#0d1413] hover:border-[rgba(46,205,179,.2)]"
+                    ? "border-[var(--color-accent-primary)]/40 bg-[var(--color-bg-secondary)]"
+                    : "border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] hover:border-[var(--color-border-primary)]"
                 )}
-                style={{ boxShadow: t.featured ? "0 0 40px rgba(46,205,179,.1)" : undefined, transitionTimingFunction: "var(--ease-el)" }}
+                style={{ boxShadow: t.featured ? "0 0 40px rgba(79,138,255,.14)" : undefined, transitionTimingFunction: "var(--ease-el)" }}
               >
                 {t.featured && (
-                  <span className="font-data absolute -top-2.5 left-6 rounded-full px-2.5 py-1 text-[8px] font-bold tracking-[0.2em] text-[#151208] uppercase" style={{ background: "linear-gradient(90deg,#EB7D00,#C4A35A)" }}>
+                  <span className="font-data absolute -top-2.5 left-6 rounded-full bg-[var(--color-accent-primary)] px-2.5 py-1 text-[8px] font-bold tracking-[0.2em] text-[var(--color-text-on-accent)] uppercase">
                     Most Popular
                   </span>
                 )}
-                <h3 className="font-data text-[10px] font-bold tracking-[0.22em] text-[#7d948f] uppercase">{t.name}</h3>
+                <h3 className="font-data text-[10px] font-bold tracking-[0.22em] text-[var(--text-3)] uppercase">{t.name}</h3>
                 <div className="mt-3 flex items-baseline gap-1.5">
-                  <span className="font-display text-[32px] leading-none font-bold text-[#eaf5f2]">{t.price}</span>
-                  <span className="font-data text-[9.5px] tracking-[0.1em] text-[#5c736e] uppercase">{t.per}</span>
+                  <span className="font-display text-[32px] leading-none font-bold text-[var(--text-1)]">{t.price}</span>
+                  <span className="font-data text-[9.5px] tracking-[0.1em] text-[var(--text-3)] uppercase">{t.per}</span>
                 </div>
                 <ul className="mt-5 space-y-2.5">
                   {t.points.map((p) => (
-                    <li key={p} className="flex items-center gap-2.5 text-[12.5px] text-[#8fa39f]">
-                      <span className="flex size-[16px] shrink-0 items-center justify-center rounded-full bg-[rgba(107,159,120,.12)] text-[#6B9F78]">
+                    <li key={p} className="flex items-center gap-2.5 text-[12.5px] text-[var(--text-2)]">
+                      <span className="flex size-[16px] shrink-0 items-center justify-center rounded-full bg-[var(--color-success-bg)] text-[var(--color-status-success)]">
                         <Icon name="check" size={9} strokeWidth={3} />
                       </span>
                       {p}
@@ -73,10 +73,10 @@ export default function PricingBand() {
                   className={cn(
                     "mt-6 rounded-xl px-4 py-2.5 text-center text-[12.5px] font-bold transition-all duration-200 active:scale-[.98]",
                     t.featured
-                      ? "shine text-[#151208] hover:brightness-110"
-                      : "border border-[rgba(46,205,179,.15)] text-[#EBE3A7] hover:border-[rgba(235,125,0,.4)] hover:text-[#EBE3A7]"
+                      ? "shine bg-[var(--color-accent-primary)] text-[var(--color-text-on-accent)] hover:bg-[var(--color-accent-primary-hover)]"
+                      : "border border-[var(--color-border-primary)] text-[var(--text-1)] hover:border-[var(--color-accent-primary)]/50 hover:text-[var(--text-1)]"
                   )}
-                  style={t.featured ? { background: "linear-gradient(90deg,#3898ff,#EB7D00 60%,#C4A35A)", boxShadow: "0 0 22px rgba(235,125,0,.3)" } : undefined}
+                  style={t.featured ? { boxShadow: "0 0 22px rgba(79,138,255,.3)" } : undefined}
                 >
                   {t.cta}
                 </a>
@@ -84,7 +84,7 @@ export default function PricingBand() {
             </MItem>
           ))}
         </Stagger>
-        <p className="font-data mt-8 text-center text-[9.5px] tracking-[0.18em] text-[#4c5f5b] uppercase">
+        <p className="font-data mt-8 text-center text-[9.5px] tracking-[0.18em] text-[var(--text-3)] uppercase">
           No credit card required · Cancel anytime · SOC2 Type II
         </p>
       </div>

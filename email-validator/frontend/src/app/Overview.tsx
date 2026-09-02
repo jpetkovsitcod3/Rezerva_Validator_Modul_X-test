@@ -31,7 +31,7 @@ function ValidationRateGauge({ rate }: { rate: number }) {
             strokeWidth="8"
             strokeLinecap="round"
             strokeDasharray={`${(rate / 100) * 157} 157`}
-            style={{ filter: "drop-shadow(0 0 6px rgba(212,175,55,0.6))" }}
+            style={{ filter: "drop-shadow(0 0 6px rgba(79,138,255,0.6))" }}
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center pt-4">
@@ -139,7 +139,7 @@ function GlobalMeshMap({ validatedToday }: { validatedToday: number }) {
           </svg>
         </div>
         {/* anomaly overlay */}
-        <div className="absolute bottom-4 left-4 max-w-xs rounded border border-[var(--palette-teal-400)]/50 bg-[#141414]/90 p-3 shadow-[0_0_10px_rgba(212,175,55,0.3)] backdrop-blur-sm">
+        <div className="absolute bottom-4 left-4 max-w-xs rounded border border-[var(--palette-teal-400)]/50 bg-[#141414]/90 p-3 shadow-[0_0_10px_rgba(79,138,255,0.3)] backdrop-blur-sm">
           <div className="mb-1 flex items-start gap-2">
             <svg className="mt-0.5 size-4 text-[var(--palette-teal-400)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
@@ -178,7 +178,7 @@ function PipelinePanel() {
         </div>
         <div className="flex gap-4 text-xs">
           <div className="flex items-center gap-1">
-            <div className="size-2 rounded-sm bg-[var(--palette-teal-400)] shadow-[0_0_5px_rgba(212,175,55,0.7)]" /> Trusted
+            <div className="size-2 rounded-sm bg-[var(--palette-teal-400)] shadow-[0_0_5px_rgba(79,138,255,0.7)]" /> Trusted
           </div>
           <div className="flex items-center gap-1">
             <div className="size-2 rounded-sm bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.7)]" /> Rejected
@@ -195,7 +195,7 @@ function PipelinePanel() {
                   className={cn(
                     "flex size-10 items-center justify-center rounded-lg border text-xs font-bold transition-all",
                     layer.status === "active"
-                      ? "border-[var(--palette-teal-400)]/50 bg-[var(--palette-teal-400)]/10 text-[var(--palette-teal-400)] shadow-[0_0_10px_rgba(212,175,55,0.2)]"
+                      ? "border-[var(--palette-teal-400)]/50 bg-[var(--palette-teal-400)]/10 text-[var(--palette-teal-400)] shadow-[0_0_10px_rgba(79,138,255,0.2)]"
                       : "border-[var(--palette-amber-400)]/50 bg-[var(--palette-amber-400)]/10 text-[var(--palette-amber-400)] shadow-[0_0_10px_rgba(255,200,0,0.2)]"
                   )}
                 >
