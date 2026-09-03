@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
+  base: "/Rezerva_Validator_Modul_X-test/",
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
