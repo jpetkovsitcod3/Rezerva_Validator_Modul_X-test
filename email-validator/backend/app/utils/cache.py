@@ -12,20 +12,54 @@ except Exception:  # pragma: no cover - redis not installed
     _HAS_REDIS = False
 
 _redis_client: Optional[object] = None
+_free_tier_provisioned: Optional[str] = None  # db id if we self-provisioned
 
 # In-memory TTL fallback cache: {key: (value, expires_at)}
 _memory_cache: dict = {}
 
 
+async def provision_free_tier() -> Optional[str]:
+    """
+    Create a free-tier Upstash database when no REDIS_URL is configured.
+    Returns the connection string on success, or None on failure.
+
+    Free databases last 3 days unless claimed at the returned console URL.
+    Idempotent: caches the db id so repeated calls re-fetch, not duplicate.
+    """
+    global _free_tier_provisioned
+    try:
+        from .upstash_free import create_database
+        db = create_database(db_id=_free_tier_provisioned or "")
+        _free_tier_provisioned = db.db_id
+        print(
+            f"[REDIS] Free-tier database provisioned: {db.endpoint} "
+            f"(expires {db.expires})"
+        )
+        print(f"[REDIS] Claim it at: {db.console_url}")
+        return db.connection_string(0)
+    except Exception as e:
+        print(f"[REDIS] Free-tier provisioning failed: {e}")
+        return None
+
+
 async def get_redis():
-    """Lazily create a shared Redis client (returns None if unavailable)."""
+    """Lazily create a shared Redis client (returns None if unavailable).
+
+    If REDIS_URL is set, uses it. Otherwise attempts to self-provision a
+    free-tier Upstash database (no account/key required).
+    """
     global _redis_client
     if not _HAS_REDIS:
         return None
     if _redis_client is None:
+        url = settings.redis_url
+        if not url or "localhost" in url:
+            url = await provision_free_tier()
+        if not url:
+            return None
         try:
             _redis_client = aioredis.from_url(
-                settings.redis_url,
+                url,
                 encoding="utf-8",
                 decode_responses=True,
                 socket_connect_timeout=2,
@@ -78,7 +112,7 @@ async def set_cache(key: str, value: str, ttl: int = 86400):
     _memory_set(key, value, ttl)
 
 
-async def redis_available(timeout: float = 1.5) -> bool:
+async def redis_available(timeout: float = 4.0) -> bool:
     """
     Quick non-blocking check: can we talk to Redis?
 

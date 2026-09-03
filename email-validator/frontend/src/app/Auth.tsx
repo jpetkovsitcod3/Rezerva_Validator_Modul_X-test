@@ -18,16 +18,16 @@ function AuthFrame({ children, side }: { children: React.ReactNode; side: React.
           <div className="hero-grid absolute inset-0" aria-hidden />
           <div className="relative flex h-full flex-col justify-between p-10">
             <a href="#/" className="flex w-fit items-center gap-2.5">
-              <span className="flex size-9 items-center justify-center rounded-xl border border-[rgba(79,138,255,.25)] bg-[var(--bg-3)]">
+              <span className="flex size-9 items-center justify-center rounded-lg border border-[#EAEAEA] bg-[#111111]">
                 <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden>
-                  <rect x="4" y="7" width="24" height="18" rx="3.5" stroke="var(--palette-teal-400)" strokeWidth="2.4" />
-                  <path d="m4 11 12 8 12-8" stroke="var(--palette-teal-400)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                  <rect x="4" y="7" width="24" height="18" rx="3.5" stroke="#FFFFFF" strokeWidth="2.4" />
+                  <path d="m4 11 12 8 12-8" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
               <span className="text-[16px] font-extrabold tracking-tight text-[var(--text-1)]">REACTOR</span>
             </a>
             <div>{side}</div>
-            <a href="#/" className="font-data w-fit text-[10px] tracking-[0.2em] text-[var(--text-3)] uppercase transition-colors duration-200 hover:text-[var(--cyan)]">
+            <a href="#/" className="font-data w-fit text-[10px] tracking-[0.2em] text-[var(--text-3)] uppercase transition-colors duration-200 hover:text-[var(--text-1)]">
               &larr; back to reactor console
             </a>
           </div>
@@ -41,7 +41,7 @@ function AuthFrame({ children, side }: { children: React.ReactNode; side: React.
 
 function DemoPanel({ onFill }: { onFill: (email: string) => void }) {
   return (
-    <div className="glass-1 rounded-xl p-4">
+    <div className="rounded-xl border border-[#EAEAEA] bg-white p-4">
       <p className="font-data text-[9px] font-semibold tracking-[0.2em] text-[var(--cyan)] uppercase">
         Demo access &middot; password: demo1234
       </p>
@@ -49,7 +49,7 @@ function DemoPanel({ onFill }: { onFill: (email: string) => void }) {
         <button
           type="button"
           onClick={() => onFill("user@bridge.demo")}
-          className="rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] px-3 py-2.5 text-left transition-all duration-200 hover:border-[var(--line-blue)] hover:glow-1"
+          className="rounded-lg border border-[#EAEAEA] bg-[#F7F6F3] px-3 py-2.5 text-left transition-colors duration-200 hover:border-[#111111]"
         >
           <span className="flex items-center gap-1.5 text-[12px] font-extrabold text-[var(--text-1)]">
             <Icon name="users" size={13} className="text-[var(--cyan)]" /> Demo user
@@ -59,7 +59,7 @@ function DemoPanel({ onFill }: { onFill: (email: string) => void }) {
         <button
           type="button"
           onClick={() => onFill("admin@bridge.demo")}
-          className="rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] px-3 py-2.5 text-left transition-all duration-200 hover:border-[rgba(167,139,250,.4)] hover:shadow-[0_0_12px_rgba(167,139,250,.15)]"
+          className="rounded-lg border border-[#EAEAEA] bg-[#F7F6F3] px-3 py-2.5 text-left transition-colors duration-200 hover:border-[#111111]"
         >
           <span className="flex items-center gap-1.5 text-[12px] font-extrabold text-[var(--text-1)]">
             <Icon name="lock" size={13} className="text-[var(--amber)]" /> Demo admin
@@ -122,10 +122,10 @@ export function LoginPage() {
           <Icon name="arrowRight" size={14} className="rotate-180 text-[var(--cyan)]" />
           <span className="font-data text-[10px] tracking-[0.2em] text-[var(--text-3)] uppercase">back</span>
         </a>
-        <h2 className="text-[24px] font-extrabold tracking-tight text-[var(--text-1)]">Sign in</h2>
+        <h2 className="font-display text-[28px] font-bold tracking-tight text-[var(--text-1)]">Sign in</h2>
         <p className="mt-1.5 text-[13px] text-[var(--text-3)]">
           New here?{" "}
-          <a href="#/signup" className="font-bold text-[var(--cyan)] hover:underline">
+          <a href="#/signup" className="font-bold text-[#111111] underline decoration-[#D8D4C8] underline-offset-2 hover:decoration-[#111111]">
             Create an account
           </a>
         </p>
@@ -154,7 +154,7 @@ export function LoginPage() {
             />
           </Field>
           {err && (
-            <p role="alert" className="slide-up flex items-start gap-2 rounded-xl border border-[rgba(248,113,113,.3)] bg-[rgba(248,113,113,.06)] px-3.5 py-2.5 text-[12.5px] font-semibold text-[var(--red)]">
+            <p role="alert" className="slide-up flex items-start gap-2 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-3.5 py-2.5 text-[12.5px] font-semibold text-[#9F2F2D]">
               <Icon name="alert" size={14} className="mt-0.5 shrink-0" /> {err}
             </p>
           )}
@@ -222,7 +222,7 @@ export function SignupPage() {
           <ul className="mt-6 space-y-2.5">
             {["All 7 layers from day one", "No credit card, no time limit", "API keys the moment you sign in"].map((t) => (
               <li key={t} className="flex items-center gap-2.5 text-[13.5px] text-[var(--text-2)]">
-                <span className="flex size-5 items-center justify-center rounded-full bg-[rgba(107,159,120,.14)] text-[var(--green)]">
+                <span className="flex size-5 items-center justify-center rounded-full bg-[#EDF3EC] text-[var(--green)]">
                   <Icon name="check" size={10} weight="bold" />
                 </span>
                 {t}
@@ -237,10 +237,10 @@ export function SignupPage() {
           <Icon name="arrowRight" size={14} className="rotate-180 text-[var(--cyan)]" />
           <span className="font-data text-[10px] tracking-[0.2em] text-[var(--text-3)] uppercase">back</span>
         </a>
-        <h2 className="text-[24px] font-extrabold tracking-tight text-[var(--text-1)]">Create account</h2>
+        <h2 className="font-display text-[28px] font-bold tracking-tight text-[var(--text-1)]">Create account</h2>
         <p className="mt-1.5 text-[13px] text-[var(--text-3)]">
           Already validating?{" "}
-          <a href="#/login" className="font-bold text-[var(--cyan)] hover:underline">
+          <a href="#/login" className="font-bold text-[#111111] underline decoration-[#D8D4C8] underline-offset-2 hover:decoration-[#111111]">
             Sign in
           </a>
         </p>
@@ -256,7 +256,7 @@ export function SignupPage() {
             <input type="password" autoComplete="new-password" className={inputCls} placeholder="••••••••" value={pw} onChange={(e) => setPw(e.target.value)} required />
           </Field>
           {err && (
-            <p role="alert" className="slide-up flex items-start gap-2 rounded-xl border border-[rgba(248,113,113,.3)] bg-[rgba(248,113,113,.06)] px-3.5 py-2.5 text-[12.5px] font-semibold text-[var(--red)]">
+            <p role="alert" className="slide-up flex items-start gap-2 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-3.5 py-2.5 text-[12.5px] font-semibold text-[#9F2F2D]">
               <Icon name="alert" size={14} className="mt-0.5 shrink-0" /> {err}
             </p>
           )}

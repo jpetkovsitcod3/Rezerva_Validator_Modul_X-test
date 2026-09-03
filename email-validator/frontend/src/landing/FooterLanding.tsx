@@ -30,7 +30,7 @@ const COLS: { title: string; links: [string, string][] }[] = [
 export default function FooterLanding() {
   return (
     <footer className="relative bg-[var(--color-bg-canvas)] px-5 py-14 md:px-10">
-      <div className="grad-pan absolute inset-x-0 top-0 h-px" aria-hidden />
+      <div className="absolute inset-x-0 top-0 h-px bg-[#EAEAEA]" aria-hidden />
       <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <MReveal>
           <div>
@@ -57,7 +57,7 @@ export default function FooterLanding() {
                     <li key={label}>
                       <a
                         href={href}
-                        className="inline-block text-[12.5px] text-[var(--text-2)] transition-all duration-200 hover:translate-x-1 hover:text-[var(--text-1)]"
+                        className="inline-block text-[12.5px] text-[var(--text-2)] transition-[color,transform] duration-200 hover:translate-x-1 hover:text-[var(--text-1)]"
                       >
                         {label}
                       </a>

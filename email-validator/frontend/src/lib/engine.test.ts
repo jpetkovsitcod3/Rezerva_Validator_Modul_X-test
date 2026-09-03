@@ -144,8 +144,8 @@ describe("engine · domainReport", () => {
   });
 
   it("should be deterministic for generic domains", () => {
-    const a = domainReport("acme-analytics.io");
-    const b = domainReport("acme-analytics.io");
+    const a = domainReport("meridian-analytics.io");
+    const b = domainReport("meridian-analytics.io");
     expect(b).toEqual(a);
   });
 });

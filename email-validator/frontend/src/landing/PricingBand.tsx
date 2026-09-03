@@ -34,22 +34,28 @@ const TIERS = [
 
 export default function PricingBand() {
   return (
-    <section id="pricing" className="border-t border-[var(--color-border-secondary)] px-5 py-20 md:px-10 md:py-24">
+    <section id="pricing" className="border-t border-[var(--color-border-secondary)] px-5 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-5xl">
-        <Stagger className="grid gap-4 md:grid-cols-3" stagger={0.1}>
+        <div className="text-center">
+          <h2 className="font-display text-[clamp(1.6rem,3.2vw,2.2rem)] font-bold text-[var(--text-1)]">
+            Simple, Transparent Pricing
+          </h2>
+          <p className="mt-3 max-w-md mx-auto text-[13.5px] leading-relaxed text-[var(--text-3)]">
+            Start free. Scale when you need to. No surprises.
+          </p>
+        </div>
+        <Stagger className="mt-10 grid gap-4 md:grid-cols-3" stagger={0.1}>
           {TIERS.map((t) => (
             <MItem key={t.name}>
               <article
                 className={cn(
-                  "relative flex h-full flex-col rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1",
-                  t.featured
-                    ? "border-[var(--color-accent-primary)]/40 bg-[var(--color-bg-secondary)]"
-                    : "border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] hover:border-[var(--color-border-primary)]"
+                  "relative flex h-full flex-col rounded-xl border border-[#EAEAEA] bg-white p-6 transition-[border-color,box-shadow] duration-200 hover:border-[#D8D4C8] hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
+                  t.featured && "border-[#111111]"
                 )}
-                style={{ boxShadow: t.featured ? "0 0 40px rgba(79,138,255,.14)" : undefined, transitionTimingFunction: "var(--ease-el)" }}
+                style={{ transitionTimingFunction: "var(--ease-el)" }}
               >
                 {t.featured && (
-                  <span className="font-data absolute -top-2.5 left-6 rounded-full bg-[var(--color-accent-primary)] px-2.5 py-1 text-[8px] font-bold tracking-[0.2em] text-[var(--color-text-on-accent)] uppercase">
+                  <span className="font-data absolute -top-2.5 left-6 rounded-full bg-[#111111] px-2.5 py-1 text-[8px] font-bold tracking-[0.05em] text-white uppercase">
                     Most Popular
                   </span>
                 )}
@@ -71,12 +77,11 @@ export default function PricingBand() {
                 <a
                   href={t.href}
                   className={cn(
-                    "mt-6 rounded-xl px-4 py-2.5 text-center text-[12.5px] font-bold transition-all duration-200 active:scale-[.98]",
+                    "mt-6 rounded-md px-4 py-2.5 text-center text-[12.5px] font-bold transition-colors duration-200 active:scale-[.98]",
                     t.featured
-                      ? "shine bg-[var(--color-accent-primary)] text-[var(--color-text-on-accent)] hover:bg-[var(--color-accent-primary-hover)]"
-                      : "border border-[var(--color-border-primary)] text-[var(--text-1)] hover:border-[var(--color-accent-primary)]/50 hover:text-[var(--text-1)]"
+                      ? "bg-[#111111] text-white hover:bg-[#333333]"
+                      : "border border-[#EAEAEA] text-[var(--text-1)] hover:border-[#111111]"
                   )}
-                  style={t.featured ? { boxShadow: "0 0 22px rgba(79,138,255,.3)" } : undefined}
                 >
                   {t.cta}
                 </a>

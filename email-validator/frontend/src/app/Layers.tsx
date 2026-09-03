@@ -13,7 +13,7 @@ export function ScoreDial({
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg viewBox="0 0 100 100" className="size-full -rotate-90">
-        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(160,160,184,.12)" strokeWidth="8" />
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#EFEDE8" strokeWidth="8" />
         <circle
           cx="50" cy="50" r="42" fill="none" stroke={color} strokeWidth="8" strokeLinecap="round"
           pathLength={100} strokeDasharray={`${score} ${100 - score}`}

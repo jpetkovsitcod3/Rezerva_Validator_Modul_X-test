@@ -6,7 +6,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        case_sensitive=False
+        case_sensitive=False,
+        extra="ignore",
     )
 
     # App
@@ -26,6 +27,10 @@ class Settings(BaseSettings):
     # Redis
     redis_url: str = "redis://localhost:6379/0"
     redis_cache_ttl: int = 86400  # 24 hours
+
+    # Upstash Developer API (for provisioning/managing Redis databases)
+    upstash_management_key: str = ""
+    upstash_account_email: str = ""
 
     # CORS
     cors_origins: List[str] = [

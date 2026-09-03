@@ -51,7 +51,7 @@ function useFinePointer() {
 export function MReveal({
   children,
   delay = 0,
-  y = motionTokens.distance.lg,
+  y = 12,
   className,
 }: {
   children: ReactNode;
@@ -80,7 +80,7 @@ export function MReveal({
       initial={prm ? { opacity: 0 } : { opacity: 0, y }}
       whileInView={prm ? { opacity: 1 } : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px 0px" }}
-      transition={{ ...springSoft, delay }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay }}
     >
       {children}
     </motion.div>

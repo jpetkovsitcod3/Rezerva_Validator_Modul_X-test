@@ -10,14 +10,14 @@ import { SlidingNumber, PulseDot } from "../lib/motion";
 
 /* looping live-validation feed */
 const EVENTS = [
-  { who: "maya@stripe.com", what: "96/100 · safe to send", tone: "var(--palette-teal-300)", region: "us-east" },
-  { who: "james@gmial.com", what: "8/100 · hard bounce", tone: "#F26B5E", region: "eu-west" },
-  { who: "promo@mailinator.com", what: "4/100 · disposable", tone: "#F26B5E", region: "ap-south" },
-  { who: "info@megacorp.com", what: "58/100 · review", tone: "var(--palette-teal-300)", region: "us-west" },
-  { who: "ops@beacon.dev", what: "91/100 · safe to send", tone: "var(--palette-teal-300)", region: "eu-central" },
-  { who: "cto@rival.io", what: "72/100 · risky domain", tone: "#F5C66B", region: "ap-east" },
-  { who: "hello@freshmail.co", what: "99/100 · pristine", tone: "var(--palette-teal-300)", region: "sa-east" },
-  { who: "noreply@shadow.net", what: "2/100 · spam trap", tone: "#F26B5E", region: "af-north" },
+  { who: "maya@stripe.com", what: "96/100 · safe to send", tone: "#57534A", region: "us-east" },
+  { who: "james@gmial.com", what: "8/100 · hard bounce", tone: "#9F2F2D", region: "eu-west" },
+  { who: "promo@mailinator.com", what: "4/100 · disposable", tone: "#9F2F2D", region: "ap-south" },
+  { who: "info@megacorp.com", what: "58/100 · review", tone: "#57534A", region: "us-west" },
+  { who: "ops@beacon.dev", what: "91/100 · safe to send", tone: "#57534A", region: "eu-central" },
+  { who: "cto@rival.io", what: "72/100 · risky domain", tone: "#956400", region: "ap-east" },
+  { who: "hello@freshmail.co", what: "99/100 · pristine", tone: "#57534A", region: "sa-east" },
+  { who: "noreply@shadow.net", what: "2/100 · spam trap", tone: "#9F2F2D", region: "af-north" },
 ];
 
 /* hub cities — major validation relay points */
@@ -276,7 +276,7 @@ export default function MapHero() {
             const px = (destHub.x / 100) * w;
             const py = (destHub.y / 100) * h;
             const isFail = Math.random() < 0.25;
-            spawnRipple(px, py, isFail ? "rgba(242,107,94,0.6)" : "rgba(79,138,255,0.55)");
+            spawnRipple(px, py, isFail ? "rgba(245,198,107,0.7)" : "rgba(255,255,255,0.55)");
           }
           // fade out
           pkt.el.style.transition = "opacity 0.3s ease-out";
@@ -340,19 +340,19 @@ export default function MapHero() {
   return (
     <div ref={ref} className="relative m-2 overflow-hidden rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-primary)] sm:m-3">
       {/* ambient orbs */}
-      <div aria-hidden className="ambient-orb pointer-events-none absolute -top-32 -right-24 h-[420px] w-[560px]" style={{ background: "radial-gradient(ellipse at center, rgba(79,138,255,.22), transparent 65%)", filter: "blur(40px)" }} />
-      <div aria-hidden className="ambient-orb pointer-events-none absolute -bottom-24 -left-16 h-[300px] w-[400px]" style={{ background: "radial-gradient(ellipse at center, rgba(34,211,238,.12), transparent 65%)", filter: "blur(50px)", animationDelay: "-4s" }} />
-      <div aria-hidden className="ambient-orb pointer-events-none absolute top-1/3 left-1/3 h-[200px] w-[300px]" style={{ background: "radial-gradient(ellipse at center, rgba(79,138,255,.10), transparent 65%)", filter: "blur(60px)", animationDelay: "-8s" }} />
+      <div aria-hidden className="ambient-orb pointer-events-none absolute -top-32 -right-24 h-[420px] w-[560px]" style={{ background: "radial-gradient(ellipse at center, rgba(255,255,255,.07), transparent 65%)", filter: "blur(40px)" }} />
+      <div aria-hidden className="ambient-orb pointer-events-none absolute -bottom-24 -left-16 h-[300px] w-[400px]" style={{ background: "radial-gradient(ellipse at center, rgba(214,182,94,.08), transparent 65%)", filter: "blur(50px)", animationDelay: "-4s" }} />
+      <div aria-hidden className="ambient-orb pointer-events-none absolute top-1/3 left-1/3 h-[200px] w-[300px]" style={{ background: "radial-gradient(ellipse at center, rgba(255,255,255,.05), transparent 65%)", filter: "blur(60px)", animationDelay: "-8s" }} />
 
       {/* map image */}
-      <img src="img/world-map.jpg" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover opacity-[0.85]" />
+      <img src="img/world-map.jpg" alt="" aria-hidden="true" width={1920} height={900} fetchPriority="high" className="absolute inset-0 h-full w-full object-cover opacity-80 [filter:saturate(.7)_sepia(.18)_brightness(.82)]" />
       <div aria-hidden className="absolute inset-0" style={{ background: "radial-gradient(ellipse at center, transparent 40%, rgba(7,9,11,.7) 100%)" }} />
 
       {/* subtle grid overlay */}
       <div aria-hidden className="hero-grid absolute inset-0 opacity-40" />
 
       {/* radar sweep */}
-      <div aria-hidden className="lz-sweep pointer-events-none absolute top-1/2 left-1/2 aspect-square h-[140%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50" style={{ background: "conic-gradient(from 0deg, rgba(79,138,255,.18), transparent 22%)" }} />
+      <div aria-hidden className="lz-sweep pointer-events-none absolute top-1/2 left-1/2 aspect-square h-[140%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50" style={{ background: "conic-gradient(from 0deg, rgba(255,255,255,.07), transparent 22%)" }} />
 
       {/* SVG arc layer */}
       <svg ref={svgRef} className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
@@ -365,9 +365,9 @@ export default function MapHero() {
             </feMerge>
           </filter>
           <linearGradient id="arc-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="var(--palette-teal-300)" stopOpacity="0.15" />
-            <stop offset="50%" stopColor="var(--palette-teal-300)" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="var(--palette-teal-300)" stopOpacity="0.15" />
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.15" />
+            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.15" />
           </linearGradient>
         </defs>
 
@@ -379,7 +379,7 @@ export default function MapHero() {
               ref={(el) => { arcPathRefs.current[i] = el; }}
               d={arc.d}
               fill="none"
-              stroke="rgba(79,138,255,.10)"
+              stroke="rgba(255,255,255,.10)"
               strokeWidth="2.5"
               vectorEffect="non-scaling-stroke"
             />
@@ -408,12 +408,12 @@ export default function MapHero() {
           style={{ left: `${hub.x}%`, top: `${hub.y}%` }}
         >
           {/* outer ring */}
-          <div className="map-hub-ring absolute -inset-2 rounded-full border border-[var(--color-accent-primary)]/25" style={{ animationDelay: `${i * 0.3}s` }} />
+          <div className="map-hub-ring absolute -inset-2 rounded-full border border-white/25" style={{ animationDelay: `${i * 0.3}s` }} />
           {/* core dot */}
-          <div className="relative size-2 rounded-full bg-[var(--palette-teal-300)] shadow-[0_0_10px_rgba(79,138,255,.7)]" />
+          <div className="relative size-2 rounded-full bg-white" />
           {/* label */}
           <div className="absolute left-1/2 top-full mt-1 -translate-x-1/2 whitespace-nowrap">
-            <span className="font-data text-[7px] font-bold tracking-[0.12em] text-[var(--palette-teal-200)] uppercase">{hub.label}</span>
+            <span className="font-data text-[7px] font-bold tracking-[0.12em] text-white/70 uppercase">{hub.label}</span>
           </div>
         </div>
       ))}
@@ -421,7 +421,7 @@ export default function MapHero() {
       {/* scattered relay nodes */}
       {NODES.map((n, i) => (
         <span key={i} aria-hidden className="absolute size-[5px] -translate-x-1/2 -translate-y-1/2" style={{ left: `${n.x}%`, top: `${n.y}%` }}>
-          <span className="pulse-green absolute inset-0 rounded-full bg-[var(--palette-teal-300)] opacity-60" style={{ animationDelay: `${(i % 9) * 0.4}s` }} />
+          <span className="pulse-green absolute inset-0 rounded-full bg-white opacity-50" style={{ animationDelay: `${(i % 9) * 0.4}s` }} />
         </span>
       ))}
 
@@ -435,8 +435,8 @@ export default function MapHero() {
         transition={{ delay: 0.3, type: "spring", stiffness: 200, damping: 24 }}
         className="absolute top-4 left-4 z-30 flex flex-wrap items-center gap-2"
       >
-        <span className="font-data flex items-center gap-2 rounded-md border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]/85 px-3 py-1.5 text-[9px] font-semibold tracking-[0.18em] text-[var(--palette-teal-200)] uppercase backdrop-blur-sm">
-          <PulseDot color="var(--palette-teal-300)" size={5} />
+        <span className="font-data flex items-center gap-2 rounded-md border border-white/20 bg-black/40 px-3 py-1.5 text-[9px] font-semibold tracking-[0.18em] text-white/75 uppercase">
+          <PulseDot color="#FFFFFF" size={5} />
           Global mesh · {HUBS.length} hubs · {ARCS.length} routes
         </span>
       </motion.div>
@@ -448,14 +448,14 @@ export default function MapHero() {
         transition={{ delay: 0.4, type: "spring", stiffness: 200, damping: 24 }}
         className="absolute top-4 right-4 z-30"
       >
-        <span className="font-data flex items-baseline gap-1.5 rounded-md border border-[var(--color-accent-primary)]/30 bg-[var(--color-bg-primary)]/85 px-3 py-1.5 text-[10px] font-bold text-[var(--text-1)] backdrop-blur-sm">
-          <SlidingNumber value={validated} className="text-[11px]" />
-          <span className="font-semibold text-[var(--text-3)]">validated today</span>
+        <span className="font-data flex items-baseline gap-1.5 rounded-md border border-white/20 bg-black/40 px-3 py-1.5 text-[10px] font-bold text-white">
+          <SlidingNumber value={validated} className="text-[11px] tabular-nums" />
+          <span className="font-semibold text-white/60">validated today</span>
         </span>
       </motion.div>
 
       {/* bottom-left: live event feed */}
-      <div className="absolute bottom-14 left-4 z-30 hidden md:block">
+      <div className="absolute bottom-14 left-4 z-30 hidden md:block" aria-live="polite" aria-label="Live validation feed">
         <AnimatePresence mode="popLayout">
           <motion.div
             key={evIdx}
@@ -463,10 +463,10 @@ export default function MapHero() {
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, y: -8, scale: 0.97, filter: "blur(2px)" }}
             transition={{ type: "spring", stiffness: 260, damping: 26 }}
-            className="flex items-center gap-3 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]/90 px-3.5 py-2.5 backdrop-blur-md"
+            className="flex items-center gap-3 rounded-lg border border-[#EAEAEA] bg-white/95 px-3.5 py-2.5"
           >
             <span className="font-data flex size-7 items-center justify-center rounded-md text-[9px] font-bold" style={{ color: ev.tone, background: `color-mix(in srgb, ${ev.tone} 14%, transparent)` }}>
-              {ev.tone === "#F26B5E" ? "✕" : "✓"}
+              {ev.tone === "#9F2F2D" ? "✕" : "✓"}
             </span>
             <span className="min-w-0">
               <span className="font-data block truncate text-[10.5px] font-semibold text-[var(--text-1)]">{ev.who}</span>
@@ -488,29 +488,28 @@ export default function MapHero() {
             transition={{ delay: 0.5, type: "spring", stiffness: 180, damping: 22 }}
             className="max-w-2xl"
           >
-            <span className="eyebrow">7-layer validation engine</span>
+            <span className="font-data inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-white/80 uppercase">7-layer validation engine</span>
             <h1 className="mt-3 font-display text-[clamp(1.9rem,4.2vw,3.2rem)] font-bold leading-[1.1] text-white">
               Validate any address with{" "}
-              <span className="grad-text-tri">extreme prejudice</span>
+              <span className="text-white">extreme prejudice</span>
             </h1>
-            <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-[var(--text-3)]">
+            <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-white/70">
               Syntax, DNS, MX, disposable detection, catch-all probe, SMTP handshake,
               and ML scoring — one API call.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <a
                 href="#/signup"
-                className="shine inline-flex items-center gap-2 rounded-xl bg-[var(--color-accent-primary)] px-5 py-2.5 text-[12.5px] font-bold text-[var(--color-text-on-accent)] transition-all duration-200 hover:bg-[var(--color-accent-primary-hover)] active:scale-[.98]"
-                style={{ boxShadow: "0 0 24px rgba(79,138,255,.28)" }}
+                className="group inline-flex items-center gap-2 rounded-md bg-white py-2.5 pr-2.5 pl-5 text-[12.5px] font-bold text-[#111111] transition-colors duration-200 hover:bg-[#EFEDE8] active:scale-[0.98]"
               >
-                Start validating
-                <span aria-hidden className="text-[10px]">→</span>
+                Start Validating
+                <span aria-hidden className="flex size-7 items-center justify-center rounded-full bg-black/15 text-[11px] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:scale-105">→</span>
               </a>
               <a
                 href="#pipeline"
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-border-primary)] px-5 py-2.5 text-[12.5px] font-bold text-[var(--text-1)] transition-all duration-200 hover:border-[var(--color-accent-primary)]/50 active:scale-[.98]"
+                className="inline-flex items-center gap-2 rounded-md border border-white/30 px-5 py-2.5 text-[12.5px] font-bold text-white transition-colors duration-200 hover:border-white/60 active:scale-[0.98]"
               >
-                See how it works
+                See How It Works
               </a>
             </div>
           </motion.div>
@@ -533,9 +532,9 @@ export default function MapHero() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, type: "spring", stiffness: 200, damping: 24 }}
-          className="font-data flex items-center gap-2.5 rounded-full border border-[var(--color-accent-primary)]/35 bg-[var(--color-bg-primary)]/85 px-4 py-2 text-[10px] font-semibold tracking-[0.12em] text-[var(--text-1)] uppercase backdrop-blur-sm"
+          className="font-data flex items-center gap-2.5 rounded-full border border-white/25 bg-black/40 px-4 py-2 text-[10px] font-semibold tracking-[0.12em] text-white uppercase"
         >
-          <PulseDot color="var(--palette-teal-300)" size={6} />
+          <PulseDot color="#FFFFFF" size={6} />
           System Operational · 99.999% Uptime
         </motion.span>
       </div>
@@ -559,15 +558,15 @@ export default function MapHero() {
           position: absolute;
           inset: -6px;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(79,138,255,0.55), transparent 70%);
+          background: radial-gradient(circle, rgba(255,255,255,0.35), transparent 70%);
           filter: blur(3px);
         }
         .map-packet-core {
           position: absolute;
           inset: 0;
           border-radius: 50%;
-          background: var(--text-1);
-          box-shadow: 0 0 6px rgba(122,183,255,0.85), 0 0 12px rgba(79,138,255,0.45);
+          background: #FFFFFF;
+          box-shadow: 0 0 6px rgba(255,255,255,0.8);
         }
         .map-packet-hi {
           position: absolute;
@@ -586,7 +585,7 @@ export default function MapHero() {
           height: 2px;
           pointer-events: none;
           will-change: transform, opacity;
-          background: linear-gradient(90deg, transparent, rgba(79,138,255,0.45));
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45));
           border-radius: 1px;
           z-index: 24;
         }
@@ -595,7 +594,7 @@ export default function MapHero() {
           width: 24px;
           height: 24px;
           border-radius: 50%;
-          border: 1.5px solid rgba(79,138,255,0.55);
+          border: 1.5px solid rgba(255,255,255,0.55);
           pointer-events: none;
           will-change: transform, opacity;
           z-index: 23;
@@ -643,25 +642,25 @@ function ThroughputSpark() {
   const pts = series.map((v, i) => `${(i / (series.length - 1)) * 64},${18 - ((v - min) / (max - min || 1)) * 14}`).join(" ");
 
   return (
-    <div className="rounded-md border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]/85 p-2.5 backdrop-blur-sm">
+    <div className="rounded-md border border-white/20 bg-black/40 p-2.5">
       <div className="flex items-baseline justify-between gap-3">
-        <span className="font-data text-[7.5px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">Throughput</span>
-        <span className="font-data flex items-baseline text-[11px] font-bold text-[var(--text-1)]">
-          <SlidingNumber value={rate} />
-          <span className="ml-1 text-[7px] font-semibold text-[var(--text-3)]">req/s</span>
+        <span className="font-data text-[7.5px] font-semibold tracking-[0.2em] text-white/60 uppercase">Throughput</span>
+        <span className="font-data flex items-baseline text-[11px] font-bold text-white">
+          <SlidingNumber value={rate} className="tabular-nums" />
+          <span className="ml-1 text-[7px] font-semibold text-white/60">req/s</span>
         </span>
       </div>
       <svg viewBox="0 0 64 18" className="mt-1.5 h-[18px] w-[64px]" aria-hidden>
         <defs>
           <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--palette-teal-300)" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="var(--palette-teal-300)" stopOpacity="0" />
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
           </linearGradient>
         </defs>
         {/* fill area */}
         <polygon points={`0,18 ${pts} 64,18`} fill="url(#spark-fill)" />
         {/* line */}
-        <polyline points={pts} fill="none" stroke="var(--palette-teal-300)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+        <polyline points={pts} fill="none" stroke="#FFFFFF" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
       </svg>
     </div>
   );

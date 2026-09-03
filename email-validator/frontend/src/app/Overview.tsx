@@ -40,14 +40,14 @@ const ROUTE_LINKS: [number, number][] = [
 function MetricCard({ value, suffix, label, sub, accent }: { value: number; suffix?: string; label: string; sub: string; accent: string }) {
   const v = useCountUp(value, true, 900);
   return (
-    <div className="metallic-panel relative flex flex-1 flex-col gap-1.5 p-4">
+    <div className="metallic-panel relative flex flex-1 flex-col gap-1.5 p-6">
       <span className="screw-bottom" />
       <div className="flex items-center justify-between">
         <span className="font-data text-[9.5px] font-semibold tracking-[0.18em] text-[var(--text-3)] uppercase">{label}</span>
-        <span className="size-1.5 rounded-full" style={{ background: accent, boxShadow: `0 0 6px ${accent}` }} />
+        <span className="size-1.5 rounded-full" style={{ background: accent }} />
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="text-glow font-data text-[1.7rem] font-bold leading-none tabular-nums text-white">
+        <span className="font-data text-[1.7rem] font-bold leading-none tabular-nums text-[#111111]">
           {v.toLocaleString()}
         </span>
         {suffix && <span className="text-xs font-bold tracking-wide" style={{ color: accent }}>{suffix}</span>}
@@ -63,31 +63,31 @@ function GlobalMeshMap({ validatedToday }: { validatedToday: number }) {
       <span className="screw-bottom" />
       <div className="relative z-10 mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Icon name="globe" size={15} className="text-[var(--palette-teal-300)]" weight="duotone" />
-          <h3 className="font-data text-[10px] font-bold tracking-[0.22em] text-white uppercase">Global mesh</h3>
+          <Icon name="globe" size={15} className="text-[var(--palette-teal-300)]" weight="bold" />
+          <h3 className="font-data text-[10px] font-bold tracking-[0.22em] text-[#111111] uppercase">Global mesh</h3>
           <span className="ml-2 text-[10px] tracking-wider text-[var(--text-3)] uppercase">{REGION_NODES.length} regions · 12 routes</span>
         </div>
         <div className="text-right">
           <span className="block font-data text-[9px] tracking-[0.2em] text-[var(--text-3)] uppercase">Validated today</span>
-          <span className="text-glow font-data text-[1.4rem] leading-none font-bold text-[var(--palette-teal-300)] tabular-nums">
+          <span className="font-data text-[1.4rem] leading-none font-bold text-[#111111] tabular-nums">
             {validatedToday.toLocaleString()}
           </span>
         </div>
       </div>
-      <div className="relative flex-1 overflow-hidden rounded border border-[var(--line)] bg-[#0B0F14]">
+      <div className="relative flex-1 overflow-hidden rounded-lg border border-[var(--line)] bg-[#F7F6F3]">
         <svg viewBox="0 0 900 420" className="size-full" preserveAspectRatio="xMidYMid slice">
           <defs>
             <radialGradient id="mapGlow" cx="50%" cy="50%" r="60%">
-              <stop offset="0%" stopColor="rgba(79,138,255,0.18)" />
-              <stop offset="100%" stopColor="rgba(79,138,255,0)" />
+              <stop offset="0%" stopColor="rgba(17,17,17,0.05)" />
+              <stop offset="100%" stopColor="rgba(17,17,17,0)" />
             </radialGradient>
           </defs>
           <rect width="900" height="420" fill="url(#mapGlow)" />
           {Array.from({ length: 22 }).map((_, i) => (
-            <line key={`h${i}`} x1="0" y1={i * 20} x2="900" y2={i * 20} stroke="rgba(120,145,200,0.06)" strokeWidth="0.5" />
+            <line key={`h${i}`} x1="0" y1={i * 20} x2="900" y2={i * 20} stroke="rgba(17,17,17,0.07)" strokeWidth="0.5" />
           ))}
           {Array.from({ length: 45 }).map((_, i) => (
-            <line key={`v${i}`} x1={i * 20} y1="0" x2={i * 20} y2="420" stroke="rgba(120,145,200,0.06)" strokeWidth="0.5" />
+            <line key={`v${i}`} x1={i * 20} y1="0" x2={i * 20} y2="420" stroke="rgba(17,17,17,0.07)" strokeWidth="0.5" />
           ))}
           {ROUTE_LINKS.map(([a, b], i) => (
             <line
@@ -96,7 +96,7 @@ function GlobalMeshMap({ validatedToday }: { validatedToday: number }) {
               y1={REGION_NODES[a].y}
               x2={REGION_NODES[b].x}
               y2={REGION_NODES[b].y}
-              stroke="rgba(120,170,255,0.32)"
+              stroke="rgba(17,17,17,0.28)"
               strokeWidth="0.8"
             />
           ))}
@@ -109,14 +109,14 @@ function GlobalMeshMap({ validatedToday }: { validatedToday: number }) {
               <circle cx={p.x} cy={p.y} r="3" fill="var(--palette-teal-300)">
                 <animate attributeName="opacity" values="0.6;1;0.6" dur={`${2 + (i % 3)}s`} repeatCount="indefinite" />
               </circle>
-              <text x={p.x + 8} y={p.y - 6} fill="rgba(190,210,255,0.7)" fontFamily="ui-monospace, monospace" fontSize="9" letterSpacing="0.06em">
+              <text x={p.x + 8} y={p.y - 6} fill="rgba(17,17,17,0.6)" fontFamily="ui-monospace, monospace" fontSize="9" letterSpacing="0.06em">
                 {p.label}
               </text>
             </g>
           ))}
         </svg>
-        <div className="absolute right-3 bottom-3 left-3 flex flex-wrap items-center gap-2 rounded border border-[var(--palette-teal-300)]/35 bg-[#0B0F14]/85 px-3 py-2 text-[10.5px] text-[var(--text-2)] backdrop-blur-sm sm:flex-nowrap">
-          <Icon name="alert" size={13} weight="duotone" className="text-[var(--palette-amber-300)]" />
+        <div className="absolute right-3 bottom-3 left-3 flex flex-wrap items-center gap-2 rounded-lg border border-[#EAEAEA] bg-white/90 px-3 py-2 text-[10.5px] text-[var(--text-2)] sm:flex-nowrap">
+          <Icon name="alert" size={13} weight="bold" className="text-[var(--palette-amber-300)]" />
           <span className="font-data text-[9.5px] tracking-[0.2em] text-[var(--text-3)] uppercase">Anomaly</span>
           <span>Route <span className="font-data text-[var(--palette-teal-300)]">AP-South › EU-West</span> · spike 245ms</span>
         </div>
@@ -134,8 +134,8 @@ function PipelineLayer({ index, label, status, totalLayers }: { index: number; l
           className={cn(
             "flex size-10 items-center justify-center rounded-xl border text-[12.5px] font-bold tabular-nums transition-all",
             isActive
-              ? "border-[var(--palette-teal-300)]/55 bg-[var(--accent-faint)] text-[var(--palette-teal-300)] shadow-[0_0_18px_-4px_rgba(79,138,255,0.55)]"
-              : "border-[var(--palette-amber-400)]/55 bg-[rgba(245,198,107,0.08)] text-[var(--palette-amber-400)] shadow-[0_0_18px_-4px_rgba(245,198,107,0.55)]"
+              ? "border-[#111111] bg-[#F7F6F3] text-[#111111]"
+              : "border-[#EAD9A8] bg-[#FBF3DB] text-[#956400]"
           )}
         >
           {index + 1}
@@ -157,12 +157,12 @@ function PipelinePanel({ stats }: { stats: Stats | null }) {
   const total = stats?.total ?? 0;
   const riskyRatio = total ? Math.min(0.3, (stats?.split.risky ?? 0) / Math.max(1, total)) : 0.12;
   return (
-    <div className="metallic-panel flex flex-col p-4" style={{ minHeight: 280 }}>
+    <div className="metallic-panel flex flex-col p-6" style={{ minHeight: 280 }}>
       <span className="screw-bottom" />
       <div className="relative z-10 mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Icon name="layers" size={15} weight="duotone" className="text-[var(--palette-teal-300)]" />
-          <h3 className="text-[14px] font-bold tracking-tight text-white">7-layer validation pipeline</h3>
+          <Icon name="layers" size={15} weight="bold" className="text-[var(--palette-teal-300)]" />
+          <h3 className="font-display text-[19px] font-bold tracking-tight text-[#111111]">7-layer validation pipeline</h3>
         </div>
         <div className="flex items-center gap-3 text-[10px] tracking-wider uppercase">
           <span className="flex items-center gap-1.5 text-[var(--text-3)]"><span className="size-1.5 rounded-sm bg-[var(--palette-teal-300)]" />Trusted</span>
@@ -182,10 +182,10 @@ function PipelinePanel({ stats }: { stats: Stats | null }) {
       </div>
       <div className="mt-4 flex flex-col gap-2 rounded-xl border border-[var(--line)] bg-[var(--bg-1)] p-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 text-[12px] text-[var(--text-2)]">
-          <Icon name="flask" size={14} weight="duotone" className="text-[var(--palette-teal-300)]" />
+          <Icon name="flask" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
           A sequential, rigorous filter that rejects <span className="font-data text-[var(--palette-amber-300)]">{(riskyRatio * 100).toFixed(1)}%</span> with extreme prejudice.
         </div>
-        <a href="#/app/validator" className="font-data shrink-0 rounded-lg border border-[var(--palette-teal-300)]/55 px-3 py-1.5 text-[10px] font-bold tracking-[0.16em] text-[var(--palette-teal-300)] uppercase transition-colors duration-200 hover:bg-[var(--accent-faint)]">
+        <a href="#/app/validator" className="font-data shrink-0 rounded-md bg-[#111111] px-3 py-1.5 text-[10px] font-bold tracking-[0.16em] text-white uppercase transition-colors duration-200 hover:bg-[#333333]">
           Run a check
         </a>
       </div>
@@ -202,11 +202,11 @@ function VerdictSplit({ stats }: { stats: Stats | null }) {
     { key: "invalid", value: split.invalid, color: "var(--red)", label: "Invalid" },
   ];
   return (
-    <div className="metallic-panel flex flex-col gap-3 p-4">
+    <div className="metallic-panel flex flex-col gap-3 p-6">
       <span className="screw-bottom" />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Icon name="chart" size={14} weight="duotone" className="text-[var(--palette-teal-300)]" />
+          <Icon name="chart" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
           <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">Verdict split</h3>
         </div>
         <span className="font-data text-[10px] tracking-[0.18em] text-[var(--text-3)] uppercase">{fmt(total)} total</span>
@@ -216,7 +216,7 @@ function VerdictSplit({ stats }: { stats: Stats | null }) {
           <span
             key={s.key}
             className="h-full"
-            style={{ width: `${(s.value / total) * 100}%`, background: s.color, boxShadow: `0 0 8px ${s.color}` }}
+            style={{ width: `${(s.value / total) * 100}%`, background: s.color }}
             aria-label={`${s.label} ${((s.value / total) * 100).toFixed(1)}%`}
           />
         )) : <span className="block h-full w-full bg-[var(--bg-2)]" />}
@@ -225,7 +225,7 @@ function VerdictSplit({ stats }: { stats: Stats | null }) {
         {segs.map((s) => (
           <div key={s.key} className="flex flex-col rounded-lg border border-[var(--line)] bg-[var(--bg-1)] px-2.5 py-2">
             <span className="flex items-center gap-1.5 text-[9.5px] tracking-wider text-[var(--text-3)] uppercase">
-              <span className="size-1.5 rounded-full" style={{ background: s.color, boxShadow: `0 0 6px ${s.color}` }} />
+              <span className="size-1.5 rounded-full" style={{ background: s.color }} />
               {s.label}
             </span>
             <span className="font-data mt-0.5 text-[1.05rem] font-bold tabular-nums" style={{ color: s.color }}>
@@ -246,17 +246,17 @@ function LatencyP50({ stats }: { stats: Stats | null }) {
   const target = 40;
   const ratio = Math.max(0, Math.min(1, 1 - (ms - target) / 220));
   return (
-    <div className="metallic-panel flex flex-col gap-3 p-4">
+    <div className="metallic-panel flex flex-col gap-3 p-6">
       <span className="screw-bottom" />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Icon name="gauge" size={14} weight="duotone" className="text-[var(--palette-teal-300)]" />
+          <Icon name="gauge" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
           <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">P50 latency</h3>
         </div>
         <span className="font-data text-[9.5px] text-[var(--text-3)]">target ≤ 40ms</span>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="font-data text-glow text-[1.7rem] font-bold tabular-nums text-white">{ms}</span>
+        <span className="font-data text-[1.7rem] font-bold tabular-nums text-[#111111]">{ms}</span>
         <span className="font-data text-[12px] text-[var(--text-3)]">ms</span>
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg-2)]">
@@ -264,8 +264,8 @@ function LatencyP50({ stats }: { stats: Stats | null }) {
           className="block h-full rounded-full"
           style={{
             width: `${(ratio * 100).toFixed(0)}%`,
-            background: "linear-gradient(90deg, var(--green) 0%, var(--palette-teal-300) 60%, var(--palette-amber-300) 100%)",
-            boxShadow: "0 0 10px var(--palette-teal-300)",
+            background: "#111111",
+            
           }}
         />
       </div>
@@ -276,11 +276,11 @@ function LatencyP50({ stats }: { stats: Stats | null }) {
 function TrendStrip({ series }: { series: Stats["series"] }) {
   const max = Math.max(1, ...series.map((p) => p.count));
   return (
-    <div className="metallic-panel flex flex-col gap-3 p-4">
+    <div className="metallic-panel flex flex-col gap-3 p-6">
       <span className="screw-bottom" />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Icon name="activity" size={14} weight="duotone" className="text-[var(--palette-teal-300)]" />
+          <Icon name="activity" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
           <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">14-day volume</h3>
         </div>
         <span className="font-data text-[10px] text-[var(--text-3)]">peak {fmt(max)}</span>
@@ -291,8 +291,8 @@ function TrendStrip({ series }: { series: Stats["series"] }) {
           return (
             <span
               key={`${p.day}-${i}`}
-              className="block w-2 rounded-t-sm bg-[var(--palette-teal-300)]/35 last:bg-[var(--palette-teal-300)]"
-              style={{ height: `${h}px`, boxShadow: i === series.length - 1 ? "0 0 6px var(--palette-teal-300)" : "none" }}
+              className="block w-2 rounded-t-sm bg-[#E3E0D8] last:bg-[#111111]"
+              style={{ height: `${h}px` }}
               title={`${p.day}: ${p.count}`}
             />
           );
@@ -307,7 +307,7 @@ function RecentRow({ r }: { r: ValidationRecord }) {
     <li className="grid grid-cols-[40px_1fr_auto_auto] items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 transition-colors duration-200 hover:border-[var(--line)] hover:bg-[var(--bg-2)]">
       <ScoreDial score={r.score} size={36} />
       <div className="min-w-0">
-        <p className="truncate font-data text-[12.5px] font-semibold text-white">{r.email}</p>
+        <p className="truncate font-data text-[12.5px] font-semibold text-[#111111]">{r.email}</p>
         <p className="font-data mt-0.5 text-[9.5px] tracking-[0.06em] text-[var(--text-3)]">
           {timeAgo(r.ts)} · {Math.round(r.totalMs)}ms · 7 layers
         </p>
@@ -383,7 +383,7 @@ export default function Overview() {
         <PipelinePanel stats={stats} />
 
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1.6fr_1fr]">
-          <Card className="p-4">
+          <Card className="p-6">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">Recent validations</h3>
               <a href="#/app/history" className="font-data text-[10px] font-semibold tracking-[0.18em] text-[var(--palette-teal-300)] uppercase hover:underline">
@@ -402,7 +402,7 @@ export default function Overview() {
                 title="No validations yet"
                 body="Run your first 7-layer check to populate the dashboard."
                 action={
-                  <a href="#/app/validator" className="rounded-xl bg-[var(--palette-teal-300)] px-4 py-2 text-[12.5px] font-bold tracking-wide text-[#0A0F1A] transition-[filter] duration-200 hover:brightness-110">
+                  <a href="#/app/validator" className="rounded-md bg-[#111111] px-4 py-2 text-[12.5px] font-bold tracking-wide text-white transition-colors duration-200 hover:bg-[#333333]">
                     Open validator
                   </a>
                 }
@@ -411,16 +411,16 @@ export default function Overview() {
           </Card>
           <div className="flex flex-col gap-3">
             <TrendStrip series={stats?.series ?? []} />
-            <div className="metallic-panel flex flex-col gap-2 p-4">
+            <div className="metallic-panel flex flex-col gap-2 p-6">
               <span className="screw-bottom" />
               <div className="flex items-center gap-2">
-                <Icon name="lifebuoy" size={14} weight="duotone" className="text-[var(--palette-teal-300)]" />
+                <Icon name="lifebuoy" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
                 <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">Integration note</h3>
               </div>
               <p className="text-[12px] leading-relaxed text-[var(--text-2)]">
                 Webhooks are signed with HMAC-SHA256. The <code className="font-data text-[var(--palette-teal-300)]">bridge-uid</code> rotates every 24h, so replay attempts after revocation land on a 401 — no extra auth layer needed.
               </p>
-              <a href="#/app/settings" className="font-data mt-1 self-start rounded-lg border border-[var(--line)] px-3 py-1.5 text-[10px] font-bold tracking-[0.16em] text-[var(--text-2)] uppercase transition-colors duration-200 hover:border-[var(--line-blue)] hover:text-[var(--text-1)]">
+              <a href="#/app/settings" className="font-data mt-1 self-start rounded-md border border-[#EAEAEA] px-3 py-1.5 text-[10px] font-bold tracking-[0.16em] text-[var(--text-2)] uppercase transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]">
                 Configure
               </a>
             </div>

@@ -109,10 +109,10 @@ export function ApiKeysPage() {
               <div
                 key={k.id}
                 className={`flex flex-wrap items-center gap-3 rounded-xl border p-4 transition-colors duration-200 ${
-                  k.revokedAt ? "border-[var(--line)] opacity-55" : "border-[var(--line)] hover:border-[var(--line-blue)]"
+                  k.revokedAt ? "border-[#EAEAEA] opacity-55" : "border-[#EAEAEA] hover:border-[#D8D4C8]"
                 }`}
               >
-                <span className={`flex size-9 items-center justify-center rounded-lg border ${k.revokedAt ? "border-[var(--line)] text-[var(--text-3)]" : "border-[var(--line-blue)] bg-[var(--accent-faint)] text-[var(--cyan)]"}`}>
+                <span className={`flex size-9 items-center justify-center rounded-lg border ${k.revokedAt ? "border-[#EAEAEA] text-[var(--text-3)]" : "border-[#111111] bg-[#F7F6F3] text-[#111111]"}`}>
                   <Icon name="key" size={15} />
                 </span>
                 <div className="min-w-0 flex-1">
@@ -123,7 +123,7 @@ export function ApiKeysPage() {
                   </p>
                 </div>
                 {k.revokedAt ? (
-                  <span className="font-data rounded-full border border-[rgba(248,113,113,.35)] px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] text-[var(--red)] uppercase">
+                  <span className="font-data rounded-full border border-[#EAB9BB] px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] text-[var(--red)] uppercase">
                     revoked
                   </span>
                 ) : (
@@ -131,7 +131,7 @@ export function ApiKeysPage() {
                     <CopyBtn text={k.key} />
                     <button
                       onClick={() => setRevoking(k)}
-                      className="rounded-md border border-[var(--line)] px-2.5 py-1.5 text-[11px] font-bold text-[var(--text-3)] transition-colors duration-200 hover:border-[rgba(248,113,113,.4)] hover:text-[var(--red)]"
+                      className="rounded-md border border-[var(--line)] px-2.5 py-1.5 text-[11px] font-bold text-[var(--text-3)] transition-colors duration-200 hover:border-[#EAB9BB] hover:text-[#9F2F2D]"
                     >
                       Revoke
                     </button>
@@ -150,11 +150,11 @@ export function ApiKeysPage() {
             <p className="text-[12.5px] leading-relaxed text-[var(--text-2)]">
               For security, this is the <strong className="text-[var(--text-1)]">only time</strong> the full secret is shown.
             </p>
-            <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-[var(--line-blue)] bg-[var(--bg-2)] p-3.5">
+            <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-[#111111] bg-[#F7F6F3] p-3.5">
               <code className="font-data min-w-0 flex-1 break-all text-[11.5px] text-[var(--cyan)]">{fresh.key}</code>
               <CopyBtn text={fresh.key} label="Copy key" />
             </div>
-            <button onClick={() => setFresh(null)} className="mt-5 w-full rounded-xl bg-[var(--blue)] px-4 py-2.5 text-[13px] font-bold text-[var(--color-text-on-accent)] transition-all duration-200 hover:brightness-110">
+            <button onClick={() => setFresh(null)} className="mt-5 w-full rounded-md bg-[#111111] px-4 py-2.5 text-[13px] font-bold text-white transition-colors duration-200 hover:bg-[#333333]">
               I've stored it safely
             </button>
           </div>

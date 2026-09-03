@@ -424,23 +424,23 @@ export default function PipelineScene() {
         </div>
 
         {/* ============ the scene ============ */}
-        <div ref={viewRef} className="relative mt-10 border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] shadow-[0_0_60px_rgba(79,138,255,.08)]">
+        <div ref={viewRef} className="relative mt-10 overflow-hidden rounded-xl border border-[#EAEAEA] bg-white">
           {/* corner brackets */}
           {["-left-px -top-px border-l-2 border-t-2", "-right-px -top-px border-r-2 border-t-2", "-bottom-px -left-px border-b-2 border-l-2", "-bottom-px -right-px border-b-2 border-r-2"].map((pos) => (
-            <span key={pos} className={`absolute ${pos} z-30 h-4 w-4 border-[var(--color-accent-primary)]/60`} aria-hidden />
+            <span key={pos} className={`absolute ${pos} z-30 h-4 w-4 border-white/50`} aria-hidden />
           ))}
 
           <div ref={stageRef} className="relative aspect-[3/2] w-full overflow-hidden">
-            <img src="img/pipeline.jpg" alt="Isometric factory scene: a conveyor belt carrying data packets through seven validation stations" className="absolute inset-0 h-full w-full object-cover" />
+            <img src="img/pipeline.jpg" alt="Isometric factory scene: a conveyor belt carrying data packets through seven validation stations" width={1536} height={1024} loading="lazy" className="absolute inset-0 h-full w-full object-cover [filter:saturate(.7)_sepia(.18)_brightness(.85)]" />
             <div className="absolute inset-0 bg-gradient-to-t from-[rgba(7,9,11,.75)] via-transparent to-[rgba(7,9,11,.45)]" aria-hidden />
 
             {/* station ambience */}
             {gatePos[0] && (
-              <div className="pv-sweep absolute w-[26px] bg-gradient-to-t from-transparent via-[rgba(79,138,255,.45)] to-transparent blur-[2px]" style={{ left: `${(gatePos[0].x / VB_W) * 100}%`, top: `${(gatePos[0].y / VB_H) * 100 - 15}%`, height: "15%", transformOrigin: "bottom" }} aria-hidden />
+              <div className="pv-sweep absolute w-[26px] bg-gradient-to-t from-transparent via-[rgba(255,255,255,.4)] to-transparent blur-[2px]" style={{ left: `${(gatePos[0].x / VB_W) * 100}%`, top: `${(gatePos[0].y / VB_H) * 100 - 15}%`, height: "15%", transformOrigin: "bottom" }} aria-hidden />
             )}
             {gatePos[1] && (
               <div className="pv-ringpulse absolute" style={{ left: `${(gatePos[1].x / VB_W) * 100}%`, top: `${(gatePos[1].y / VB_H) * 100 - 4}%` }} aria-hidden>
-                <div className="h-24 w-24 rounded-full border border-dashed border-[var(--color-accent-primary)]/35 md:h-32 md:w-32" />
+                <div className="h-24 w-24 rounded-full border border-dashed border-white/40 md:h-32 md:w-32" />
               </div>
             )}
 
@@ -461,13 +461,13 @@ export default function PipelineScene() {
               {/* invisible reference path for LUT */}
               <path ref={pathRef} d={PATH_D} fill="none" stroke="transparent" />
               {/* wide soft glow */}
-              <path d={PATH_D} fill="none" stroke="#7AB7FF" strokeOpacity="0.12" strokeWidth="20" filter="url(#pv-soft)" />
+              <path d={PATH_D} fill="none" stroke="#FFFFFF" strokeOpacity="0.12" strokeWidth="20" filter="url(#pv-soft)" />
               {/* medium glow */}
-              <path d={PATH_D} fill="none" stroke="#7AB7FF" strokeOpacity="0.28" strokeWidth="6" filter="url(#pv-glow)" />
+              <path d={PATH_D} fill="none" stroke="#FFFFFF" strokeOpacity="0.28" strokeWidth="6" filter="url(#pv-glow)" />
               {/* core dashed belt */}
-              <path d={PATH_D} fill="none" stroke="#7AB7FF" strokeOpacity="0.85" strokeWidth="2" strokeDasharray="10 20" className="pv-dashflow" />
+              <path d={PATH_D} fill="none" stroke="#FFFFFF" strokeOpacity="0.85" strokeWidth="2" strokeDasharray="10 20" className="pv-dashflow" />
               {/* bright center line */}
-              <path d={PATH_D} fill="none" stroke="#A8C7FF" strokeOpacity="0.4" strokeWidth="0.8" />
+              <path d={PATH_D} fill="none" stroke="#FFFFFF" strokeOpacity="0.4" strokeWidth="0.8" />
             </svg>
 
             {/* imperative cube + trail + ping layer */}
@@ -477,78 +477,85 @@ export default function PipelineScene() {
             {gatePos.map((g, i) => {
               const above = g.y < 512;
               return (
-                <div
+                <button
                   key={i}
-                  className="absolute z-20 -translate-x-1/2 -translate-y-1/2"
+                  type="button"
+                  className="absolute z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer bg-transparent"
                   style={{ left: `${(g.x / VB_W) * 100}%`, top: `${(g.y / VB_H) * 100}%` }}
                   onMouseEnter={() => setHoverGate(i)}
                   onMouseLeave={() => setHoverGate(null)}
                   onFocus={() => setHoverGate(i)}
                   onBlur={() => setHoverGate(null)}
-                  tabIndex={0}
-                  role="button"
+                  onClick={() => setHoverGate(i)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setHoverGate(i);
+                    }
+                  }}
+                  aria-expanded={hoverGate === i}
                   aria-label={`Layer ${i + 1}: ${LAYERS[i].title} — ${LAYERS[i].short}`}
                 >
                   <div className="relative flex flex-col items-center">
                     {above && (
                       <div className="mb-1 flex flex-col items-center">
-                        <div className="border border-[var(--color-accent-primary)]/35 bg-[var(--color-bg-primary)]/88 px-2 py-1 text-center backdrop-blur-sm">
-                          <div className="font-data text-[9px] font-semibold leading-none text-[var(--palette-teal-300)] md:text-[10px]">L{i + 1}</div>
-                          <div className="font-data mt-0.5 hidden text-[8px] uppercase leading-tight tracking-wider text-[var(--text-2)] md:block">{LAYERS[i].title}</div>
+                        <div className="border border-white/25 bg-black/55 px-2 py-1 text-center">
+                          <div className="font-data text-[9px] font-semibold leading-none text-white md:text-[10px]">L{i + 1}</div>
+                          <div className="font-data mt-0.5 hidden text-[8px] uppercase leading-tight tracking-wider text-white/75 md:block">{LAYERS[i].title}</div>
                         </div>
-                        <div className="h-3 w-px bg-[var(--color-accent-primary)]/55" />
+                        <div className="h-3 w-px bg-white/40" />
                       </div>
                     )}
                     <span ref={(el) => { dotRefs.current[i] = el; }} className="gate-dot block" />
                     {!above && (
                       <div className="mt-1 flex flex-col items-center">
-                        <div className="h-3 w-px bg-[var(--color-accent-primary)]/55" />
-                        <div className="border border-[var(--color-accent-primary)]/35 bg-[var(--color-bg-primary)]/88 px-2 py-1 text-center backdrop-blur-sm">
-                          <div className="font-data text-[9px] font-semibold leading-none text-[var(--palette-teal-300)] md:text-[10px]">L{i + 1}</div>
-                          <div className="font-data mt-0.5 hidden text-[8px] uppercase leading-tight tracking-wider text-[var(--text-2)] md:block">{LAYERS[i].title}</div>
+                        <div className="h-3 w-px bg-white/40" />
+                        <div className="border border-white/25 bg-black/55 px-2 py-1 text-center">
+                          <div className="font-data text-[9px] font-semibold leading-none text-white md:text-[10px]">L{i + 1}</div>
+                          <div className="font-data mt-0.5 hidden text-[8px] uppercase leading-tight tracking-wider text-white/75 md:block">{LAYERS[i].title}</div>
                         </div>
                       </div>
                     )}
 
                     {hoverGate === i && (
-                      <div className={`absolute left-1/2 z-40 w-60 -translate-x-1/2 border border-[var(--color-accent-primary)]/45 bg-[var(--color-bg-canvas)]/96 p-3 shadow-[0_0_30px_rgba(79,138,255,.18)] backdrop-blur ${above ? "top-full mt-2" : "bottom-full mb-2"}`}>
-                        <div className="font-display text-xs font-bold uppercase tracking-wider text-[var(--palette-teal-300)]">Layer {i + 1} — {LAYERS[i].title}</div>
+                      <div className={`absolute left-1/2 z-40 w-60 -translate-x-1/2 rounded-lg border border-[#EAEAEA] bg-white p-3 ${above ? "top-full mt-2" : "bottom-full mb-2"}`}>
+                        <div className="font-display text-xs font-bold uppercase tracking-wider text-[#111111]">Layer {i + 1} — {LAYERS[i].title}</div>
                         <p className="mt-1.5 text-[11px] leading-relaxed text-[var(--text-2)]">{LAYERS[i].detail}</p>
                         <div className="font-data mt-2 border-t border-[var(--color-border-secondary)] pt-1.5 text-[10px] text-[var(--color-status-error)]">rejects: {LAYERS[i].fail}</div>
                       </div>
                     )}
                   </div>
-                </div>
+                </button>
               );
             })}
 
             {/* HUD counters */}
             <div className="font-data absolute top-3 left-3 z-30 md:top-5 md:left-5">
-              <div className="flex items-center gap-2 border border-[var(--color-border-primary)] bg-[var(--color-bg-canvas)]/85 px-2.5 py-1 backdrop-blur">
-                <span className="text-[10px] uppercase tracking-widest text-[var(--text-3)]">inbound</span>
-                <SlidingNumber value={stats.inbound} className="text-sm font-semibold text-[var(--text-1)]" />
+              <div className="flex items-center gap-2 rounded-md border border-white/20 bg-black/55 px-2.5 py-1">
+                <span className="text-[10px] uppercase tracking-widest text-white/60">inbound</span>
+                <SlidingNumber value={stats.inbound} className="text-sm font-semibold text-white" />
               </div>
             </div>
             <div className="font-data absolute top-3 right-3 z-30 md:top-5 md:right-5">
-              <div className="flex items-center gap-2 border border-[var(--color-error-border)]/70 bg-[var(--color-bg-canvas)]/85 px-2.5 py-1 backdrop-blur">
-                <Phosphor.Trash size={14} className="text-[var(--color-status-error)]" aria-hidden />
-                <span className="text-[10px] uppercase tracking-widest text-[var(--color-status-error)]">rejected</span>
-                <SlidingNumber value={stats.rejected} className="text-sm font-semibold text-[var(--color-status-error)]" />
+              <div className="flex items-center gap-2 rounded-md border border-white/20 bg-black/55 px-2.5 py-1">
+                <Phosphor.Trash size={14} className="text-white/80" aria-hidden />
+                <span className="text-[10px] uppercase tracking-widest text-white/70">rejected</span>
+                <SlidingNumber value={stats.rejected} className="text-sm font-semibold text-white" />
               </div>
             </div>
             <div className="font-data absolute bottom-3 left-3 z-30 md:bottom-5 md:left-5">
-              <div className="flex items-center gap-2 border border-[var(--color-success-border)]/70 bg-[var(--color-bg-canvas)]/85 px-2.5 py-1 backdrop-blur">
-                <Phosphor.Gauge size={14} className="text-[var(--color-status-success)]" aria-hidden />
-                <span className="text-[10px] uppercase tracking-widest text-[var(--color-status-success)]">trusted</span>
-                <SlidingNumber value={stats.trusted} className="text-sm font-semibold text-[var(--color-status-success)]" />
+              <div className="flex items-center gap-2 rounded-md border border-white/20 bg-black/55 px-2.5 py-1">
+                <Phosphor.Gauge size={14} className="text-white/80" aria-hidden />
+                <span className="text-[10px] uppercase tracking-widest text-white/70">trusted</span>
+                <SlidingNumber value={stats.trusted} className="text-sm font-semibold text-white" />
               </div>
             </div>
 
             {/* legend */}
-            <div className="font-data absolute right-3 bottom-3 z-30 hidden flex-col gap-1 border border-[var(--color-border-primary)] bg-[var(--color-bg-canvas)]/85 px-3 py-2 text-[10px] backdrop-blur md:flex md:right-5 md:bottom-5">
-              <span className="flex items-center gap-2 text-[var(--text-2)]"><span className="h-2 w-2 bg-[var(--palette-teal-300)] shadow-[0_0_6px_var(--palette-teal-300)]" /> raw packet</span>
-              <span className="flex items-center gap-2 text-[var(--text-2)]"><span className="h-2 w-2 bg-[var(--color-status-error)] shadow-[0_0_6px_var(--color-status-error)]" /> filtered</span>
-              <span className="flex items-center gap-2 text-[var(--text-2)]"><span className="h-2 w-2 bg-[var(--color-status-success)] shadow-[0_0_6px_var(--color-status-success)]" /> trusted</span>
+            <div className="font-data absolute right-3 bottom-3 z-30 hidden flex-col gap-1 rounded-md border border-white/20 bg-black/55 px-3 py-2 text-[10px] text-white/75 md:flex md:right-5 md:bottom-5">
+              <span className="flex items-center gap-2"><span className="h-2 w-2 bg-white" /> raw packet</span>
+              <span className="flex items-center gap-2"><span className="h-2 w-2 bg-[#E0A49F]" /> filtered</span>
+              <span className="flex items-center gap-2"><span className="h-2 w-2 bg-[#B9CDBB]" /> trusted</span>
             </div>
           </div>
         </div>
@@ -563,7 +570,7 @@ export default function PipelineScene() {
                 {running ? "streaming" : "scroll to activate"}
               </span>
             </div>
-            <div className="font-data h-[230px] overflow-hidden px-4 py-3 text-[11px] leading-relaxed">
+            <div role="log" aria-label="Validation event log" className="font-data h-[230px] overflow-hidden px-4 py-3 text-[11px] leading-relaxed">
               {log.length === 0 ? (
                 <p className="text-[var(--text-3)]">awaiting first packet…</p>
               ) : (
@@ -582,7 +589,7 @@ export default function PipelineScene() {
             {layer ? (
               <div key={inspected} className="slide-up mt-3">
                 <div className="flex items-center gap-3">
-                  <span className="flex size-10 items-center justify-center border border-[var(--color-accent-primary)]/45 bg-[var(--color-accent-primary)]/10 text-[var(--palette-teal-300)]">
+                  <span className="flex size-10 items-center justify-center rounded-lg border border-[#EAEAEA] bg-[#F7F6F3] text-[#111111]">
                     <LayerIcon className="h-5 w-5" aria-hidden />
                   </span>
                   <div>
@@ -631,7 +638,7 @@ export default function PipelineScene() {
           </MItem>
           <MItem>
             <span className="font-data flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-[var(--text-3)]">
-              <span className={`pv-blink h-1.5 w-1.5 rounded-full ${running ? "bg-[var(--palette-teal-300)]" : "bg-[var(--text-3)]"}`} />
+              <span className={`h-1.5 w-1.5 rounded-full ${running ? "bg-white pv-blink" : "bg-white/40"}`} />
               {running ? "pipeline nominal" : "awaiting scroll"}
             </span>
           </MItem>
@@ -648,7 +655,7 @@ export default function PipelineScene() {
           height: 3px;
           pointer-events: none;
           will-change: transform, opacity;
-          background: linear-gradient(90deg, transparent, rgba(79,138,255,0.55));
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
           border-radius: 2px;
           transform-origin: 0 50%;
           z-index: 9;

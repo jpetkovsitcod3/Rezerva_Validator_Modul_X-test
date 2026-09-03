@@ -18,13 +18,13 @@ export function BrandMark({ compact = false }: { compact?: boolean }) {
     <a href="#top" className="flex items-center gap-2.5" aria-label="Bridge Modul X — home">
       <span className="relative flex size-8 items-center justify-center rounded-lg border border-[color:var(--color-border-primary)] bg-[var(--color-bg-primary)]">
         <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden>
-          <rect x="3.5" y="6.5" width="25" height="19" rx="3.5" fill="none" stroke="var(--palette-teal-300)" strokeWidth="2" />
-          <path d="m3.5 11 12.5 8 12.5-8" fill="none" stroke="var(--palette-teal-300)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <rect x="3.5" y="6.5" width="25" height="19" rx="3.5" fill="none" stroke="#111111" strokeWidth="2" />
+          <path d="m3.5 11 12.5 8 12.5-8" fill="none" stroke="#111111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <span className="absolute -top-1 -right-1 size-1.5 rounded-full bg-[var(--palette-teal-300)] pulse-green" />
       </span>
       {!compact && (
-        <span className="font-display text-[15px] font-bold tracking-tight text-white">
+        <span className="font-display text-[15px] font-bold tracking-tight text-[#111111]">
           Bridge <span className="text-[var(--palette-teal-300)]">Modul X</span>
         </span>
       )}
@@ -88,9 +88,9 @@ export default function Sidebar() {
           onClick={() => setOpen(false)}
           aria-current={isActive(item) ? "page" : undefined}
           className={cn(
-            "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-semibold transition-all duration-200",
+            "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-semibold transition-[color,background-color,border-color,transform] duration-200",
             isActive(item)
-              ? "text-white"
+              ? "text-[#111111]"
               : "border border-transparent text-[var(--text-3)] hover:translate-x-0.5 hover:bg-[var(--color-accent-primary)]/8 hover:text-[var(--text-1)]"
           )}
         >
@@ -106,7 +106,7 @@ export default function Sidebar() {
             <motion.span
               layoutId="sidebar-indicator"
               aria-hidden
-              className="absolute top-1/2 left-0 h-5 w-[2.5px] -translate-y-1/2 rounded-full bg-gradient-to-b from-[var(--palette-teal-300)] to-[var(--palette-teal-400)] shadow-[0_0_8px_rgba(79,138,255,.5)]"
+              className="absolute top-1/2 left-0 h-5 w-[2.5px] -translate-y-1/2 rounded-full bg-[#111111]"
               transition={{ type: "spring", stiffness: 350, damping: 30 }}
             />
           )}
@@ -120,14 +120,17 @@ export default function Sidebar() {
 
   const foot = (
     <div className="mt-auto space-y-3 border-t border-[var(--color-border-secondary)] pt-4">
+      <a href="#/landing" className="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold text-[var(--text-3)] transition-colors duration-200 hover:text-[var(--text-1)]">
+        <Icon name="globe" size={14} className="text-[var(--text-3)]" />
+        New landing page
+      </a>
       <a href="#/login" className="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold text-[var(--text-3)] transition-colors duration-200 hover:text-[var(--text-1)]">
         <Icon name="arrowRight" size={14} className="text-[var(--text-3)]" />
         Sign In
       </a>
       <a
         href="#/signup"
-        className="shine flex items-center justify-center rounded-xl bg-[var(--color-accent-primary)] px-4 py-2.5 text-[13px] font-bold text-[var(--color-text-on-accent)] transition-[filter,box-shadow] duration-200 hover:bg-[var(--color-accent-primary-hover)] focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)]"
-        style={{ boxShadow: "0 0 24px rgba(79,138,255,.32)" }}
+        className="flex items-center justify-center rounded-md bg-[#111111] px-4 py-2.5 text-[13px] font-bold text-white transition-colors duration-200 hover:bg-[#333333] focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
       >
         Get Started
       </a>
@@ -143,11 +146,14 @@ export default function Sidebar() {
         </div>
         <label className="mb-5 flex items-center gap-2.5 rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-secondary)] px-3 py-2 transition-colors duration-200 focus-within:border-[var(--color-accent-primary)]/50">
           <Icon name="search" size={13} className="text-[var(--text-3)]" />
-          <input
-            aria-label="Search the console"
-            placeholder="Search..."
-            className="w-full bg-transparent text-[12.5px] text-[var(--text-1)] outline-none placeholder:text-[var(--text-3)]"
-          />
+            <input
+              type="search"
+              name="search"
+              autoComplete="off"
+              aria-label="Search the console"
+              placeholder="Search…"
+              className="w-full bg-transparent text-[12.5px] text-[var(--text-1)] outline-none placeholder:text-[var(--text-3)]"
+            />
         </label>
         {nav}
 
@@ -155,7 +161,7 @@ export default function Sidebar() {
         <div className="mt-5 rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-secondary)] p-3">
           <div className="flex items-baseline justify-between">
             <span className="font-data text-[8px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">Throughput</span>
-            <span className="font-data flex items-baseline text-[12px] font-bold text-[var(--text-1)]">
+            <span className="font-data flex items-baseline text-[12px] font-bold text-[var(--text-1)] tabular-nums">
               <SlidingNumber value={rate} />
               <span className="ml-1 text-[8px] font-semibold text-[var(--text-3)]">req/s</span>
             </span>
@@ -185,7 +191,7 @@ export default function Sidebar() {
           aria-label="Close menu"
           tabIndex={open ? 0 : -1}
           onClick={() => setOpen(false)}
-          className={cn("absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300", open ? "opacity-100" : "opacity-0")}
+          className={cn("absolute inset-0 bg-[rgba(17,17,17,0.45)] transition-opacity duration-300", open ? "opacity-100" : "opacity-0")}
         />
         <div
           className={cn(

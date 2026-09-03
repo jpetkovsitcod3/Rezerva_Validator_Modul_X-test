@@ -45,7 +45,7 @@ function CardShell({
       id={id}
       onPointerMove={onMove}
       className={cn(
-        "glow-card group relative overflow-hidden rounded-xl border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-border-primary)]",
+        "group relative overflow-hidden rounded-xl border border-[#EAEAEA] bg-white p-6 transition-[border-color,box-shadow] duration-200 hover:border-[#D8D4C8] hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
         className
       )}
       style={{ transitionTimingFunction: "var(--ease-el)" }}
@@ -53,11 +53,11 @@ function CardShell({
       <span
         aria-hidden
         className="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ background: `radial-gradient(circle, ${accent}1f, transparent 70%)` }}
+        style={{ background: "radial-gradient(circle, rgba(17,17,17,0.04), transparent 70%)" }}
       />
       <span
         className="flex size-9 items-center justify-center rounded-lg border"
-        style={{ color: accent, borderColor: `${accent}55`, background: `${accent}12` }}
+        style={{ color: accent, borderColor: `color-mix(in srgb, ${accent} 35%, transparent)`, background: `color-mix(in srgb, ${accent} 10%, transparent)` }}
       >
         <Icon name={icon} size={16} />
       </span>
@@ -95,11 +95,11 @@ function ScoreDonut() {
     <div ref={ref} className="mt-5 flex items-center gap-4">
       <div className="relative size-[58px] shrink-0">
         <svg viewBox="0 0 100 100" className="size-full -rotate-90">
-          <circle cx="50" cy="50" r="42" fill="none" stroke="var(--color-accent-primary)/10" strokeWidth="10" />
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#EFEDE8" strokeWidth="10" />
           <circle
-            cx="50" cy="50" r="42" fill="none" stroke="var(--palette-teal-300)" strokeWidth="10" strokeLinecap="round"
+            cx="50" cy="50" r="42" fill="none" stroke="#111111" strokeWidth="10" strokeLinecap="round"
             pathLength={100} strokeDasharray={`${v} ${100 - v}`}
-            style={{ transition: "stroke-dasharray 1.1s var(--ease-el)", filter: "drop-shadow(0 0 6px rgba(79,138,255,.55))" }}
+            style={{ transition: "stroke-dasharray 1.1s var(--ease-el)" }}
           />
         </svg>
         <span className="font-data absolute inset-0 flex items-center justify-center text-[12px] font-bold text-[var(--text-1)] tabular-nums">
@@ -114,7 +114,7 @@ function ScoreDonut() {
             transform: inView ? "scaleX(0.96)" : "scaleX(0)",
             transformOrigin: "left",
             transition: "transform 1.1s var(--ease-el)",
-            boxShadow: "0 0 12px rgba(79,138,255,.45)",
+            
           }}
         />
       </div>

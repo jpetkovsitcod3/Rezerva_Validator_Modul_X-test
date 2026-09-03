@@ -49,8 +49,8 @@ function SideLink({ item, active }: { item: NavItem; active: boolean }) {
       className={cn(
         "metallic-panel group relative flex items-center gap-3 p-3 text-sm transition-colors duration-200",
         active
-          ? "border-[var(--palette-teal-400)]/50 inner-glow text-[var(--palette-teal-400)] text-glow"
-          : "hover:border-[var(--palette-teal-400)]/30 text-[var(--text-2)]"
+          ? "border-[#111111] bg-[#F7F6F3] text-[#111111]"
+          : "hover:border-[#D8D4C8] text-[var(--text-2)]"
       )}
     >
       <span className="screw-bottom" />
@@ -58,12 +58,12 @@ function SideLink({ item, active }: { item: NavItem; active: boolean }) {
         name={item.icon}
         size={16}
         className={cn(
-          active ? "text-[var(--palette-teal-400)]" : "text-[var(--text-3)] group-hover:text-[var(--text-2)]"
+          active ? "text-[#111111]" : "text-[var(--text-3)] group-hover:text-[var(--text-2)]"
         )}
       />
       <span>{item.label}</span>
       {active && (
-        <span className="ml-auto size-1.5 rounded-full bg-[var(--palette-teal-400)] shadow-[0_0_6px_rgba(79,138,255,0.7)]" />
+        <span className="ml-auto size-1.5 rounded-full bg-[#111111]" />
       )}
     </a>
   );
@@ -77,9 +77,9 @@ function ControlSlider({ label, value }: { label: string; value: string }) {
         <span className="text-xs uppercase tracking-wider">{label}</span>
         <Icon name="bolt" size={12} weight="fill" className="text-[var(--palette-teal-400)]" />
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full border border-[#333] bg-[#111]">
-        <div className="relative h-full bg-[var(--palette-teal-400)] shadow-[0_0_10px_rgba(79,138,255,0.5)]" style={{ width: value }}>
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 rounded-sm bg-white shadow-md" style={{ width: 8, height: 12 }} />
+      <div className="h-1.5 w-full overflow-hidden rounded-full border border-[#EAEAEA] bg-[#EFEDE8]">
+        <div className="relative h-full bg-[#111111]" style={{ width: value }}>
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 rounded-sm border border-[#111111] bg-white" style={{ width: 8, height: 12 }} />
         </div>
       </div>
     </div>
@@ -94,7 +94,7 @@ function ThroughputChart() {
       <span className="screw-bottom" />
       <div className="mb-2 flex items-end justify-between">
         <span className="text-xs uppercase tracking-wider">Throughput</span>
-        <span className="text-glow text-sm font-bold text-[var(--palette-teal-400)]">
+        <span className="text-sm font-bold text-[#111111]">
           1,962 <span className="text-[10px] font-normal text-[var(--text-3)]">req/s</span>
         </span>
       </div>
@@ -103,10 +103,8 @@ function ThroughputChart() {
           <div
             key={i}
             className={cn(
-              "w-full rounded-t-sm transition-colors hover:bg-[var(--palette-teal-400)]",
-              i === 4
-                ? "bg-[var(--palette-teal-400)] shadow-[0_0_10px_rgba(79,138,255,0.5)]"
-                : "bg-[var(--palette-teal-400)]/40"
+              "w-full rounded-t-sm transition-colors",
+              i === 4 ? "bg-[#111111]" : "bg-[#E3E0D8] hover:bg-[#C9C5B9]"
             )}
             style={{ height: `${h}%` }}
           />
@@ -140,13 +138,13 @@ export default function Shell({
     .toUpperCase();
 
   return (
-    <div className="flex h-screen overflow-hidden p-4 text-sm">
+    <div className="flex min-h-[100dvh] overflow-hidden p-4 text-sm">
       {/* mobile drawer backdrop */}
       <button
         aria-label="Close menu"
         onClick={() => setDrawer(false)}
         className={cn(
-          "fixed inset-0 z-40 bg-black/80 backdrop-blur-md transition-opacity duration-300 lg:hidden",
+          "fixed inset-0 z-40 bg-[rgba(17,17,17,0.45)] transition-opacity duration-300 lg:hidden",
           drawer ? "opacity-100" : "pointer-events-none opacity-0"
         )}
       />
@@ -155,18 +153,18 @@ export default function Shell({
       <aside
         style={{ viewTransitionName: "app-sidebar", transitionTimingFunction: "var(--ease-el)" }}
         className={cn(
-          "z-50 flex w-64 flex-shrink-0 flex-col gap-4 overflow-y-auto transition-transform duration-300 lg:translate-x-0",
+          "z-50 flex w-64 flex-shrink-0 flex-col gap-4 overflow-y-auto bg-[var(--color-bg-canvas)] transition-transform duration-300 lg:translate-x-0",
           drawer ? "fixed top-0 bottom-0 left-0" : "fixed top-0 bottom-0 left-0 -translate-x-full lg:static lg:translate-x-0"
         )}
       >
         {/* brand */}
         <div className="metallic-panel flex items-center gap-3 p-4">
           <span className="screw-bottom" />
-          <span className="flex size-8 items-center justify-center rounded bg-[var(--palette-teal-400)] font-bold text-black shadow-[0_0_10px_rgba(79,138,255,0.5)]">
+          <span className="flex size-8 items-center justify-center rounded-md bg-[#111111] font-bold text-white">
             B
           </span>
           <div>
-            <h1 className="text-glow font-bold tracking-wider text-white">REACTOR</h1>
+            <h1 className="font-display text-[17px] font-bold tracking-tight text-[#111111]">Reactor</h1>
             <p className="text-xs text-[var(--text-3)]/70">
               {area === "admin" ? "ADMIN CONSOLE" : "Nodul X"}
             </p>
@@ -179,7 +177,7 @@ export default function Shell({
             <Icon name="search" size={16} />
           </span>
           <input
-            className="w-full rounded border border-[var(--color-border-primary)] bg-[#141414] py-2 pl-9 text-[var(--text-2)] placeholder-[var(--text-3)]/50 focus:border-[var(--palette-teal-400)] focus:ring-1 focus:ring-[var(--palette-teal-400)]"
+            className="w-full rounded-md border border-[#EAEAEA] bg-white py-2 pl-9 text-[var(--text-2)] placeholder-[var(--text-3)]/60 focus:border-[#111111] focus:ring-1 focus:ring-[#111111]"
             placeholder="Search..."
             type="text"
           />
@@ -206,21 +204,21 @@ export default function Shell({
         <div className="metallic-panel flex flex-col gap-2 p-4">
           <span className="screw-bottom" />
           {isAdmin && area === "user" && (
-            <a href="#/admin" className="flex items-center gap-2 px-2 py-1 text-sm text-white transition-colors hover:text-[var(--palette-teal-400)]">
+            <a href="#/admin" className="flex items-center gap-2 px-2 py-1 text-sm text-[var(--text-2)] transition-colors hover:text-[#111111]">
               <Icon name="lock" size={16} /> Admin console
             </a>
           )}
           {isAdmin && area === "admin" && (
-            <a href="#/app" className="flex items-center gap-2 px-2 py-1 text-sm text-white transition-colors hover:text-[var(--palette-teal-400)]">
+            <a href="#/app" className="flex items-center gap-2 px-2 py-1 text-sm text-[var(--text-2)] transition-colors hover:text-[#111111]">
               <Icon name="users" size={16} /> User view
             </a>
           )}
-          <a href="#/" className="flex items-center gap-2 px-2 py-1 text-sm text-white transition-colors hover:text-[var(--palette-teal-400)]">
+          <a href="#/" className="flex items-center gap-2 px-2 py-1 text-sm text-[var(--text-2)] transition-colors hover:text-[#111111]">
             <Icon name="globe" size={16} /> Back to site
           </a>
           <button
             onClick={logout}
-            className="flex items-center gap-2 px-2 py-1 text-sm text-white transition-colors hover:text-[var(--palette-teal-400)]"
+            className="flex items-center gap-2 px-2 py-1 text-sm text-[var(--text-2)] transition-colors hover:text-[#111111]"
           >
             <Icon name="close" size={16} /> Sign out
           </button>
@@ -236,12 +234,12 @@ export default function Shell({
               type="button"
               aria-label="Open menu"
               onClick={() => setDrawer(true)}
-              className="metallic-panel mt-0.5 flex size-9 shrink-0 items-center justify-center text-[var(--text-1)] transition-colors duration-200 hover:text-[var(--palette-teal-400)] lg:hidden"
+              className="metallic-panel mt-0.5 flex size-9 shrink-0 items-center justify-center text-[var(--text-1)] transition-colors duration-200 hover:text-[#111111] lg:hidden"
             >
               <Icon name="menu" size={17} />
             </button>
             <div className="min-w-0">
-              <h2 className="text-glow text-[1.4rem] leading-tight font-bold tracking-tight text-white md:text-3xl">
+              <h2 className="font-display text-[1.6rem] leading-[1.1] font-bold tracking-tight text-[#111111] md:text-3xl">
                 {TITLES[route] ?? "Dashboard"}
               </h2>
               <p className="mt-1 text-[12.5px] text-[var(--text-2)] sm:text-sm">
@@ -250,10 +248,10 @@ export default function Shell({
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="metallic-panel flex items-center gap-2 border-[var(--palette-teal-400)]/50 px-4 py-2 inner-glow">
+            <div className="metallic-panel flex items-center gap-2 px-4 py-2">
               <span className="screw-bottom" />
-              <span className="size-2 animate-pulse rounded-full bg-[var(--palette-teal-400)] shadow-[0_0_6px_rgba(79,138,255,0.7)]" />
-              <span className="text-glow text-sm font-bold uppercase tracking-wider text-[var(--palette-teal-400)]">Core Stable</span>
+              <span className="size-2 rounded-full bg-[#346538]" />
+              <span className="font-data text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--text-1)]">Core Stable</span>
             </div>
             <div className="relative">
               <button
@@ -262,11 +260,11 @@ export default function Shell({
                 aria-haspopup="menu"
                 className="metallic-panel flex items-center gap-2.5 py-1 pr-3 pl-1 transition-colors duration-200 hover:border-[var(--palette-teal-400)]/30"
               >
-                <span className="flex size-7 items-center justify-center rounded-full bg-[var(--palette-teal-400)] text-[10px] font-bold text-black">
+                <span className="flex size-7 items-center justify-center rounded-full bg-[#111111] text-[10px] font-bold text-white">
                   {initials}
                 </span>
                 <span className="hidden text-left sm:block">
-                  <span className="block max-w-[120px] truncate text-xs leading-tight font-bold text-white">
+                  <span className="block max-w-[120px] truncate text-xs leading-tight font-bold text-[#111111]">
                     {user?.name}
                   </span>
                   <span className="block text-[8px] uppercase tracking-[0.14em] text-[var(--text-3)]">
@@ -295,7 +293,7 @@ export default function Shell({
                       transition={springSnappy}
                       className="metallic-panel absolute right-0 z-20 mt-2 w-52 p-1.5 shadow-[0_20px_50px_rgba(0,0,0,.55)]"
                     >
-                      <a role="menuitem" href="#/app/settings" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-xs font-bold text-[var(--text-2)] hover:bg-[var(--bg-2)] hover:text-white">
+                      <a role="menuitem" href="#/app/settings" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-xs font-bold text-[var(--text-2)] hover:bg-[#F7F6F3] hover:text-[#111111]">
                         <Icon name="shield" size={14} /> Profile & security
                       </a>
                       <button

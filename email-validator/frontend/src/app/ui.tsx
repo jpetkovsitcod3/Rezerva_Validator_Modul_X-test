@@ -35,9 +35,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3800);
   };
   const toneStyle: Record<Tone, string> = {
-    ok: "border-[rgba(52,211,153,.35)] text-[var(--green)]",
-    err: "border-[rgba(248,113,113,.35)] text-[var(--red)]",
-    info: "border-[var(--line-blue)] text-[var(--cyan)]",
+    ok: "border-[#BFD8C0] text-[var(--green)]",
+    err: "border-[#EAB9BB] text-[var(--red)]",
+    info: "border-[#EAEAEA] text-[var(--text-1)]",
   };
   return (
     <ToastCtx.Provider value={{ push }}>
@@ -46,7 +46,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={cn("slide-up glass-3 pointer-events-auto flex items-start gap-2.5 rounded-xl border px-4 py-3 shadow-[0_16px_40px_rgba(0,0,0,.5)]", toneStyle[t.tone])}
+            className={cn("slide-up pointer-events-auto flex items-start gap-2.5 rounded-xl border border-[#EAEAEA] bg-white px-4 py-3", toneStyle[t.tone])}
           >
             <Icon name={t.tone === "ok" ? "check" : t.tone === "err" ? "alert" : "sparkles"} size={15} className="mt-0.5 shrink-0" />
             <p className="text-[12.5px] leading-snug font-semibold text-[var(--text-1)]">{t.msg}</p>
@@ -111,16 +111,16 @@ export function Modal({
           <MOverlay
             ariaLabel="Close dialog"
             onClick={onClose}
-            className="absolute inset-0 bg-[rgba(6,11,9,.85)] backdrop-blur-sm"
+            className="absolute inset-0 bg-[rgba(17,17,17,0.4)]"
           />
           <MPanel
             innerRef={boxRef}
             tabIndex={-1}
-            className={cn("glass-3 relative w-full rounded-2xl p-6 shadow-[0_30px_80px_rgba(0,0,0,.6)] outline-none", width)}
+            className={cn("relative w-full rounded-xl border border-[#EAEAEA] bg-white p-6 outline-none", width)}
           >
             <div className="mb-4 flex items-center justify-between gap-4">
-              <h3 className="text-[16px] font-extrabold tracking-tight text-[var(--text-1)]">{title}</h3>
-              <button onClick={onClose} aria-label="Close" className="flex size-8 shrink-0 items-center justify-center rounded-xl border border-[var(--line-secondary)] text-[var(--text-3)] transition-colors duration-200 hover:border-[var(--line-blue)] hover:text-[var(--text-1)]">
+              <h3 className="font-display text-[18px] font-bold tracking-tight text-[var(--text-1)]">{title}</h3>
+              <button onClick={onClose} aria-label="Close" className="flex size-8 shrink-0 items-center justify-center rounded-md border border-[#EAEAEA] text-[var(--text-3)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]">
                 <Icon name="close" size={14} />
               </button>
             </div>
@@ -155,15 +155,15 @@ export function Confirm({
     <Modal open={open} onClose={onClose} title={title} width="max-w-md">
       <div className="text-[13.5px] leading-relaxed text-[var(--text-2)]">{body}</div>
       <div className="mt-6 flex justify-end gap-2.5">
-        <button onClick={onClose} className="rounded-xl border border-[var(--line-secondary)] px-4 py-2.5 text-[13px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:text-[var(--text-1)]">
+        <button onClick={onClose} className="rounded-md border border-[#EAEAEA] px-4 py-2.5 text-[13px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]">
           Cancel
         </button>
         <button
           onClick={onConfirm}
           disabled={busy}
           className={cn(
-            "flex items-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-bold text-[var(--color-text-on-accent)] transition-all duration-200 active:scale-95 disabled:opacity-70",
-            danger ? "bg-[var(--color-action-danger)] hover:bg-[var(--color-action-danger-hover)]" : "bg-[var(--blue)] hover:brightness-110"
+            "flex items-center gap-2 rounded-md px-4 py-2.5 text-[13px] font-bold text-white transition-colors duration-200 active:scale-[.98] disabled:opacity-70",
+            danger ? "bg-[#9F2F2D] hover:bg-[#86302E]" : "bg-[#111111] hover:bg-[#333333]"
           )}
         >
           {busy && <Spinner size={13} />}
@@ -180,8 +180,8 @@ export function StatusBadge({ status }: { status: VerdictStatus }) {
   const m = STATUS_META[status];
   return (
     <span
-      className="font-data inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9.5px] font-bold tracking-[0.1em] uppercase"
-      style={{ color: m.color, borderColor: m.color, background: `color-mix(in srgb, ${m.color} 10%, transparent)` }}
+      className="font-data inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9.5px] font-bold tracking-[0.05em] uppercase"
+      style={{ color: m.color, borderColor: `color-mix(in srgb, ${m.color} 35%, transparent)`, background: `color-mix(in srgb, ${m.color} 10%, transparent)` }}
     >
       <span className="size-1.5 rounded-full" style={{ background: m.color }} />
       {m.label}
@@ -190,7 +190,7 @@ export function StatusBadge({ status }: { status: VerdictStatus }) {
 }
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("glass-1 rounded-2xl", className)}>{children}</div>;
+  return <div className={cn("rounded-xl border border-[#EAEAEA] bg-white", className)}>{children}</div>;
 }
 
 export const StatTile = memo(function StatTile({
@@ -209,7 +209,7 @@ export const StatTile = memo(function StatTile({
   loading?: boolean;
 }) {
   return (
-    <Card className="p-5 transition-all duration-300 hover:border-[var(--line-blue)] hover:glow-1">
+    <Card className="hover-lift p-6">
       <div className="flex items-start justify-between">
         <div>
           <p className="font-data text-[9.5px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">{label}</p>
@@ -240,11 +240,11 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--line-secondary)] px-6 py-14 text-center">
-      <span className="flex size-12 items-center justify-center rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] text-[var(--text-3)]">
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#EAEAEA] bg-white px-6 py-14 text-center">
+      <span className="flex size-12 items-center justify-center rounded-lg border border-[#EAEAEA] bg-[#F7F6F3] text-[var(--text-3)]">
         <Icon name={icon} size={20} />
       </span>
-      <p className="mt-4 text-[15px] font-extrabold text-[var(--text-1)]">{title}</p>
+      <p className="font-display mt-4 text-[17px] font-bold text-[var(--text-1)]">{title}</p>
       <p className="mt-1.5 max-w-sm text-[12.5px] leading-relaxed text-[var(--text-3)]">{body}</p>
       {action && <div className="mt-5">{action}</div>}
     </div>
@@ -258,7 +258,7 @@ export function Pagination({ page, pages, onPage }: { page: number; pages: numbe
       <button
         onClick={() => onPage(page - 1)}
         disabled={page <= 1}
-        className="flex items-center gap-1.5 rounded-xl border border-[var(--line-secondary)] px-3 py-2 text-[12px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[var(--line-blue)] hover:text-[var(--cyan)] disabled:pointer-events-none disabled:opacity-40"
+        className="flex items-center gap-1.5 rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-[12px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)] disabled:pointer-events-none disabled:opacity-40"
       >
         <Icon name="arrowRight" size={12} className="rotate-180" /> Prev
       </button>
@@ -268,7 +268,7 @@ export function Pagination({ page, pages, onPage }: { page: number; pages: numbe
       <button
         onClick={() => onPage(page + 1)}
         disabled={page >= pages}
-        className="flex items-center gap-1.5 rounded-xl border border-[var(--line-secondary)] px-3 py-2 text-[12px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[var(--line-blue)] hover:text-[var(--cyan)] disabled:pointer-events-none disabled:opacity-40"
+        className="flex items-center gap-1.5 rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-[12px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)] disabled:pointer-events-none disabled:opacity-40"
       >
         Next <Icon name="arrowRight" size={12} />
       </button>
@@ -304,7 +304,7 @@ export function Field({
 }
 
 export const inputCls =
-  "w-full rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] px-3.5 py-2.5 text-[13.5px] text-[var(--text-1)] outline-none transition-colors duration-200 placeholder:text-[var(--text-3)] focus:border-[var(--blue)]";
+  "w-full rounded-md border border-[#EAEAEA] bg-white px-3.5 py-2.5 text-[13.5px] text-[var(--text-1)] outline-none transition-colors duration-200 placeholder:text-[var(--text-3)] focus:border-[#111111]";
 
 export function CopyBtn({ text, label = "Copy" }: { text: string; label?: string }) {
   const { push } = useToast();
@@ -326,7 +326,7 @@ export function CopyBtn({ text, label = "Copy" }: { text: string; label?: string
         push("Copied to clipboard", "info");
         setTimeout(() => setDone(false), 1600);
       }}
-      className="flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--line-secondary)] px-2.5 py-1.5 text-[11px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[var(--line-blue)] hover:text-[var(--cyan)]"
+      className="flex shrink-0 items-center gap-1.5 rounded-md border border-[#EAEAEA] bg-white px-2.5 py-1.5 text-[11px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]"
     >
       <Icon name={done ? "check" : "code"} size={11} />
       {done ? "Copied" : label}
@@ -336,7 +336,7 @@ export function CopyBtn({ text, label = "Copy" }: { text: string; label?: string
 
 /* ================= unified button system ================= */
 
-const BTN_BASE = "inline-flex items-center justify-center gap-2 rounded-xl font-bold transition-all duration-200 active:scale-[.97] disabled:opacity-60 disabled:pointer-events-none";
+const BTN_BASE = "inline-flex items-center justify-center gap-2 rounded-md font-bold transition-colors duration-200 active:scale-[.98] disabled:opacity-60 disabled:pointer-events-none";
 
 export function PrimaryButton({ children, icon, loading, disabled, className, onClick, type = "button", href }: {
   children: ReactNode;
@@ -348,7 +348,7 @@ export function PrimaryButton({ children, icon, loading, disabled, className, on
   type?: "button" | "submit";
   href?: string;
 }) {
-  const cls = cn(BTN_BASE, "glow-2 bg-[var(--blue)] text-[var(--color-text-on-accent)] hover:brightness-110 hover:glow-3 px-5 py-2.5 text-[13px]", className);
+  const cls = cn(BTN_BASE, "bg-[#111111] text-white hover:bg-[#333333] px-5 py-2.5 text-[13px]", className);
   const inner = <>{loading ? <Spinner size={13} /> : icon ? <Icon name={icon} size={14} /> : null}{children}</>;
   if (href) return <a href={href} className={cls} onClick={disabled ? undefined : onClick}>{inner}</a>;
   return <button type={type} onClick={onClick} disabled={disabled || loading} className={cls}>{inner}</button>;
@@ -364,7 +364,7 @@ export function SecondaryButton({ children, icon, loading, disabled, className, 
   type?: "button" | "submit";
 }) {
   return (
-    <button type={type} onClick={onClick} disabled={disabled || loading} className={cn(BTN_BASE, "glass-1 text-[var(--text-1)] hover:border-[var(--line-blue)] hover:glow-1 px-5 py-2.5 text-[13px]", className)}>
+    <button type={type} onClick={onClick} disabled={disabled || loading} className={cn(BTN_BASE, "border border-[#EAEAEA] bg-white text-[var(--text-1)] hover:border-[#111111] px-5 py-2.5 text-[13px]", className)}>
       {loading ? <Spinner size={13} /> : icon ? <Icon name={icon} size={14} /> : null}{children}
     </button>
   );
@@ -380,7 +380,7 @@ export function DangerButton({ children, icon, loading, disabled, className, onC
   type?: "button" | "submit";
 }) {
   return (
-    <button type={type} onClick={onClick} disabled={disabled || loading} className={cn(BTN_BASE, "border border-[rgba(248,113,113,.4)] bg-[rgba(248,113,113,.08)] text-[var(--red)] hover:bg-[rgba(248,113,113,.16)] px-4 py-2.5 text-[13px]", className)}>
+    <button type={type} onClick={onClick} disabled={disabled || loading} className={cn(BTN_BASE, "border border-[#EAB9BB] bg-[#FDEBEC] text-[#9F2F2D] hover:bg-[#F6DADB] px-4 py-2.5 text-[13px]", className)}>
       {loading ? <Spinner size={13} /> : icon ? <Icon name={icon} size={14} /> : null}{children}
     </button>
   );
@@ -395,7 +395,7 @@ export function GhostButton({ children, icon, disabled, className, onClick, type
   type?: "button" | "submit";
 }) {
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={cn(BTN_BASE, "border border-[var(--line-secondary)] text-[var(--text-2)] hover:border-[var(--line-blue)] hover:text-[var(--cyan)] px-4 py-2.5 text-[13px]", className)}>
+    <button type={type} onClick={onClick} disabled={disabled} className={cn(BTN_BASE, "border border-transparent text-[var(--text-2)] hover:border-[#EAEAEA] hover:bg-[#F7F6F3] hover:text-[var(--text-1)] px-4 py-2.5 text-[13px]", className)}>
       {icon ? <Icon name={icon} size={14} /> : null}{children}
     </button>
   );

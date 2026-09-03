@@ -20,7 +20,7 @@ async def test_supabase():
     print("=" * 60)
 
     if not settings.supabase_configured:
-        print("❌ Supabase not configured (missing URL or service_role_key)")
+        print("[FAIL] Supabase not configured (missing URL or service_role_key)")
         return False
 
     import httpx
@@ -40,25 +40,25 @@ async def test_supabase():
         print(f"Status Code: {resp.status_code}")
 
         if resp.status_code == 200:
-            print("✅ Supabase: Connected and schema applied!")
+            print("[PASS] Supabase: Connected and schema applied!")
             return True
         elif resp.status_code == 404:
-            print("⚠️  Supabase: Connected but schema NOT applied")
+            print("[WARN]  Supabase: Connected but schema NOT applied")
             print("   → Run supabase/schema.sql in Supabase SQL Editor")
             return False
         elif resp.status_code == 401:
-            print("❌ Supabase: Authentication failed (401)")
+            print("[FAIL] Supabase: Authentication failed (401)")
             print("   → Regenerate service_role_key in Supabase Dashboard → Settings → API")
             return False
         else:
-            print(f"❌ Supabase: Unexpected response: {resp.text}")
+            print(f"[FAIL] Supabase: Unexpected response: {resp.text}")
             return False
 
     except httpx.HTTPError as e:
-        print(f"❌ Supabase: Network error - {e}")
+        print(f"[FAIL] Supabase: Network error - {e}")
         return False
     except Exception as e:
-        print(f"❌ Supabase: Error - {e}")
+        print(f"[FAIL] Supabase: Error - {e}")
         return False
 
 
@@ -69,14 +69,14 @@ async def test_redis():
     print("=" * 60)
 
     if "YOUR_UPSTASH_PASSWORD" in settings.redis_url or "YOUR_ENDPOINT" in settings.redis_url:
-        print("❌ Redis URL not configured (still using placeholder values)")
+        print("[FAIL] Redis URL not configured (still using placeholder values)")
         print(f"   Current: {settings.redis_url}")
         return False
 
     try:
         import redis.asyncio as aioredis
     except ImportError:
-        print("❌ redis package not installed: pip install redis")
+        print("[FAIL] redis package not installed: pip install redis")
         return False
 
     try:
@@ -90,27 +90,30 @@ async def test_redis():
 
         # Test ping
         pong = await client.ping()
-        print(f"✅ Redis PING: {pong}")
+        print(f"[PASS] Redis PING: {pong}")
 
         # Test set/get
         await client.set("test:connection", "ok", ex=10)
         val = await client.get("test:connection")
-        print(f"✅ Redis SET/GET: {val}")
+        print(f"[PASS] Redis SET/GET: {val}")
 
-        # Test database selection (for Celery)
-        await client.select(1)
-        await client.set("test:db1", "broker", ex=10)
-        await client.select(2)
-        await client.set("test:db2", "backend", ex=10)
-        await client.select(0)
-        print("✅ Redis DB 0/1/2: Accessible")
+        # Upstash supports only database 0; SELECT would fail by design.
+        if "upstash.io" in settings.redis_url:
+            print("ℹ️  Redis: Upstash single-database mode — skipping SELECT 1/2 test")
+        else:
+            await client.select(1)
+            await client.set("test:db1", "broker", ex=10)
+            await client.select(2)
+            await client.set("test:db2", "backend", ex=10)
+            await client.select(0)
+            print("[PASS] Redis DB 0/1/2: Accessible")
 
         await client.close()
-        print("✅ Redis: All tests passed!")
+        print("[PASS] Redis: All tests passed!")
         return True
 
     except Exception as e:
-        print(f"❌ Redis: Connection failed - {e}")
+        print(f"[FAIL] Redis: Connection failed - {e}")
         print(f"   URL: {settings.redis_url}")
         print("   → Check: Password, Endpoint, TLS (rediss://), IP Allowlist (0.0.0.0/0)")
         return False
@@ -123,7 +126,7 @@ async def test_celery():
     print("=" * 60)
 
     if "YOUR_UPSTASH_PASSWORD" in settings.celery_broker_url:
-        print("❌ Celery broker URL not configured")
+        print("[FAIL] Celery broker URL not configured")
         return False
 
     try:
@@ -140,18 +143,18 @@ async def test_celery():
         try:
             stats = insp.stats()
             if stats:
-                print(f"✅ Celery: Workers found: {list(stats.keys())}")
+                print(f"[PASS] Celery: Workers found: {list(stats.keys())}")
             else:
-                print("⚠️  Celery: Broker reachable but no workers running")
+                print("[WARN]  Celery: Broker reachable but no workers running")
                 print("   → Start worker: celery -A app.tasks.celery_tasks.celery_app worker --loglevel=info")
         except Exception:
-            print("⚠️  Celery: Broker reachable but no workers responding")
+            print("[WARN]  Celery: Broker reachable but no workers responding")
 
-        print("✅ Celery: Configuration OK")
+        print("[PASS] Celery: Configuration OK")
         return True
 
     except Exception as e:
-        print(f"❌ Celery: Error - {e}")
+        print(f"[FAIL] Celery: Error - {e}")
         return False
 
 
@@ -166,12 +169,12 @@ async def test_validation_engine():
 
         # Quick validation (no SMTP)
         result = await engine.validate("test@example.com", deep=False)
-        print(f"✅ Validation: {result.email} → {result.status.value} (score: {result.scoring.score})")
+        print(f"[PASS] Validation: {result.email} → {result.status.value} (score: {result.scoring.score})")
         print(f"   Layers: Syntax={result.syntax.passed}, DNS={result.dns.domain_exists}, MX={result.dns.has_mx_records}")
         return True
 
     except Exception as e:
-        print(f"❌ Validation Engine: Error - {e}")
+        print(f"[FAIL] Validation Engine: Error - {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -199,11 +202,11 @@ async def main():
     print("=" * 60)
 
     for name, passed in results.items():
-        status = "✅ PASS" if passed else "❌ FAIL"
+        status = "[PASS] PASS" if passed else "[FAIL] FAIL"
         print(f"  {name.capitalize()}: {status}")
 
     all_passed = all(results.values())
-    print(f"\nOverall: {'✅ ALL TESTS PASSED' if all_passed else '❌ SOME TESTS FAILED'}")
+    print(f"\nOverall: {'[PASS] ALL TESTS PASSED' if all_passed else '[FAIL] SOME TESTS FAILED'}")
 
     if not all_passed:
         print("\nNext steps:")

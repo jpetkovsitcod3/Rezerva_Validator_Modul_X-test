@@ -4,10 +4,13 @@ import { AuthProvider, Guard, useRoute } from "./lib/auth";
 import { ToastProvider } from "./app/ui";
 import Sidebar from "./landing/Sidebar";
 import MapHero from "./landing/MapHero";
+import TrustBar from "./landing/TrustBar";
 import PipelineScene from "./landing/PipelineScene";
 import Architecture from "./landing/Architecture";
 import PricingBand from "./landing/PricingBand";
+import CTABand from "./landing/CTABand";
 import FooterLanding from "./landing/FooterLanding";
+import LandingPage from "./landing/LandingPage";
 import Shell from "./app/Shell";
 import { RouteTransition } from "./lib/route-transition";
 import { LoginPage, SignupPage } from "./app/Auth";
@@ -31,9 +34,11 @@ function Landing() {
           <Sidebar />
           <MapHero />
         </div>
+        <TrustBar />
         <PipelineScene />
         <Architecture />
         <PricingBand />
+        <CTABand />
         <FooterLanding />
       </div>
     </RouteTransition>
@@ -49,6 +54,7 @@ function AppRoutes() {
 
   if (route === "/login") return <LoginPage />;
   if (route === "/signup") return <SignupPage />;
+  if (route === "/landing") return <LandingPage />;
 
   if (route.startsWith("/app")) {
     const page =

@@ -150,7 +150,7 @@ const SEED_ADDRESSES = [
   "leads@yopmail.com", "anna@fjordline.no", "cto@nordpay.se", "ops@beacon.dev",
   "marcus@initech.com", "hello@vandelay.com", "priya@umbrella.co", "tom@starkind.com",
   "no.reply@dead-domain.io", "support@outlok.com", "growth@hooli.xyz", "qa@nullmx.test",
-  "lena@acme.dev", "finance@globex.com", "sam@proton.me", "errors@sharklasers.com",
+  "lena@brightline.co", "finance@globex.com", "sam@proton.me", "errors@sharklasers.com",
 ];
 
 function seed(): DB {

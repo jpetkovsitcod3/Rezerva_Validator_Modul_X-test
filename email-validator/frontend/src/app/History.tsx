@@ -91,7 +91,7 @@ export default function History() {
       <div className="space-y-5">
         {/* toolbar */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] px-4 py-2.5 transition-colors duration-200 focus-within:border-[var(--blue)] sm:max-w-xs">
+          <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-lg border border-[#EAEAEA] bg-white px-4 py-2.5 transition-colors duration-200 focus-within:border-[#111111] sm:max-w-xs">
             <Icon name="search" size={14} className="shrink-0 text-[var(--text-3)]" />
             <input
               value={search}
@@ -148,7 +148,7 @@ export default function History() {
                 }
                 action={
                   !search && status === "all" ? (
-                    <a href="#/app/validator" className="glow-2 rounded-xl bg-[var(--blue)] px-5 py-2.5 text-[13px] font-bold text-[var(--color-text-on-accent)]">
+                    <a href="#/app/validator" className="rounded-md bg-[#111111] px-5 py-2.5 text-[13px] font-bold text-white transition-colors duration-200 hover:bg-[#333333]">
                       Run your first check
                     </a>
                   ) : undefined
@@ -188,14 +188,14 @@ export default function History() {
                             <div className="flex justify-end gap-1.5 opacity-60 transition-opacity duration-200 group-hover:opacity-100">
                               <button
                                 onClick={() => openTrace(r)}
-                                className="rounded-md border border-[var(--line)] px-2.5 py-1.5 text-[10.5px] font-bold text-[var(--cyan)] transition-colors duration-200 hover:border-[var(--line-blue)]"
+                                className="rounded-md border border-[#EAEAEA] bg-white px-2.5 py-1.5 text-[10.5px] font-bold text-[#111111] transition-colors duration-200 hover:border-[#111111]"
                               >
                                 Trace
                               </button>
                               <button
                                 onClick={() => setDeleting(r)}
                                 aria-label={`Delete ${r.email}`}
-                                className="rounded-md border border-[var(--line)] p-1.5 text-[var(--text-3)] transition-colors duration-200 hover:border-[rgba(248,113,113,.4)] hover:text-[var(--red)]"
+                                className="rounded-md border border-[var(--line)] p-1.5 text-[var(--text-3)] transition-colors duration-200 hover:border-[#EAB9BB] hover:text-[#9F2F2D]"
                               >
                                 <Icon name="trash" size={11} />
                               </button>

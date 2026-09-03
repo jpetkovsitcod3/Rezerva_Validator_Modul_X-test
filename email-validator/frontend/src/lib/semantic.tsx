@@ -1,7 +1,8 @@
 /* ============================================================
-   Semantic-UI-derived elements, rebuilt natively for the dark
-   BRIDGE design system (semantic-ui-react targets React ≤18;
-   these ports run on React 19 and inherit all design tokens).
+   Semantic-UI-derived elements, rebuilt natively for the warm
+   paper BRIDGE design system (semantic-ui-react targets
+   React ≤18; these ports run on React 19 and inherit all
+   design tokens).
    Elements: Button(animated) · Label/Ribbon · Statistic ·
    Progress · Rating · Message · Divider
    ============================================================ */
@@ -14,12 +15,12 @@ import { cn } from "../utils/cn";
 
 const BTN_VARIANTS: Record<string, string> = {
   primary:
-    "glow-2 bg-[var(--blue)] text-[var(--color-text-on-accent)] hover:brightness-110 hover:glow-3 border border-transparent",
-  dark: "glass-1 text-[var(--text-1)] hover:border-[var(--line-blue)] hover:glow-1",
+    "bg-[#111111] text-white hover:bg-[#333333] border border-transparent",
+  dark: "border border-[#EAEAEA] bg-white text-[var(--text-1)] hover:border-[#111111]",
   danger:
-    "border border-[rgba(248,113,113,.45)] bg-[rgba(248,113,113,.08)] text-[var(--red)] hover:bg-[rgba(248,113,113,.16)]",
+    "border border-[#EAB9BB] bg-[#FDEBEC] text-[#9F2F2D] hover:bg-[#F6DADB]",
   ghost:
-    "border border-[var(--line)] bg-transparent text-[var(--text-2)] hover:border-[var(--line-blue)] hover:text-[var(--cyan)]",
+    "border border-transparent bg-transparent text-[var(--text-2)] hover:border-[#EAEAEA] hover:bg-[#F7F6F3] hover:text-[var(--text-1)]",
 };
 
 export function SuiButton({
@@ -46,7 +47,7 @@ export function SuiButton({
   icon?: IconName;
 }) {
   const cls = cn(
-    "sui-btn relative inline-flex items-center justify-center overflow-hidden rounded-xl px-5 py-2.5 text-[13px] font-bold transition-[filter,box-shadow,background-color] duration-200 active:scale-[.97]",
+    "sui-btn relative inline-flex items-center justify-center overflow-hidden rounded-md px-5 py-2.5 text-[13px] font-bold transition-colors duration-200 active:scale-[.98]",
     BTN_VARIANTS[variant],
     (disabled || loading) && "pointer-events-none opacity-60",
     className
@@ -129,7 +130,7 @@ export function SuiStatistic({
     <div className="min-w-[86px]">
       <span
         className="font-data block text-[20px] leading-none font-bold tabular-nums"
-        style={{ color: accent, textShadow: `0 0 18px color-mix(in srgb, ${accent} 45%, transparent)` }}
+        style={{ color: accent }}
       >
         {value}
       </span>
@@ -171,7 +172,7 @@ export function SuiProgress({
         </div>
       )}
       <div
-        className="h-2 overflow-hidden rounded-full bg-[rgba(160,160,184,.1)]"
+        className="h-2 overflow-hidden rounded-full bg-[#EFEDE8]"
         role="progressbar"
         aria-valuenow={Math.round(pct)}
         aria-valuemin={0}
@@ -183,8 +184,7 @@ export function SuiProgress({
           style={{
             transform: `scaleX(${pct / 100})`,
             transition: "transform .6s var(--ease-el)",
-            background: `linear-gradient(90deg, ${accent}, var(--blue))`,
-            boxShadow: `0 0 12px color-mix(in srgb, ${accent} 55%, transparent)`,
+            background: accent,
           }}
         />
       </div>
@@ -233,8 +233,8 @@ export function SuiRating({
               name="star"
               size={17}
               className={cn(
-                "transition-[color,filter] duration-150",
-                filled ? "text-[#fbbf24] [filter:drop-shadow(0_0_7px_rgba(251,191,36,.65))]" : "text-[rgba(160,160,184,.28)]"
+                "transition-colors duration-150",
+                filled ? "text-[#956400]" : "text-[#D8D4C8]"
               )}
             />
           </button>
@@ -247,9 +247,9 @@ export function SuiRating({
 /* ---------------- Message ---------------- */
 
 const MSG_TONES: Record<string, { icon: IconName; c: string }> = {
-  info: { icon: "sparkles", c: "var(--cyan)" },
+  info: { icon: "sparkles", c: "#1F6C9F" },
   success: { icon: "check", c: "var(--green)" },
-  warning: { icon: "alert", c: "#fbbf24" },
+  warning: { icon: "alert", c: "#956400" },
   danger: { icon: "alert", c: "var(--red)" },
 };
 
@@ -270,7 +270,7 @@ export function SuiMessage({
   return (
     <div
       role="alert"
-      className={cn("slide-up flex items-start gap-3 rounded-xl border bg-[var(--bg-2)] p-4", className)}
+      className={cn("slide-up flex items-start gap-3 rounded-xl border bg-white p-4", className)}
       style={{
         borderColor: `color-mix(in srgb, ${t.c} 35%, transparent)`,
         borderLeft: `3px solid ${t.c}`,
@@ -307,11 +307,11 @@ export function SuiMessage({
 export function SuiDivider({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-4" role="separator" aria-label={label}>
-      <span className="h-px flex-1 bg-gradient-to-r from-transparent to-[rgba(160,160,184,.22)]" />
+      <span className="h-px flex-1 bg-[#EAEAEA]" />
       <span className="font-data text-[9px] font-semibold tracking-[0.24em] text-[var(--text-3)] uppercase">
         {label}
       </span>
-      <span className="h-px flex-1 bg-gradient-to-l from-transparent to-[rgba(160,160,184,.22)]" />
+      <span className="h-px flex-1 bg-[#EAEAEA]" />
     </div>
   );
 }
