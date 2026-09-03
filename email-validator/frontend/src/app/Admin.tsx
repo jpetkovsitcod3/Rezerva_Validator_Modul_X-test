@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, startTransition, useState, ViewTransition, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "../lib/ui";
+import { RouteTransition } from "../lib/route-transition";
 import {
   apiAdminDeleteUser,
   apiAdminOverview,
@@ -39,101 +40,103 @@ export function AdminOverviewPage() {
   const total = split.valid + split.risky + split.invalid || 1;
 
   return (
-    <div className="space-y-6">
-      <Stagger className="grid grid-cols-2 gap-4 xl:grid-cols-4" stagger={0.08}>
-        <MItem><StatTile label="Total users" value={ov ? ov.users : "…"} icon="users" sub={`${ov?.active ?? 0} active · ${ov?.suspended ?? 0} suspended`} loading={!ov} /></MItem>
-        <MItem><StatTile label="Validations" value={ov ? ov.validations.toLocaleString() : "…"} icon="database" sub={`${ov?.last7 ?? 0} in last 7 days`} loading={!ov} /></MItem>
-        <MItem><StatTile label="Credits in play" value={ov ? ov.creditsOutstanding.toLocaleString() : "…"} icon="zap" sub="outstanding user balances" loading={!ov} /></MItem>
-        <MItem><StatTile label="Invalid caught" value={ov ? `${Math.round((split.invalid / total) * 100)}%` : "…"} icon="ban" accent="var(--red)" sub="of all traffic" loading={!ov} /></MItem>
-      </Stagger>
+    <RouteTransition>
+      <div className="space-y-6">
+        <Stagger className="grid grid-cols-2 gap-4 xl:grid-cols-4" stagger={0.08}>
+          <MItem><StatTile label="Total users" value={ov ? ov.users : "…"} icon="users" sub={`${ov?.active ?? 0} active · ${ov?.suspended ?? 0} suspended`} loading={!ov} /></MItem>
+          <MItem><StatTile label="Validations" value={ov ? ov.validations.toLocaleString() : "…"} icon="database" sub={`${ov?.last7 ?? 0} in last 7 days`} loading={!ov} /></MItem>
+          <MItem><StatTile label="Credits in play" value={ov ? ov.creditsOutstanding.toLocaleString() : "…"} icon="bolt" sub="outstanding user balances" loading={!ov} /></MItem>
+          <MItem><StatTile label="Invalid caught" value={ov ? `${Math.round((split.invalid / total) * 100)}%` : "…"} icon="ban" accent="var(--red)" sub="of all traffic" loading={!ov} /></MItem>
+        </Stagger>
 
-      {/* platform health — mirrors /api/v1/health */}
-      <Card className="flex flex-wrap items-center gap-x-7 gap-y-3 px-6 py-4">
-        <span className="font-data text-[9px] font-semibold tracking-[0.22em] text-[var(--text-3)] uppercase">platform health</span>
-        {[
-          ["api · 200 ok", "var(--green)"],
-          ["engine · warm", "var(--green)"],
-          ["cache · 94% hit", "var(--cyan)"],
-          ["smtp pool · 12/12", "var(--green)"],
-          ["queue · idle", "var(--cyan)"],
-          ["blocklist · synced", "var(--purple)"],
-        ].map(([label, color]) => (
-          <span key={label} className="font-data flex items-center gap-2 text-[10.5px] tracking-[0.08em] text-[var(--text-2)]">
-            <span className="pulse-green size-1.5 rounded-full" style={{ background: color }} />
-            {label}
-          </span>
-        ))}
-      </Card>
-
-      <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">
-        <Card className="p-6">
-          <h3 className="text-[14px] font-extrabold text-[var(--text-1)]">Traffic by verdict</h3>
-          <div className="mt-5 space-y-4">
-            {(["valid", "risky", "invalid"] as VerdictStatus[]).map((s) => {
-              const v = split[s];
-              const pct = Math.round((v / total) * 100);
-              const color = s === "valid" ? "var(--green)" : s === "risky" ? "var(--purple)" : "var(--red)";
-              return (
-                <div key={s}>
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-[12.5px] font-bold text-[var(--text-2)] capitalize">{s}</span>
-                    <span className="font-data text-[11.5px] text-[var(--text-3)] tabular-nums">{v.toLocaleString()} · {pct}%</span>
-                  </div>
-                  <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-[rgba(160,160,184,.1)]">
-                    <div className="h-full rounded-full" style={{ width: ov ? `${pct}%` : "0%", background: color, transition: "width .8s var(--ease-el)", boxShadow: `0 0 10px ${color}` }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <h3 className="mt-8 text-[14px] font-extrabold text-[var(--text-1)]">Top validators</h3>
-          <ul className="mt-3 space-y-2">
-            {!ov ? (
-              [...Array(4)].map((_, i) => <li key={i} className="shimmer h-10 rounded-lg bg-[var(--bg-2)]" />)
-            ) : (
-              ov.topUsers.map(({ user, count }, i) => (
-                <li key={user.id} className="flex items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--bg-2)] px-3.5 py-2.5">
-                  <span className="font-data w-5 text-[11px] font-bold text-[var(--text-3)]">#{i + 1}</span>
-                  <span className="font-data grad-bg flex size-7 items-center justify-center rounded-full text-[9.5px] font-bold text-[#151208]">
-                    {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-[var(--text-1)]">{user.name}</span>
-                  <span className="font-data text-[11px] text-[var(--cyan)] tabular-nums">{count} checks</span>
-                </li>
-              ))
-            )}
-          </ul>
+        {/* platform health — mirrors /api/v1/health */}
+        <Card className="flex flex-wrap items-center gap-x-7 gap-y-3 px-6 py-4">
+          <span className="font-data text-[9px] font-semibold tracking-[0.22em] text-[var(--text-3)] uppercase">platform health</span>
+          {[
+            ["api · 200 ok", "var(--green)"],
+            ["engine · warm", "var(--green)"],
+            ["cache · 94% hit", "var(--cyan)"],
+            ["smtp pool · 12/12", "var(--green)"],
+            ["queue · idle", "var(--cyan)"],
+            ["blocklist · synced", "var(--cyan)"],
+          ].map(([label, color]) => (
+            <span key={label} className="font-data flex items-center gap-2 text-[10.5px] tracking-[0.08em] text-[var(--text-2)]">
+              <span className="pulse-green size-1.5 rounded-full" style={{ background: color }} />
+              {label}
+            </span>
+          ))}
         </Card>
 
-        <Card className="p-6">
-          <h3 className="text-[14px] font-extrabold text-[var(--text-1)]">Recent signups</h3>
-          <ul className="mt-3 space-y-2">
-            {!ov ? (
-              [...Array(5)].map((_, i) => <li key={i} className="shimmer h-12 rounded-lg bg-[var(--bg-2)]" />)
-            ) : (
-              ov.recentSignups.map((u) => (
-                <li key={u.id} className="flex items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--bg-2)] px-3.5 py-2.5">
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[12.5px] font-bold text-[var(--text-1)]">{u.name}</span>
-                    <span className="font-data block truncate text-[10px] text-[var(--text-3)]">{u.email}</span>
-                  </span>
-                  {u.role === "admin" && (
-                    <span className="font-data rounded-full border border-[rgba(167,139,250,.4)] px-2 py-0.5 text-[8.5px] font-bold tracking-[0.12em] text-[var(--purple)] uppercase">admin</span>
-                  )}
-                  {u.status === "suspended" && (
-                    <span className="font-data rounded-full border border-[rgba(248,113,113,.4)] px-2 py-0.5 text-[8.5px] font-bold tracking-[0.12em] text-[var(--red)] uppercase">susp</span>
-                  )}
-                  <span className="font-data text-[10px] text-[var(--text-3)]">{timeAgo(u.createdAt)}</span>
-                </li>
-              ))
-            )}
-          </ul>
-          <a href="#/admin/users" className="mt-5 block text-center text-[12.5px] font-bold text-[var(--cyan)] hover:underline">
-            Manage all users →
-          </a>
-        </Card>
+        <div className="grid gap-4 lg:grid-cols-[1.1fr_1fr]">
+          <Card className="p-6">
+            <h3 className="text-[14px] font-extrabold text-[var(--text-1)]">Traffic by verdict</h3>
+            <div className="mt-5 space-y-4">
+              {(["valid", "risky", "invalid"] as VerdictStatus[]).map((s) => {
+                const v = split[s];
+                const pct = Math.round((v / total) * 100);
+                const color = s === "valid" ? "var(--green)" : s === "risky" ? "var(--amber)" : "var(--red)";
+                return (
+                  <div key={s}>
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-[12.5px] font-bold text-[var(--text-2)] capitalize">{s}</span>
+                      <span className="font-data text-[11.5px] text-[var(--text-3)] tabular-nums">{v.toLocaleString()} · {pct}%</span>
+                    </div>
+                    <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-[rgba(160,160,184,.1)]">
+                      <div className="h-full rounded-full" style={{ width: ov ? `${pct}%` : "0%", background: color, transition: "width .8s var(--ease-el)", boxShadow: `0 0 10px ${color}` }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <h3 className="mt-8 text-[14px] font-extrabold text-[var(--text-1)]">Top validators</h3>
+            <ul className="mt-3 space-y-2">
+              {!ov ? (
+                [...Array(4)].map((_, i) => <li key={i} className="shimmer h-10 rounded-lg bg-[var(--bg-2)]" />)
+              ) : (
+                ov.topUsers.map(({ user, count }, i) => (
+                  <li key={user.id} className="flex items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--bg-2)] px-3.5 py-2.5">
+                    <span className="font-data w-5 text-[11px] font-bold text-[var(--text-3)]">#{i + 1}</span>
+                    <span className="font-data grad-bg flex size-7 items-center justify-center rounded-full text-[9.5px] font-bold text-[#151208]">
+                      {user.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-[var(--text-1)]">{user.name}</span>
+                    <span className="font-data text-[11px] text-[var(--cyan)] tabular-nums">{count} checks</span>
+                  </li>
+                ))
+              )}
+            </ul>
+          </Card>
+
+          <Card className="p-6">
+            <h3 className="text-[14px] font-extrabold text-[var(--text-1)]">Recent signups</h3>
+            <ul className="mt-3 space-y-2">
+              {!ov ? (
+                [...Array(5)].map((_, i) => <li key={i} className="shimmer h-12 rounded-lg bg-[var(--bg-2)]" />)
+              ) : (
+                ov.recentSignups.map((u) => (
+                  <li key={u.id} className="flex items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--bg-2)] px-3.5 py-2.5">
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[12.5px] font-bold text-[var(--text-1)]">{u.name}</span>
+                      <span className="font-data block truncate text-[10px] text-[var(--text-3)]">{u.email}</span>
+                    </span>
+                    {u.role === "admin" && (
+                      <span className="font-data rounded-full border border-[rgba(93,211,158,.35)] px-2 py-0.5 text-[8.5px] font-bold tracking-[0.12em] text-[var(--green)] uppercase">admin</span>
+                    )}
+                    {u.status === "suspended" && (
+                      <span className="font-data rounded-full border border-[rgba(248,113,113,.4)] px-2 py-0.5 text-[8.5px] font-bold tracking-[0.12em] text-[var(--red)] uppercase">susp</span>
+                    )}
+                    <span className="font-data text-[10px] text-[var(--text-3)]">{timeAgo(u.createdAt)}</span>
+                  </li>
+                ))
+              )}
+            </ul>
+            <a href="#/admin/users" className="mt-5 block text-center text-[12.5px] font-bold text-[var(--cyan)] hover:underline">
+              Manage all users →
+            </a>
+          </Card>
+        </div>
       </div>
-    </div>
+    </RouteTransition>
   );
 }
 
@@ -152,8 +155,19 @@ export function AdminUsersPage() {
   const [err, setErr] = useState("");
   const [viewing, setViewing] = useState<User | null>(null);
   const [viewData, setViewData] = useState<{ stats: Stats; recent: ValidationRecord[] } | null>(null);
+  const firstLoad = useRef(true);
 
-  const load = useCallback(() => apiAdminUsers().then(setUsers), []);
+  const load = useCallback(() => {
+    const p = apiAdminUsers().then((us) => {
+      if (firstLoad.current) {
+        firstLoad.current = false;
+        startTransition(() => setUsers(us));
+      } else {
+        setUsers(us);
+      }
+    });
+    return p;
+  }, []);
   useEffect(() => {
     load();
   }, [load]);
@@ -237,7 +251,8 @@ export function AdminUsersPage() {
   };
 
   return (
-    <div className="space-y-5">
+    <RouteTransition>
+      <div className="space-y-5">
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-xl border border-[var(--line)] bg-[var(--bg-2)] px-4 py-2.5 focus-within:border-[var(--blue)] sm:max-w-xs">
           <Icon name="search" size={14} className="text-[var(--text-3)]" />
@@ -255,11 +270,14 @@ export function AdminUsersPage() {
 
       <Card className="overflow-hidden">
         {!users ? (
-          <div className="space-y-2.5 p-6">{[...Array(5)].map((_, i) => <div key={i} className="shimmer h-12 rounded-lg bg-[var(--bg-2)]" />)}</div>
+          <ViewTransition exit="slide-down">
+            <div className="space-y-2.5 p-6">{[...Array(5)].map((_, i) => <div key={i} className="shimmer h-12 rounded-lg bg-[var(--bg-2)]" />)}</div>
+          </ViewTransition>
         ) : filtered.length === 0 ? (
           <div className="p-6"><EmptyState icon="users" title="No users match" body="Adjust the search or filter — new signups appear here instantly." /></div>
         ) : (
-          <div className="overflow-x-auto">
+          <ViewTransition enter="slide-up" default="none">
+            <div className="overflow-x-auto">
             <table className="w-full min-w-[780px] text-left">
               <thead>
                 <tr className="border-b border-[var(--line)]">
@@ -333,7 +351,8 @@ export function AdminUsersPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+            </div>
+          </ViewTransition>
         )}
       </Card>
 
@@ -383,7 +402,7 @@ export function AdminUsersPage() {
                   <li key={r.id} className="flex items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--bg-2)] px-3.5 py-2.5">
                     <span className="font-data min-w-0 flex-1 truncate text-[12px] text-[var(--text-1)]">{r.email}</span>
                     <span className="font-data text-[10px] text-[var(--text-3)]">{timeAgo(r.ts)}</span>
-                    <span className="font-data w-8 text-right text-[11px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--purple)" : "var(--red)" }}>
+                    <span className="font-data w-8 text-right text-[11px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--amber)" : "var(--red)" }}>
                       {r.score}
                     </span>
                     <StatusBadge status={r.status} />
@@ -433,7 +452,8 @@ export function AdminUsersPage() {
         confirmLabel="Delete user"
         body={<>This removes the account, <strong className="text-[var(--text-1)]">all validation history and all API keys</strong>. There is no undo.</>}
       />
-    </div>
+      </div>
+    </RouteTransition>
   );
 }
 
@@ -446,19 +466,35 @@ export function AdminLogsPage() {
   const [status, setStatus] = useState<VerdictStatus | "all">("all");
   const [search, setSearch] = useState("");
   const [viewing, setViewing] = useState<ValidationRecord | null>(null);
+  const firstLoad = useRef(true);
 
   useEffect(() => {
     apiAdminUsers().then((us) => setUsers(new Map(us.map((u) => [u.id, u.name]))));
   }, []);
 
   useEffect(() => {
-    apiHistory({ search, status, page, pageSize: 12 }).then(setData);
+    apiHistory({ search, status, page, pageSize: 12 }).then((d) => {
+      if (firstLoad.current) {
+        firstLoad.current = false;
+        startTransition(() => setData(d));
+      } else {
+        setData(d);
+      }
+    });
   }, [search, status, page]);
 
   useEffect(() => setPage(1), [search, status]);
 
+  const openTrace = (r: ValidationRecord) => {
+    setViewing(r);
+  };
+  const closeTrace = () => {
+    setViewing(null);
+  };
+
   return (
-    <div className="space-y-5">
+    <RouteTransition>
+      <div className="space-y-5">
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-xl border border-[var(--line)] bg-[var(--bg-2)] px-4 py-2.5 focus-within:border-[var(--blue)] sm:max-w-xs">
           <Icon name="search" size={14} className="text-[var(--text-3)]" />
@@ -476,11 +512,14 @@ export function AdminLogsPage() {
 
       <Card className="overflow-hidden">
         {!data ? (
-          <div className="space-y-2.5 p-6">{[...Array(6)].map((_, i) => <div key={i} className="shimmer h-11 rounded-lg bg-[var(--bg-2)]" />)}</div>
+          <ViewTransition exit="slide-down">
+            <div className="space-y-2.5 p-6">{[...Array(6)].map((_, i) => <div key={i} className="shimmer h-11 rounded-lg bg-[var(--bg-2)]" />)}</div>
+          </ViewTransition>
         ) : data.total === 0 ? (
           <div className="p-6"><EmptyState icon="database" title="No events match" body="Global logs record every validation across all workspaces." /></div>
         ) : (
-          <>
+          <ViewTransition enter="slide-up" default="none">
+            <>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[760px] text-left">
                 <thead>
@@ -497,9 +536,9 @@ export function AdminLogsPage() {
                       <td className="max-w-[160px] truncate px-5 py-3 text-[12.5px] font-semibold text-[var(--text-2)]">{users.get(r.userId) ?? "deleted user"}</td>
                       <td className="font-data max-w-[240px] truncate px-5 py-3 text-[12px] text-[var(--text-1)]">{r.email}</td>
                       <td className="px-5 py-3"><StatusBadge status={r.status} /></td>
-                      <td className="font-data px-5 py-3 text-[12.5px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--purple)" : "var(--red)" }}>{r.score}</td>
+                      <td className="font-data px-5 py-3 text-[12.5px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--amber)" : "var(--red)" }}>{r.score}</td>
                       <td className="px-5 py-3 text-right">
-                        <button onClick={() => setViewing(r)} className="rounded-md border border-[var(--line)] px-2.5 py-1.5 text-[10.5px] font-bold text-[var(--cyan)] opacity-60 transition-all duration-200 hover:border-[var(--line-blue)] group-hover:opacity-100">
+                        <button onClick={() => openTrace(r)} className="rounded-md border border-[var(--line)] px-2.5 py-1.5 text-[10.5px] font-bold text-[var(--cyan)] opacity-60 transition-all duration-200 hover:border-[var(--line-blue)] group-hover:opacity-100">
                           Trace
                         </button>
                       </td>
@@ -509,11 +548,12 @@ export function AdminLogsPage() {
               </table>
             </div>
             <div className="px-5 pb-4"><Pagination page={page} pages={data.pages} onPage={setPage} /></div>
-          </>
+            </>
+          </ViewTransition>
         )}
       </Card>
 
-      <Modal open={!!viewing} onClose={() => setViewing(null)} title="Layer trace" width="max-w-2xl">
+      <Modal open={!!viewing} onClose={closeTrace} title="Layer trace" width="max-w-2xl">
         {viewing && (
           <div>
             <div className="flex flex-wrap items-center gap-5">
@@ -528,7 +568,8 @@ export function AdminLogsPage() {
           </div>
         )}
       </Modal>
-    </div>
+      </div>
+    </RouteTransition>
   );
 }
 
@@ -570,7 +611,8 @@ export function AdminBlocklistPage() {
   };
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_1.3fr]">
+    <RouteTransition>
+      <div className="grid gap-5 lg:grid-cols-[1fr_1.3fr]">
       <Card className="h-fit p-6">
         <h3 className="text-[15px] font-extrabold text-[var(--text-1)]">Add a domain</h3>
         <p className="mt-1 text-[12.5px] leading-relaxed text-[var(--text-3)]">
@@ -614,7 +656,8 @@ export function AdminBlocklistPage() {
           )}
         </div>
       </Card>
-    </div>
+      </div>
+    </RouteTransition>
   );
 }
 
@@ -640,7 +683,8 @@ export function AdminSettingsPage() {
   };
 
   return (
-    <div className="grid gap-5 lg:grid-cols-2">
+    <RouteTransition>
+      <div className="grid gap-5 lg:grid-cols-2">
       <Card className="h-fit p-6">
         <h3 className="text-[15px] font-extrabold text-[var(--text-1)]">Layer switches</h3>
         <p className="mt-1 text-[12.5px] leading-relaxed text-[var(--text-3)]">
@@ -727,6 +771,7 @@ export function AdminSettingsPage() {
         }}
         body={<>Every user edit, validation, job and key will be replaced by the original seed. <strong className="text-[var(--text-1)]">Demo credentials keep working.</strong></>}
       />
-    </div>
+      </div>
+    </RouteTransition>
   );
 }

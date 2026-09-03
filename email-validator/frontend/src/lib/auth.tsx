@@ -3,7 +3,10 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
+  addTransitionType,
+  startTransition,
   type ReactNode,
 } from "react";
 import {
@@ -27,10 +30,41 @@ export function navigate(path: string) {
   window.location.hash = path;
 }
 
+/* Depth of each area — used to pick the transition type:
+   forward when going deeper (landing -> auth -> app -> admin), back
+   when climbing out, lateral within the same area. */
+function areaDepth(route: string): number {
+  if (route.startsWith("/admin")) return 3;
+  if (route.startsWith("/app")) return 2;
+  if (route === "/login" || route === "/signup") return 1;
+  return 0; // landing
+}
+
+export function routeTransitionType(prev: string, next: string): string {
+  const from = areaDepth(prev);
+  const to = areaDepth(next);
+  if (from === to) return "nav-lateral";
+  return to > from ? "nav-forward" : "nav-back";
+}
+
 export function useRoute(): string {
   const [route, setRoute] = useState(currentRoute());
+  const routeRef = useRef(route);
   useEffect(() => {
-    const on = () => setRoute(currentRoute());
+    const on = () => {
+      const next = currentRoute();
+      const previous = routeRef.current;
+      if (next === previous) return;
+      // Keep classification correct if another hashchange arrives before
+      // the concurrent route render commits.
+      routeRef.current = next;
+      // Only startTransition/useDeferredValue/Suspense activate
+      // <ViewTransition> — plain setState would skip the animation.
+      startTransition(() => {
+        addTransitionType(routeTransitionType(previous, next));
+        setRoute(next);
+      });
+    };
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
   }, []);

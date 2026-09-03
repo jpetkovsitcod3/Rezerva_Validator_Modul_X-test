@@ -32,6 +32,7 @@ import {
 import { Card, EmptyState, PrimaryButton, SecondaryButton, GhostButton, StatusBadge, useToast } from "./ui";
 import { RibbonCorner, SuiMessage, SuiProgress } from "../lib/semantic";
 import { LayerRows, ScoreDial, timeAgo } from "./Layers";
+import { RouteTransition } from "../lib/route-transition";
 import { cn } from "../utils/cn";
 
 /* ================= single check (quick / deep) ================= */
@@ -54,7 +55,7 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
   useEffect(() => {
     if (!user) return;
     apiHistory({ userId: user.id, page: 1, pageSize: 5, status: "all" }).then((h) =>
-      setRecent(h.rows.map((r) => r.email))
+      setRecent([...new Set(h.rows.map((r) => r.email))])
     );
   }, [user]);
 
@@ -281,7 +282,7 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
                   </span>
                   <span className="font-data text-[10.5px] text-[var(--text-3)]">{result.totalMs}ms</span>
                 </div>
-                <p className="mt-2 text-[12.5px] font-semibold" style={{ color: result.status === "valid" ? "var(--green)" : result.status === "risky" ? "var(--purple)" : "var(--red)" }}>
+                <p className="mt-2 text-[12.5px] font-semibold" style={{ color: result.status === "valid" ? "var(--green)" : result.status === "risky" ? "var(--amber)" : "var(--red)" }}>
                   {result.action}
                 </p>
               </div>
@@ -351,7 +352,7 @@ function DomainIntel() {
   };
 
   const policyColor = (p: string) =>
-    p === "reject" ? "var(--green)" : p === "quarantine" ? "var(--purple)" : "var(--red)";
+    p === "reject" ? "var(--green)" : p === "quarantine" ? "var(--amber)" : "var(--red)";
 
   return (
     <div className="space-y-4">
@@ -409,7 +410,7 @@ function DomainIntel() {
                   </span>
                   <span className="font-data text-[10.5px] text-[var(--text-3)]">{report.mx.length} MX · {report.dkim.length} DKIM</span>
                 </div>
-                <p className="mt-2 text-[12.5px] font-semibold" style={{ color: report.score >= 80 ? "var(--green)" : report.score >= 55 ? "var(--purple)" : "var(--red)" }}>
+                <p className="mt-2 text-[12.5px] font-semibold" style={{ color: report.score >= 80 ? "var(--green)" : report.score >= 55 ? "var(--amber)" : "var(--red)" }}>
                   {report.verdict}
                 </p>
               </div>
@@ -463,7 +464,7 @@ function DomainIntel() {
                     {report.spf.mechanisms.map((m) => (
                       <span key={m} className="font-data rounded-md border border-[var(--line)] bg-[var(--bg-2)] px-2 py-1 text-[10px] text-[var(--text-2)]">{m}</span>
                     ))}
-                    <span className={cn("font-data ml-auto rounded-full px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", report.spf.strict ? "bg-[rgba(52,211,153,.1)] text-[var(--green)]" : "bg-[rgba(167,139,250,.12)] text-[var(--purple)]")}>
+                    <span className={cn("font-data ml-auto rounded-full px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", report.spf.strict ? "bg-[rgba(52,211,153,.1)] text-[var(--green)]" : "bg-[rgba(245,198,107,.12)] text-[var(--amber)]")}>
                       {report.spf.strict ? "hard fail" : "soft fail"}
                     </span>
                   </div>
@@ -517,7 +518,7 @@ function DomainIntel() {
                       </span>
                       <span className="font-data ml-auto text-[10.5px] text-[var(--text-3)]">{k.bits}-bit</span>
                       <span className={cn("flex size-5 items-center justify-center rounded-full", k.valid ? "bg-[rgba(52,211,153,.14)] text-[var(--green)]" : "bg-[rgba(248,113,113,.14)] text-[var(--red)]")}>
-                        <Icon name={k.valid ? "check" : "close"} size={10} strokeWidth={3} />
+                        <Icon name={k.valid ? "check" : "close"} size={10} weight="bold" />
                       </span>
                     </li>
                   ))}
@@ -713,7 +714,7 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
           <div className="flex flex-wrap items-center gap-2.5">
             <h4 className="text-[14px] font-extrabold text-[var(--text-1)]">Results</h4>
             <span className="font-data rounded-full bg-[rgba(52,211,153,.1)] px-2.5 py-1 text-[10px] font-bold text-[var(--green)]">{counts.valid} valid</span>
-            <span className="font-data rounded-full bg-[rgba(167,139,250,.12)] px-2.5 py-1 text-[10px] font-bold text-[var(--purple)]">{counts.risky} risky</span>
+            <span className="font-data rounded-full bg-[rgba(245,198,107,.12)] px-2.5 py-1 text-[10px] font-bold text-[var(--amber)]">{counts.risky} risky</span>
             <span className="font-data rounded-full bg-[rgba(248,113,113,.1)] px-2.5 py-1 text-[10px] font-bold text-[var(--red)]">{counts.invalid} invalid</span>
             <button
               onClick={() => exportRows(results.map((r) => ({ email: r.email, status: r.status, score: r.score })), `bridge-bulk-${new Date().toISOString().slice(0, 10)}.csv`)}
@@ -727,7 +728,7 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
               <li key={r.id} className="feed-in flex items-center gap-3 rounded-lg px-3 py-2 transition-colors duration-150 hover:bg-[var(--bg-2)]">
                 <span className="font-data min-w-0 flex-1 truncate text-[12px] text-[var(--text-1)]">{r.email}</span>
                 <span className="font-data text-[10px] text-[var(--text-3)] tabular-nums">{Math.round(r.totalMs)}ms</span>
-                <span className="font-data w-9 text-right text-[11px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--purple)" : "var(--red)" }}>
+                <span className="font-data w-9 text-right text-[11px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--amber)" : "var(--red)" }}>
                   {r.score}
                 </span>
                 <StatusBadge status={r.status} />
@@ -768,7 +769,7 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
                     <p className="font-data mt-0.5 text-[10px] text-[var(--text-3)]">
                       {timeAgo(j.startedAt)} ·{" "}
                       <span className="text-[var(--green)]">{j.valid} valid</span> ·{" "}
-                      <span className="text-[var(--purple)]">{j.risky} risky</span> ·{" "}
+                      <span className="text-[var(--amber)]">{j.risky} risky</span> ·{" "}
                       <span className="text-[var(--red)]">{j.invalid} invalid</span>
                     </p>
                   </div>
@@ -807,52 +808,54 @@ export default function Validator() {
   }, []);
 
   return (
-    <div className="space-y-5">
-      <div className="flex w-fit items-center gap-1 rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] p-1">
-        {(
-          [
-            ["single", "Single check", "mail"],
-            ["bulk", "Bulk clean", "database"],
-            ["domain", "Domain intel", "globe"],
-          ] as const
-        ).map(([key, label, icon]) => (
-          <button
-            key={key}
-            onClick={() => setTab(key)}
-            aria-pressed={tab === key}
-            className={cn(
-              "relative flex items-center gap-2 rounded-lg px-4 py-2 text-[12.5px] font-bold transition-colors duration-200",
-              tab === key ? "text-[var(--cyan)]" : "text-[var(--text-3)] hover:text-[var(--text-1)]"
-            )}
-          >
-            {tab === key && (
-              <motion.span
-                layoutId="validator-tab"
-                className="glow-1 absolute inset-0 rounded-lg bg-[var(--accent-soft)]"
-                transition={springSnappy}
-                aria-hidden
-              />
-            )}
-            <span className="relative flex items-center gap-2">
-              <Icon name={icon} size={13} /> {label}
-            </span>
-          </button>
-        ))}
-      </div>
+    <RouteTransition>
+      <div className="space-y-5">
+        <div className="flex w-fit items-center gap-1 rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] p-1">
+          {(
+            [
+              ["single", "Single check", "mail"],
+              ["bulk", "Bulk clean", "database"],
+              ["domain", "Domain intel", "globe"],
+            ] as const
+          ).map(([key, label, icon]) => (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              aria-pressed={tab === key}
+              className={cn(
+                "relative flex items-center gap-2 rounded-lg px-4 py-2 text-[12.5px] font-bold transition-colors duration-200",
+                tab === key ? "text-[var(--cyan)]" : "text-[var(--text-3)] hover:text-[var(--text-1)]"
+              )}
+            >
+              {tab === key && (
+                <motion.span
+                  layoutId="validator-tab"
+                  className="glow-1 absolute inset-0 rounded-lg bg-[var(--accent-soft)]"
+                  transition={springSnappy}
+                  aria-hidden
+                />
+              )}
+              <span className="relative flex items-center gap-2">
+                <Icon name={icon} size={13} /> {label}
+              </span>
+            </button>
+          ))}
+        </div>
 
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={tab}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={springSnappy}
-        >
-          {tab === "single" && <SingleCheck opts={opts} onSpent={refresh} />}
-          {tab === "bulk" && <BulkClean onSpent={refresh} />}
-          {tab === "domain" && <DomainIntel />}
-        </motion.div>
-      </AnimatePresence>
-    </div>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={tab}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={springSnappy}
+          >
+            {tab === "single" && <SingleCheck opts={opts} onSpent={refresh} />}
+            {tab === "bulk" && <BulkClean onSpent={refresh} />}
+            {tab === "domain" && <DomainIntel />}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </RouteTransition>
   );
 }

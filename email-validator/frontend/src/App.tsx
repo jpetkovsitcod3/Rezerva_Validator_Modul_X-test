@@ -9,6 +9,7 @@ import Architecture from "./landing/Architecture";
 import PricingBand from "./landing/PricingBand";
 import FooterLanding from "./landing/FooterLanding";
 import Shell from "./app/Shell";
+import { RouteTransition } from "./lib/route-transition";
 import { LoginPage, SignupPage } from "./app/Auth";
 import Overview from "./app/Overview";
 import Validator from "./app/Validator";
@@ -24,16 +25,18 @@ import {
 
 function Landing() {
   return (
-    <div className="lz-dots min-h-screen bg-[var(--color-bg-canvas)] text-[var(--color-text-primary)]">
-      <div id="top" className="grid lg:grid-cols-[240px_1fr]">
-        <Sidebar />
-        <MapHero />
+    <RouteTransition>
+      <div className="lz-dots min-h-screen bg-[var(--color-bg-canvas)] text-[var(--color-text-primary)]">
+        <div id="top" className="grid lg:grid-cols-[240px_1fr]">
+          <Sidebar />
+          <MapHero />
+        </div>
+        <PipelineScene />
+        <Architecture />
+        <PricingBand />
+        <FooterLanding />
       </div>
-      <PipelineScene />
-      <Architecture />
-      <PricingBand />
-      <FooterLanding />
-    </div>
+    </RouteTransition>
   );
 }
 

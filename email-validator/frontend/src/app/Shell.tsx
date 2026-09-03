@@ -1,8 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icon, type IconName } from "../lib/ui";
-import { useAuth } from "../lib/auth";
-import { PageFade, springSnappy } from "../lib/motion";
+import { useAuth, useRoute } from "../lib/auth";
+import { springSnappy } from "../lib/motion";
 import { cn } from "../utils/cn";
 
 interface NavItem {
@@ -75,9 +75,7 @@ function ControlSlider({ label, value }: { label: string; value: string }) {
     <div>
       <div className="mb-2 flex justify-between">
         <span className="text-xs uppercase tracking-wider">{label}</span>
-        <svg className="size-3 text-[var(--palette-teal-400)]" fill="currentColor" viewBox="0 0 20 20">
-          <path clipRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" fillRule="evenodd" />
-        </svg>
+        <Icon name="bolt" size={12} weight="fill" className="text-[var(--palette-teal-400)]" />
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full border border-[#333] bg-[#111]">
         <div className="relative h-full bg-[var(--palette-teal-400)] shadow-[0_0_10px_rgba(79,138,255,0.5)]" style={{ width: value }}>
@@ -128,7 +126,7 @@ export default function Shell({
   const { user, logout } = useAuth();
   const [drawer, setDrawer] = useState(false);
   const [menu, setMenu] = useState(false);
-  const route = window.location.hash.slice(1) || "/app";
+  const route = useRoute() || "/app";
   const nav = area === "admin" ? ADMIN_NAV : USER_NAV;
   const isAdmin = user?.role === "admin";
 
@@ -155,11 +153,11 @@ export default function Shell({
 
       {/* ─── SIDEBAR ─── */}
       <aside
+        style={{ viewTransitionName: "app-sidebar", transitionTimingFunction: "var(--ease-el)" }}
         className={cn(
           "z-50 flex w-64 flex-shrink-0 flex-col gap-4 overflow-y-auto transition-transform duration-300 lg:translate-x-0",
           drawer ? "fixed top-0 bottom-0 left-0" : "fixed top-0 bottom-0 left-0 -translate-x-full lg:static lg:translate-x-0"
         )}
-        style={{ transitionTimingFunction: "var(--ease-el)" }}
       >
         {/* brand */}
         <div className="metallic-panel flex items-center gap-3 p-4">
@@ -177,9 +175,9 @@ export default function Shell({
 
         {/* search */}
         <div className="relative">
-          <svg className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--text-3)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
-          </svg>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-3)]">
+            <Icon name="search" size={16} />
+          </span>
           <input
             className="w-full rounded border border-[var(--color-border-primary)] bg-[#141414] py-2 pl-9 text-[var(--text-2)] placeholder-[var(--text-3)]/50 focus:border-[var(--palette-teal-400)] focus:ring-1 focus:ring-[var(--palette-teal-400)]"
             placeholder="Search..."
@@ -232,12 +230,24 @@ export default function Shell({
       {/* ─── MAIN ─── */}
       <div className="flex flex-1 flex-col gap-4 overflow-hidden pl-0 lg:pl-4">
         {/* header */}
-        <header className="flex items-start justify-between">
-          <div>
-            <h2 className="text-glow text-2xl font-bold tracking-wide text-white md:text-3xl">
-              {TITLES[route] ?? "Dashboard"}
-            </h2>
-            <p className="mt-1 text-sm text-[var(--text-2)]">Real-time validation mesh status</p>
+        <header className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex min-w-0 items-start gap-3">
+            <button
+              type="button"
+              aria-label="Open menu"
+              onClick={() => setDrawer(true)}
+              className="metallic-panel mt-0.5 flex size-9 shrink-0 items-center justify-center text-[var(--text-1)] transition-colors duration-200 hover:text-[var(--palette-teal-400)] lg:hidden"
+            >
+              <Icon name="menu" size={17} />
+            </button>
+            <div className="min-w-0">
+              <h2 className="text-glow text-[1.4rem] leading-tight font-bold tracking-tight text-white md:text-3xl">
+                {TITLES[route] ?? "Dashboard"}
+              </h2>
+              <p className="mt-1 text-[12.5px] text-[var(--text-2)] sm:text-sm">
+                {area === "admin" ? "Platform-wide validation mesh status" : "Real-time validation mesh status"}
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <div className="metallic-panel flex items-center gap-2 border-[var(--palette-teal-400)]/50 px-4 py-2 inner-glow">
@@ -307,9 +317,7 @@ export default function Shell({
         </header>
 
         {/* content */}
-        <main className="flex-1 overflow-y-auto">
-          <PageFade id={route}>{children}</PageFade>
-        </main>
+        <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
     </div>
   );

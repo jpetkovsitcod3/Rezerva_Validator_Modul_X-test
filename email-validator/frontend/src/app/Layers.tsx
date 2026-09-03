@@ -9,7 +9,7 @@ export function ScoreDial({
   score: number;
   size?: number;
 }) {
-  const color = score >= 75 ? "var(--green)" : score >= 40 ? "var(--purple)" : "var(--red)";
+  const color = score >= 75 ? "var(--green)" : score >= 40 ? "var(--amber)" : "var(--red)";
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg viewBox="0 0 100 100" className="size-full -rotate-90">
@@ -40,7 +40,7 @@ function Led({ status }: { status: LayerResult["status"] }) {
       className="pop-in flex size-[17px] items-center justify-center rounded-full"
       style={{ color: m.color, background: `color-mix(in srgb, ${m.color} 15%, transparent)` }}
     >
-      <Icon name={icon} size={10} strokeWidth={2.8} />
+      <Icon name={icon} size={10} weight="bold" />
     </span>
   );
 }
@@ -82,10 +82,10 @@ export function timeAgo(ts: number): string {
 
 export const statusDotCls: Record<string, string> = {
   valid: "bg-[var(--green)]",
-  risky: "bg-[var(--purple)]",
+  risky: "bg-[var(--amber)]",
   invalid: "bg-[var(--red)]",
 };
 
 export function rowTone(status: string) {
-  return cn(status === "valid" && "text-[var(--green)]", status === "risky" && "text-[var(--purple)]", status === "invalid" && "text-[var(--red)]");
+  return cn(status === "valid" && "text-[var(--green)]", status === "risky" && "text-[var(--amber)]", status === "invalid" && "text-[var(--red)]");
 }

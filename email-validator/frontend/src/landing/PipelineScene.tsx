@@ -1,14 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import {
-  Gauge,
-  Globe,
-  Network,
-  Satellite,
-  ScanLine,
-  Server,
-  Trash2,
-  type LucideIcon,
-} from "lucide-react";
+import * as Phosphor from "@phosphor-icons/react";
 import { KineticText, MItem, SlidingNumber, Stagger } from "../lib/motion";
 import { useActiveInView } from "../lib/ui";
 
@@ -23,17 +14,17 @@ interface LayerDef {
   detail: string;
   fail: string;
   ms: string;
-  icon: LucideIcon;
+  icon: Phosphor.Icon;
 }
 
 const LAYERS: LayerDef[] = [
-  { id: "syntax", title: "Syntax Verification", short: "RFC 5322 grammar", detail: "Parses local part, domain and quoting rules; rejects anything malformed before it wastes a network call.", fail: "malformed address", ms: "0.3ms", icon: ScanLine },
-  { id: "dns", title: "DNS Lookup", short: "domain + nameservers", detail: "Resolves the domain against an edge-cached resolver; dead and typo domains die here, cheaply.", fail: "NXDOMAIN — no such domain", ms: "8ms", icon: Globe },
-  { id: "mx", title: "MX Record Extraction", short: "mail exchangers", detail: "Locates and priority-orders mail exchangers; domains that exist but can't receive mail are ejected.", fail: "no mail exchanger", ms: "13ms", icon: Server },
-  { id: "disposable", title: "Disposable Detection", short: "4,217-domain blocklist", detail: "Scans against the burner-domain blocklist plus heuristics for fresh throwaway services.", fail: "burner domain listed", ms: "0.8ms", icon: Trash2 },
-  { id: "catchall", title: "Catch-All Probe", short: "accept-all detection", detail: "Fires randomized non-existent users at the domain; accept-anything domains pass SMTP but still bounce later.", fail: "accepts all addresses", ms: "21ms", icon: Network },
-  { id: "smtp", title: "SMTP Handshake", short: "live RCPT TO", detail: "Real EHLO → MAIL FROM → RCPT TO against warm pools, disconnected before DATA. Polite, never a spam trap.", fail: "550 5.1.1 user unknown", ms: "246ms", icon: Satellite },
-  { id: "scoring", title: "ML Scoring Gate", short: "41 signals → 0–100", detail: "Gradient-boosted verdict over 41 signals, calibrated weekly on 4B outcomes. Below 40 never ships.", fail: "score below threshold", ms: "2.0ms", icon: Gauge },
+  { id: "syntax", title: "Syntax Verification", short: "RFC 5322 grammar", detail: "Parses local part, domain and quoting rules; rejects anything malformed before it wastes a network call.", fail: "malformed address", ms: "0.3ms", icon: Phosphor.Scan },
+  { id: "dns", title: "DNS Lookup", short: "domain + nameservers", detail: "Resolves the domain against an edge-cached resolver; dead and typo domains die here, cheaply.", fail: "NXDOMAIN — no such domain", ms: "8ms", icon: Phosphor.Globe },
+  { id: "mx", title: "MX Record Extraction", short: "mail exchangers", detail: "Locates and priority-orders mail exchangers; domains that exist but can't receive mail are ejected.", fail: "no mail exchanger", ms: "13ms", icon: Phosphor.DesktopTower },
+  { id: "disposable", title: "Disposable Detection", short: "4,217-domain blocklist", detail: "Scans against the burner-domain blocklist plus heuristics for fresh throwaway services.", fail: "burner domain listed", ms: "0.8ms", icon: Phosphor.Trash },
+  { id: "catchall", title: "Catch-All Probe", short: "accept-all detection", detail: "Fires randomized non-existent users at the domain; accept-anything domains pass SMTP but still bounce later.", fail: "accepts all addresses", ms: "21ms", icon: Phosphor.ShareNetwork },
+  { id: "smtp", title: "SMTP Handshake", short: "live RCPT TO", detail: "Real EHLO → MAIL FROM → RCPT TO against warm pools, disconnected before DATA. Polite, never a spam trap.", fail: "550 5.1.1 user unknown", ms: "246ms", icon: Phosphor.PaperPlaneTilt },
+  { id: "scoring", title: "ML Scoring Gate", short: "41 signals → 0–100", detail: "Gradient-boosted verdict over 41 signals, calibrated weekly on 4B outcomes. Below 40 never ships.", fail: "score below threshold", ms: "2.0ms", icon: Phosphor.Gauge },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -417,7 +408,7 @@ export default function PipelineScene() {
 
   const inspected = hoverGate ?? lastGate;
   const layer = inspected !== null ? LAYERS[inspected] : null;
-  const LayerIcon = layer?.icon ?? ScanLine;
+  const LayerIcon = layer?.icon ?? Phosphor.Scan;
 
   return (
     <section id="pipeline" className="relative px-5 py-20 md:px-10 md:py-24">

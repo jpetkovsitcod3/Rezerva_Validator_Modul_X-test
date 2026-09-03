@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, startTransition, useState, ViewTransition } from "react";
 import { motion } from "framer-motion";
 import { Icon } from "../lib/ui";
 import { useAuth } from "../lib/auth";
+import { RouteTransition } from "../lib/route-transition";
 import { apiDeleteRecord, apiHistory, type HistoryPage, type ValidationRecord } from "../lib/db";
 import { downloadCSV, toCSV, type VerdictStatus } from "../lib/engine";
 import { Card, Confirm, EmptyState, GhostButton, Modal, Pagination, PrimaryButton, StatusBadge, useToast } from "./ui";
@@ -29,13 +30,24 @@ export default function History() {
   const [deleting, setDeleting] = useState<ValidationRecord | null>(null);
   const [busyDelete, setBusyDelete] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const firstLoad = useRef(true);
 
   const load = useCallback(async () => {
     if (!user) return;
     setLoading(true);
     const h = await apiHistory({ userId: user.id, search, status, page, pageSize: PAGE_SIZE });
-    setData(h);
-    setLoading(false);
+    if (firstLoad.current) {
+      firstLoad.current = false;
+      // Reveal the first table inside a Transition so the skeleton→table
+      // swap animates; refetches (filters/pagination) stay silent.
+      startTransition(() => {
+        setData(h);
+        setLoading(false);
+      });
+    } else {
+      setData(h);
+      setLoading(false);
+    }
   }, [user, search, status, page]);
 
   useEffect(() => {
@@ -43,6 +55,13 @@ export default function History() {
   }, [load]);
 
   useEffect(() => setPage(1), [search, status]);
+
+  const openTrace = (r: ValidationRecord) => {
+    setViewing(r);
+  };
+  const closeTrace = () => {
+    setViewing(null);
+  };
 
   const doDelete = async () => {
     if (!deleting) return;
@@ -70,166 +89,172 @@ export default function History() {
   };
 
   return (
-    <div className="space-y-5">
-      {/* toolbar */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] px-4 py-2.5 transition-colors duration-200 focus-within:border-[var(--blue)] sm:max-w-xs">
-          <Icon name="search" size={14} className="shrink-0 text-[var(--text-3)]" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search addresses..."
-            aria-label="Search history"
-            className="min-w-0 flex-1 bg-transparent text-[13px] text-[var(--text-1)] outline-none placeholder:text-[var(--text-3)]"
-          />
-        </div>
-        <div className="flex items-center gap-1 rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] p-1">
-          {FILTERS.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setStatus(f.key)}
-              aria-pressed={status === f.key}
-              className={cn(
-                "rounded-lg px-3 py-1.5 text-[11.5px] font-bold transition-all duration-200",
-                status === f.key ? "bg-[var(--accent-soft)] text-[var(--cyan)]" : "text-[var(--text-3)] hover:text-[var(--text-1)]"
-              )}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-        <GhostButton
-          icon="arrowDown"
-          onClick={exportAll}
-          disabled={exporting || !data || data.total === 0}
-          className="ml-auto text-[12.5px]"
-        >
-          {exporting ? "Exporting..." : `Export CSV${data && data.total ? ` (${data.total})` : ""}`}
-        </GhostButton>
-      </div>
-
-      {/* table */}
-      <Card className="overflow-hidden">
-        {loading ? (
-          <div className="space-y-2.5 p-6">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="shimmer h-12 rounded-lg bg-[var(--bg-2)]" />
-            ))}
-          </div>
-        ) : !data || data.total === 0 ? (
-          <div className="p-6">
-            <EmptyState
-              icon={search || status !== "all" ? "search" : "clock"}
-              title={search || status !== "all" ? "No matches" : "History is empty"}
-              body={
-                search || status !== "all"
-                  ? "Nothing matches this filter. Loosen it up and try again."
-                  : "Every validation you run is stored here with its full layer trace."
-              }
-              action={
-                !search && status === "all" ? (
-                  <a href="#/app/validator" className="glow-2 rounded-xl bg-[var(--blue)] px-5 py-2.5 text-[13px] font-bold text-[var(--color-text-on-accent)]">
-                    Run your first check
-                  </a>
-                ) : undefined
-              }
+    <RouteTransition>
+      <div className="space-y-5">
+        {/* toolbar */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] px-4 py-2.5 transition-colors duration-200 focus-within:border-[var(--blue)] sm:max-w-xs">
+            <Icon name="search" size={14} className="shrink-0 text-[var(--text-3)]" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search addresses..."
+              aria-label="Search history"
+              className="min-w-0 flex-1 bg-transparent text-[13px] text-[var(--text-1)] outline-none placeholder:text-[var(--text-3)]"
             />
           </div>
-        ) : (
-          <>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[680px] text-left">
-                <thead>
-                  <tr className="border-b border-[var(--line)]">
-                    {["Address", "Verdict", "Score", "Latency", "Checked", ""].map((h) => (
-                      <th key={h} className="font-data px-5 py-3.5 text-[9px] font-semibold tracking-[0.18em] text-[var(--text-3)] uppercase">
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.rows.map((r) => (
-                    <tr key={r.id} className="group border-b border-[var(--line)] transition-colors duration-150 last:border-0 hover:bg-[var(--accent-faint)]">
-                      <td className="font-data max-w-[260px] truncate px-5 py-3.5 text-[12.5px] font-semibold text-[var(--text-1)]">{r.email}</td>
-                      <td className="px-5 py-3.5"><StatusBadge status={r.status} /></td>
-                      <td className="px-5 py-3.5">
-                        <span className="font-data text-[13px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--purple)" : "var(--red)" }}>
-                          {r.score}
-                        </span>
-                      </td>
-                      <td className="font-data px-5 py-3.5 text-[11.5px] text-[var(--text-2)] tabular-nums">{Math.round(r.totalMs)}ms</td>
-                      <td className="font-data px-5 py-3.5 text-[11px] text-[var(--text-3)]">
-                        {timeAgo(r.ts)}
-                        <span className="ml-2 rounded border border-[var(--line)] px-1 py-px text-[8px] tracking-[0.1em] uppercase">{r.mode}</span>
-                      </td>
-                      <td className="px-5 py-3.5">
-                        <div className="flex justify-end gap-1.5 opacity-60 transition-opacity duration-200 group-hover:opacity-100">
-                          <button
-                            onClick={() => setViewing(r)}
-                            className="rounded-md border border-[var(--line)] px-2.5 py-1.5 text-[10.5px] font-bold text-[var(--cyan)] transition-colors duration-200 hover:border-[var(--line-blue)]"
-                          >
-                            Trace
-                          </button>
-                          <button
-                            onClick={() => setDeleting(r)}
-                            aria-label={`Delete ${r.email}`}
-                            className="rounded-md border border-[var(--line)] p-1.5 text-[var(--text-3)] transition-colors duration-200 hover:border-[rgba(248,113,113,.4)] hover:text-[var(--red)]"
-                          >
-                            <Icon name="trash" size={11} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="px-5 pb-4">
-              <Pagination page={page} pages={data.pages} onPage={setPage} />
-            </div>
-          </>
-        )}
-      </Card>
+          <div className="flex items-center gap-1 rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] p-1">
+            {FILTERS.map((f) => (
+              <button
+                key={f.key}
+                onClick={() => setStatus(f.key)}
+                aria-pressed={status === f.key}
+                className={cn(
+                  "rounded-lg px-3 py-1.5 text-[11.5px] font-bold transition-all duration-200",
+                  status === f.key ? "bg-[var(--accent-soft)] text-[var(--cyan)]" : "text-[var(--text-3)] hover:text-[var(--text-1)]"
+                )}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+          <GhostButton
+            icon="arrowDown"
+            onClick={exportAll}
+            disabled={exporting || !data || data.total === 0}
+            className="ml-auto text-[12.5px]"
+          >
+            {exporting ? "Exporting..." : `Export CSV${data && data.total ? ` (${data.total})` : ""}`}
+          </GhostButton>
+        </div>
 
-      {/* trace modal */}
-      <Modal open={!!viewing} onClose={() => setViewing(null)} title="Full layer trace" width="max-w-2xl">
-        {viewing && (
-          <div>
-            <div className="flex flex-wrap items-center gap-5">
-              <ScoreDial score={viewing.score} size={76} />
-              <div className="min-w-0 flex-1">
-                <p className="font-data truncate text-[14px] font-semibold text-[var(--text-1)]">{viewing.email}</p>
-                <div className="mt-2 flex flex-wrap items-center gap-2.5">
-                  <StatusBadge status={viewing.status} />
-                  <span className="font-data text-[10.5px] text-[var(--text-3)]">
-                    {Math.round(viewing.totalMs)}ms · {new Date(viewing.ts).toLocaleString()}
-                  </span>
+        {/* table */}
+        <Card className="overflow-hidden">
+          {loading ? (
+            <ViewTransition exit="slide-down">
+              <div className="space-y-2.5 p-6">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="shimmer h-12 rounded-lg bg-[var(--bg-2)]" />
+                ))}
+              </div>
+            </ViewTransition>
+          ) : !data || data.total === 0 ? (
+            <div className="p-6">
+              <EmptyState
+                icon={search || status !== "all" ? "search" : "clock"}
+                title={search || status !== "all" ? "No matches" : "History is empty"}
+                body={
+                  search || status !== "all"
+                    ? "Nothing matches this filter. Loosen it up and try again."
+                    : "Every validation you run is stored here with its full layer trace."
+                }
+                action={
+                  !search && status === "all" ? (
+                    <a href="#/app/validator" className="glow-2 rounded-xl bg-[var(--blue)] px-5 py-2.5 text-[13px] font-bold text-[var(--color-text-on-accent)]">
+                      Run your first check
+                    </a>
+                  ) : undefined
+                }
+              />
+            </div>
+          ) : (
+            <ViewTransition enter="slide-up" default="none">
+              <>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[680px] text-left">
+                    <thead>
+                      <tr className="border-b border-[var(--line)]">
+                        {["Address", "Verdict", "Score", "Latency", "Checked", ""].map((h) => (
+                          <th key={h} className="font-data px-5 py-3.5 text-[9px] font-semibold tracking-[0.18em] text-[var(--text-3)] uppercase">
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.rows.map((r) => (
+                        <tr key={r.id} className="group border-b border-[var(--line)] transition-colors duration-150 last:border-0 hover:bg-[var(--accent-faint)]">
+                          <td className="font-data max-w-[260px] truncate px-5 py-3.5 text-[12.5px] font-semibold text-[var(--text-1)]">{r.email}</td>
+                          <td className="px-5 py-3.5"><StatusBadge status={r.status} /></td>
+                          <td className="px-5 py-3.5">
+                            <span className="font-data text-[13px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--amber)" : "var(--red)" }}>
+                              {r.score}
+                            </span>
+                          </td>
+                          <td className="font-data px-5 py-3.5 text-[11.5px] text-[var(--text-2)] tabular-nums">{Math.round(r.totalMs)}ms</td>
+                          <td className="font-data px-5 py-3.5 text-[11px] text-[var(--text-3)]">
+                            {timeAgo(r.ts)}
+                            <span className="ml-2 rounded border border-[var(--line)] px-1 py-px text-[8px] tracking-[0.1em] uppercase">{r.mode}</span>
+                          </td>
+                          <td className="px-5 py-3.5">
+                            <div className="flex justify-end gap-1.5 opacity-60 transition-opacity duration-200 group-hover:opacity-100">
+                              <button
+                                onClick={() => openTrace(r)}
+                                className="rounded-md border border-[var(--line)] px-2.5 py-1.5 text-[10.5px] font-bold text-[var(--cyan)] transition-colors duration-200 hover:border-[var(--line-blue)]"
+                              >
+                                Trace
+                              </button>
+                              <button
+                                onClick={() => setDeleting(r)}
+                                aria-label={`Delete ${r.email}`}
+                                className="rounded-md border border-[var(--line)] p-1.5 text-[var(--text-3)] transition-colors duration-200 hover:border-[rgba(248,113,113,.4)] hover:text-[var(--red)]"
+                              >
+                                <Icon name="trash" size={11} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="px-5 pb-4">
+                  <Pagination page={page} pages={data.pages} onPage={setPage} />
+                </div>
+              </>
+            </ViewTransition>
+          )}
+        </Card>
+
+        {/* trace modal */}
+        <Modal open={!!viewing} onClose={closeTrace} title="Full layer trace" width="max-w-2xl">
+          {viewing && (
+            <div>
+              <div className="flex flex-wrap items-center gap-5">
+                <ScoreDial score={viewing.score} size={76} />
+                <div className="min-w-0 flex-1">
+                  <p className="font-data truncate text-[14px] font-semibold text-[var(--text-1)]">{viewing.email}</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2.5">
+                    <StatusBadge status={viewing.status} />
+                    <span className="font-data text-[10.5px] text-[var(--text-3)]">
+                      {Math.round(viewing.totalMs)}ms · {new Date(viewing.ts).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
               </div>
+              <div className="mt-5 rounded-xl border border-[var(--line)] bg-[var(--bg-2)] p-3">
+                <LayerRows layers={viewing.layers} />
+              </div>
             </div>
-            <div className="mt-5 rounded-xl border border-[var(--line)] bg-[var(--bg-2)] p-3">
-              <LayerRows layers={viewing.layers} />
-            </div>
-          </div>
-        )}
-      </Modal>
+          )}
+        </Modal>
 
-      <Confirm
-        open={!!deleting}
-        onClose={() => setDeleting(null)}
-        onConfirm={doDelete}
-        busy={busyDelete}
-        danger
-        title="Delete this validation?"
-        confirmLabel="Delete"
-        body={
-          <>
-            <span className="font-data text-[var(--cyan)]">{deleting?.email}</span> and its layer trace will be
-            removed from your history. Credits are not refunded.
-          </>
-        }
-      />
-    </div>
+        <Confirm
+          open={!!deleting}
+          onClose={() => setDeleting(null)}
+          onConfirm={doDelete}
+          busy={busyDelete}
+          danger
+          title="Delete this validation?"
+          confirmLabel="Delete"
+          body={
+            <>
+              <span className="font-data text-[var(--cyan)]">{deleting?.email}</span> and its layer trace will be
+              removed from your history. Credits are not refunded.
+            </>
+          }
+        />
+      </div>
+    </RouteTransition>
   );
 }

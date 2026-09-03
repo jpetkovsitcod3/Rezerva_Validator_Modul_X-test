@@ -257,14 +257,14 @@ function finish(email: string, domain: string, layers: LayerResult[], score: num
 
 export const STATUS_META: Record<VerdictStatus, { label: string; color: string }> = {
   valid: { label: "Valid", color: "var(--green)" },
-  risky: { label: "Risky", color: "var(--purple)" },
+  risky: { label: "Risky", color: "var(--amber)" },
   invalid: { label: "Invalid", color: "var(--red)" },
 };
 
 export const LAYER_STATUS_META: Record<LayerStatus, { label: string; color: string }> = {
   pass: { label: "Pass", color: "var(--green)" },
   fail: { label: "Fail", color: "var(--red)" },
-  warn: { label: "Warn", color: "var(--purple)" },
+  warn: { label: "Warn", color: "var(--amber)" },
   skip: { label: "Skipped", color: "var(--text-3)" },
   off: { label: "Off", color: "var(--text-3)" },
 };

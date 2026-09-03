@@ -62,7 +62,7 @@ export default function PricingBand() {
                   {t.points.map((p) => (
                     <li key={p} className="flex items-center gap-2.5 text-[12.5px] text-[var(--text-2)]">
                       <span className="flex size-[16px] shrink-0 items-center justify-center rounded-full bg-[var(--color-success-bg)] text-[var(--color-status-success)]">
-                        <Icon name="check" size={9} strokeWidth={3} />
+                        <Icon name="check" size={9} weight="bold" />
                       </span>
                       {p}
                     </li>

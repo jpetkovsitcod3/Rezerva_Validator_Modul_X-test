@@ -13,6 +13,7 @@ import {
 } from "../lib/db";
 import { Card, Confirm, CopyBtn, Field, inputCls, Modal, PrimaryButton, GhostButton, useToast } from "./ui";
 import { timeAgo } from "./Layers";
+import { RouteTransition } from "../lib/route-transition";
 import { springSoft } from "../lib/motion";
 
 /* ================= API keys ================= */
@@ -68,7 +69,8 @@ export function ApiKeysPage() {
   const mask = (k: string) => `${k.slice(0, 12)}…${k.slice(-4)}`;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
+    <RouteTransition>
+      <div className="grid gap-5 lg:grid-cols-[1fr_1.2fr]">
       <Card className="h-fit p-6">
         <h3 className="text-[15px] font-extrabold text-[var(--text-1)]">Create a key</h3>
         <p className="mt-1 text-[12.5px] leading-relaxed text-[var(--text-3)]">
@@ -176,7 +178,8 @@ export function ApiKeysPage() {
           </>
         }
       />
-    </div>
+      </div>
+    </RouteTransition>
   );
 }
 
@@ -233,46 +236,48 @@ export function SettingsPage() {
   };
 
   return (
-    <div className="grid gap-5 lg:grid-cols-2">
-      <Card className="h-fit p-6">
-        <h3 className="text-[15px] font-extrabold text-[var(--text-1)]">Profile</h3>
-        <p className="mt-1 text-[12.5px] text-[var(--text-3)]">How you appear in team workspaces and logs.</p>
-        <form onSubmit={saveProfile} className="mt-5 space-y-4">
-          <Field label="Full name">
-            <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
-          </Field>
-          <Field label="Email" hint="used for sign-in">
-            <input type="email" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
-          </Field>
-          {profileErr && <p role="alert" className="font-data text-[11px] text-[var(--red)]">{profileErr}</p>}
-          <PrimaryButton type="submit" loading={saving} disabled={saving}>
-            Save profile
-          </PrimaryButton>
-        </form>
-      </Card>
+    <RouteTransition>
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Card className="h-fit p-6">
+          <h3 className="text-[15px] font-extrabold text-[var(--text-1)]">Profile</h3>
+          <p className="mt-1 text-[12.5px] text-[var(--text-3)]">How you appear in team workspaces and logs.</p>
+          <form onSubmit={saveProfile} className="mt-5 space-y-4">
+            <Field label="Full name">
+              <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+            </Field>
+            <Field label="Email" hint="used for sign-in">
+              <input type="email" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+            </Field>
+            {profileErr && <p role="alert" className="font-data text-[11px] text-[var(--red)]">{profileErr}</p>}
+            <PrimaryButton type="submit" loading={saving} disabled={saving}>
+              Save profile
+            </PrimaryButton>
+          </form>
+        </Card>
 
-      <Card className="h-fit p-6">
-        <h3 className="text-[15px] font-extrabold text-[var(--text-1)]">Security</h3>
-        <p className="mt-1 text-[12.5px] text-[var(--text-3)]">Rotate your password regularly — especially after key leaks.</p>
-        <form onSubmit={savePw} className="mt-5 space-y-4">
-          <Field label="Current password">
-            <input type="password" autoComplete="current-password" className={inputCls} value={curPw} onChange={(e) => setCurPw(e.target.value)} />
-          </Field>
-          <Field label="New password" hint="min 8 characters">
-            <input type="password" autoComplete="new-password" className={inputCls} value={newPw} onChange={(e) => setNewPw(e.target.value)} />
-          </Field>
-          {pwErr && <p role="alert" className="font-data text-[11px] text-[var(--red)]">{pwErr}</p>}
-          <GhostButton type="submit" loading={pwSaving} disabled={pwSaving}>
-            Change password
-          </GhostButton>
-        </form>
-        <div className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--bg-2)] p-4">
-          <p className="font-data text-[9px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">demo note</p>
-          <p className="mt-1.5 text-[11.5px] leading-relaxed text-[var(--text-3)]">
-            This demo stores a salted digest in your browser only — no server, no telemetry. Real deployments hash with Argon2id server-side.
-          </p>
-        </div>
-      </Card>
-    </div>
+        <Card className="h-fit p-6">
+          <h3 className="text-[15px] font-extrabold text-[var(--text-1)]">Security</h3>
+          <p className="mt-1 text-[12.5px] text-[var(--text-3)]">Rotate your password regularly — especially after key leaks.</p>
+          <form onSubmit={savePw} className="mt-5 space-y-4">
+            <Field label="Current password">
+              <input type="password" autoComplete="current-password" className={inputCls} value={curPw} onChange={(e) => setCurPw(e.target.value)} />
+            </Field>
+            <Field label="New password" hint="min 8 characters">
+              <input type="password" autoComplete="new-password" className={inputCls} value={newPw} onChange={(e) => setNewPw(e.target.value)} />
+            </Field>
+            {pwErr && <p role="alert" className="font-data text-[11px] text-[var(--red)]">{pwErr}</p>}
+            <GhostButton type="submit" disabled={pwSaving}>
+              Change password
+            </GhostButton>
+          </form>
+          <div className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--bg-2)] p-4">
+            <p className="font-data text-[9px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">demo note</p>
+            <p className="mt-1.5 text-[11.5px] leading-relaxed text-[var(--text-3)]">
+              This demo stores a salted digest in your browser only — no server, no telemetry. Real deployments hash with Argon2id server-side.
+            </p>
+          </div>
+        </Card>
+      </div>
+    </RouteTransition>
   );
 }
