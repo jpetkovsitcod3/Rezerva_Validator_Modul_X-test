@@ -5,14 +5,18 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   base: "/Rezerva_Validator_Modul_X-test/",
   plugins: [react(), tailwindcss()],
+  define: {
+    __HF_API_URL__: JSON.stringify(
+      process.env.HF_API_URL || "https://sitcod3-bridge-modul-x-api.hf.space"
+    ),
+  },
   server: {
     port: 5173,
     host: true,
-    // Allow the sandboxed live-preview host (and any other host) in dev.
     allowedHosts: true,
     proxy: {
       "/api": {
-        target: "http://localhost:8000",
+        target: process.env.HF_API_URL || "https://sitcod3-bridge-modul-x-api.hf.space",
         changeOrigin: true,
       },
     },
