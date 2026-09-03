@@ -1,5 +1,5 @@
 import { Icon, useCountUp, useInViewOnce, type IconName } from "../lib/ui";
-import { KineticText, MItem, MReveal, Stagger, PulseDot } from "../lib/motion";
+import { KineticText, MItem, MReveal, Stagger } from "../lib/motion";
 import { cn } from "../utils/cn";
 import type { PointerEvent as ReactPointerEvent, ReactNode } from "react";
 
@@ -124,7 +124,7 @@ function ScoreDonut() {
 
 export default function Architecture() {
   return (
-    <section id="architecture" className="px-5 py-20 md:px-10 md:py-24">
+    <section id="architecture" className="px-5 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <MReveal>
           <h2 className="font-display text-[clamp(1.6rem,3.2vw,2.3rem)] font-bold text-[var(--text-1)]">
@@ -132,12 +132,13 @@ export default function Architecture() {
           </h2>
         </MReveal>
         <MReveal delay={0.08}>
-          <p className="mt-2.5 max-w-md text-[13.5px] leading-relaxed text-[var(--text-3)]">
+          <p className="mt-3 max-w-lg text-[13.5px] leading-relaxed text-[var(--text-3)]">
             Modular components designed for high-frequency transactional environments.
+            Every layer is isolated, observable, and replaceable.
           </p>
         </MReveal>
 
-        <Stagger className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3" stagger={0.09}>
+        <Stagger className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4" stagger={0.09}>
           {[
             ["12", "edge regions"],
             ["38ms", "p50 latency"],
@@ -148,7 +149,7 @@ export default function Architecture() {
           ))}
         </Stagger>
 
-        <div className="mt-8 grid gap-4 lg:grid-cols-3">
+        <div className="mt-10 grid gap-4 lg:grid-cols-3">
           <MReveal delay={0.1} className="lg:col-span-2">
             <CardShell icon="globe" accent="var(--palette-teal-300)" title="Hardware Acceleration" className="h-full">
               Bypassing standard software stacks, Modul X interfaces directly with specialized

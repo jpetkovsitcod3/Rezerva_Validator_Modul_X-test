@@ -171,7 +171,7 @@ function seed(): DB {
 
   const users: User[] = [
     mkUser("Ava Stone", "admin@bridge.demo", "admin", 99999, 210),
-    mkUser("Noah Reyes", "user@bridge.demo", "user", 5_000_000, 34),
+    mkUser("Noah Reyes", "user@bridge.demo", "user", 74, 34),
     mkUser("Lena Fischer", "lena@nordica.io", "user", 212, 96),
     mkUser("Marcus Ade", "marcus@loopmail.io", "user", 18, 61),
     mkUser("Sofia Reyes", "sofia@cartful.com", "user", 455, 148),
@@ -262,7 +262,7 @@ function seed(): DB {
     keys,
     jobs,
     blocklist: [...DISPOSABLE_SEED],
-    settings: { creditsOnSignup: 5_000_000, enabled },
+    settings: { creditsOnSignup: 25, enabled },
     seededAt: now,
   };
 }

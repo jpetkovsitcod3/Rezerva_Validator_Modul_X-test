@@ -413,7 +413,7 @@ describe("admin overview", () => {
 describe("validate branches: quick path, admin bypass, rate limit, credits", () => {
   it("should take the quick path when quick=true and not charge credits", async () => {
     const u = await settle(apiSignup("Quick", "quick@x.io", "password123"));
-    const { verdict, record } = await settle(apiValidate(u, "maya.chen@stripe.com", { quick: true }));
+    const { record } = await settle(apiValidate(u, "maya.chen@stripe.com", { quick: true }));
     expect(record.mode).toBe("quick");
     const fresh = await settle(fetchSessionUser());
     expect(fresh?.credits).toBe(25);

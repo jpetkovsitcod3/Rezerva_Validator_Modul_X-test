@@ -230,6 +230,7 @@ export const PHOSPHOR_ICONS = {
   gauge: Phosphor.Gauge,
   star: Phosphor.Star,
   copy: Phosphor.Copy,
+  network: Phosphor.ShareNetwork,
   file: Phosphor.FileCsv,
   flask: Phosphor.Flask,
   gear: Phosphor.Gear,

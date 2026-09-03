@@ -411,13 +411,13 @@ export default function PipelineScene() {
   const LayerIcon = layer?.icon ?? Phosphor.Scan;
 
   return (
-    <section id="pipeline" className="relative px-5 py-20 md:px-10 md:py-24">
+    <section id="pipeline" className="relative px-5 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <div className="text-center">
           <h2 className="font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-bold text-[var(--text-1)]">
             <KineticText text="7-Layer Validation Pipeline" delay={0.05} />
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-[13.5px] leading-relaxed text-[var(--text-3)]">
+          <p className="mx-auto mt-4 max-w-lg text-[13.5px] leading-relaxed text-[var(--text-3)]">
             A sequential, rigorous process designed to filter invalid data{" "}
             <span className="font-semibold text-[var(--color-status-error)]">with extreme prejudice.</span>
           </p>
@@ -531,14 +531,14 @@ export default function PipelineScene() {
             </div>
             <div className="font-data absolute top-3 right-3 z-30 md:top-5 md:right-5">
               <div className="flex items-center gap-2 border border-[var(--color-error-border)]/70 bg-[var(--color-bg-canvas)]/85 px-2.5 py-1 backdrop-blur">
-                <Trash2 className="h-3.5 w-3.5 text-[var(--color-status-error)]" aria-hidden />
+                <Phosphor.Trash size={14} className="text-[var(--color-status-error)]" aria-hidden />
                 <span className="text-[10px] uppercase tracking-widest text-[var(--color-status-error)]">rejected</span>
                 <SlidingNumber value={stats.rejected} className="text-sm font-semibold text-[var(--color-status-error)]" />
               </div>
             </div>
             <div className="font-data absolute bottom-3 left-3 z-30 md:bottom-5 md:left-5">
               <div className="flex items-center gap-2 border border-[var(--color-success-border)]/70 bg-[var(--color-bg-canvas)]/85 px-2.5 py-1 backdrop-blur">
-                <Gauge className="h-3.5 w-3.5 text-[var(--color-status-success)]" aria-hidden />
+                <Phosphor.Gauge size={14} className="text-[var(--color-status-success)]" aria-hidden />
                 <span className="text-[10px] uppercase tracking-widest text-[var(--color-status-success)]">trusted</span>
                 <SlidingNumber value={stats.trusted} className="text-sm font-semibold text-[var(--color-status-success)]" />
               </div>

@@ -29,7 +29,7 @@ import {
   type EngineOptions,
   type Verdict,
 } from "../lib/engine";
-import { Card, EmptyState, PrimaryButton, SecondaryButton, GhostButton, StatusBadge, useToast } from "./ui";
+import { Card, EmptyState, PrimaryButton, GhostButton, StatusBadge, useToast } from "./ui";
 import { RibbonCorner, SuiMessage, SuiProgress } from "../lib/semantic";
 import { LayerRows, ScoreDial, timeAgo } from "./Layers";
 import { RouteTransition } from "../lib/route-transition";

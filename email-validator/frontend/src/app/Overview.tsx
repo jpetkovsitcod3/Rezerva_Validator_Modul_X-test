@@ -4,7 +4,7 @@ import { useAuth } from "../lib/auth";
 import { RouteTransition } from "../lib/route-transition";
 import { apiHistory, apiStats, type Stats } from "../lib/db";
 import type { ValidationRecord } from "../lib/db";
-import { Card, EmptyState, StatTile, StatusBadge } from "./ui";
+import { Card, EmptyState, StatusBadge } from "./ui";
 import { ScoreDial, timeAgo } from "./Layers";
 import { cn } from "../utils/cn";
 import { fmt, useCountUp } from "../lib/ui";
@@ -35,13 +35,6 @@ const REGION_NODES: { code: string; label: string; x: number; y: number }[] = [
 
 const ROUTE_LINKS: [number, number][] = [
   [0, 1], [1, 3], [2, 3], [3, 4], [3, 5], [5, 6], [5, 7], [5, 8], [6, 7], [9, 1], [10, 2],
-];
-
-const META_TILES: { key: "today" | "last7" | "valid" | "avg"; label: string; sub: string; accent: string }[] = [
-  { key: "today", label: "Validated today", sub: "Live across your team", accent: "var(--palette-teal-300)" },
-  { key: "last7", label: "Last 7 days", sub: "Trend stable", accent: "var(--palette-amber-400)" },
-  { key: "valid", label: "Valid rate", sub: "Above 78% target", accent: "var(--palette-teal-400)" },
-  { key: "avg", label: "Avg latency", sub: "P50 across regions", accent: "var(--palette-sky-300)" },
 ];
 
 function MetricCard({ value, suffix, label, sub, accent }: { value: number; suffix?: string; label: string; sub: string; accent: string }) {

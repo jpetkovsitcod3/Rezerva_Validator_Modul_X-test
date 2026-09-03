@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, startTransition, useState, ViewTransition, type FormEvent } from "react";
-import { motion } from "framer-motion";
 import { Icon } from "../lib/ui";
 import { RouteTransition } from "../lib/route-transition";
 import {
@@ -23,10 +22,10 @@ import {
   type ValidationRecord,
 } from "../lib/db";
 import { LAYERS, type LayerKey, type VerdictStatus } from "../lib/engine";
-import { Card, Confirm, EmptyState, Field, inputCls, Modal, Pagination, PrimaryButton, DangerButton, GhostButton, SecondaryButton, StatTile, StatusBadge, useToast } from "./ui";
+import { Card, Confirm, EmptyState, Field, inputCls, Modal, Pagination, PrimaryButton, DangerButton, StatTile, StatusBadge, useToast } from "./ui";
 import { LayerRows, ScoreDial, timeAgo } from "./Layers";
 import { cn } from "../utils/cn";
-import { MItem, Stagger, springSoft } from "../lib/motion";
+import { MItem, Stagger } from "../lib/motion";
 
 /* ================= overview ================= */
 

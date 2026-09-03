@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useRef, startTransition, useState, ViewTransition } from "react";
-import { motion } from "framer-motion";
 import { Icon } from "../lib/ui";
 import { useAuth } from "../lib/auth";
 import { RouteTransition } from "../lib/route-transition";
 import { apiDeleteRecord, apiHistory, type HistoryPage, type ValidationRecord } from "../lib/db";
 import { downloadCSV, toCSV, type VerdictStatus } from "../lib/engine";
-import { Card, Confirm, EmptyState, GhostButton, Modal, Pagination, PrimaryButton, StatusBadge, useToast } from "./ui";
+import { Card, Confirm, EmptyState, GhostButton, Modal, Pagination, StatusBadge, useToast } from "./ui";
 import { LayerRows, ScoreDial, timeAgo } from "./Layers";
 import { cn } from "../utils/cn";
-import { springSoft } from "../lib/motion";
 
 const PAGE_SIZE = 9;
 const FILTERS: { key: VerdictStatus | "all"; label: string }[] = [

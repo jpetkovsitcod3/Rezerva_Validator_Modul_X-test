@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { motion } from "framer-motion";
-import { Icon, Spinner } from "../lib/ui";
+import { Icon } from "../lib/ui";
 import { useAuth } from "../lib/auth";
 import {
   apiChangePassword,
@@ -14,7 +13,6 @@ import {
 import { Card, Confirm, CopyBtn, Field, inputCls, Modal, PrimaryButton, GhostButton, useToast } from "./ui";
 import { timeAgo } from "./Layers";
 import { RouteTransition } from "../lib/route-transition";
-import { springSoft } from "../lib/motion";
 
 /* ================= API keys ================= */
 

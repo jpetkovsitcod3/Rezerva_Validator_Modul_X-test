@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, render, renderHook, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import {
   AuthProvider,
   BootSplash,
@@ -10,7 +9,7 @@ import {
   useAuth,
   useRoute,
 } from "./auth";
-import { apiLogin, apiLogout, apiSignup, fetchSessionUser, resetDemoData } from "./db";
+import { apiLogin, apiLogout, apiSignup, fetchSessionUser } from "./db";
 import { ReactNode } from "react";
 
 vi.mock("./db", async () => {
@@ -67,8 +66,6 @@ describe("hash router", () => {
 });
 
 describe("AuthProvider", () => {
-  const renderWithAuth = (children: ReactNode) => render(<AuthProvider>{children}</AuthProvider>);
-
   it("should boot and restore session from fetchSessionUser", async () => {
     const mockUser = { id: "u_1", name: "Test", email: "test@x.io", role: "user" as const, status: "active" as const, credits: 10, createdAt: Date.now() };
     (fetchSessionUser as any).mockResolvedValue(mockUser);

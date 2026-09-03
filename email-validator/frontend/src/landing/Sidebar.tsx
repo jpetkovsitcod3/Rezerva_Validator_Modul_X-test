@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Icon, type IconName } from "../lib/ui";
 import { SlidingNumber, PulseDot } from "../lib/motion";
 import { cn } from "../utils/cn";

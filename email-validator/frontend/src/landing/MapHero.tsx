@@ -77,7 +77,7 @@ interface Packet {
   alive: boolean;
 }
 
-function buildArcLUT(svgEl: SVGSVGElement, arcPaths: SVGPathElement[]) {
+function buildArcLUT(arcPaths: SVGPathElement[]) {
   return arcPaths.map((p) => {
     const L = p.getTotalLength();
     const N = 200;
@@ -145,7 +145,7 @@ export default function MapHero() {
     const svg = svgRef.current;
     if (!svg) return;
     const paths = arcPathRefs.current.filter(Boolean) as SVGPathElement[];
-    lutRef.current = buildArcLUT(svg, paths);
+    lutRef.current = buildArcLUT(paths);
   }, []);
 
   /* measure container */
@@ -196,7 +196,6 @@ export default function MapHero() {
     const luts = lutRef.current;
     if (luts.length === 0) return;
 
-    let raf = 0;
     let last = performance.now();
 
     const createPacketEl = () => {
@@ -478,6 +477,44 @@ export default function MapHero() {
             </span>
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* hero text overlay */}
+      <div className="absolute inset-0 z-30 flex items-end">
+        <div className="mx-auto w-full max-w-6xl px-5 pb-24 pt-10 md:px-10 md:pb-32 md:pt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, type: "spring", stiffness: 180, damping: 22 }}
+            className="max-w-2xl"
+          >
+            <span className="eyebrow">7-layer validation engine</span>
+            <h1 className="mt-3 font-display text-[clamp(1.9rem,4.2vw,3.2rem)] font-bold leading-[1.1] text-white">
+              Validate any address with{" "}
+              <span className="grad-text-tri">extreme prejudice</span>
+            </h1>
+            <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-[var(--text-3)]">
+              Syntax, DNS, MX, disposable detection, catch-all probe, SMTP handshake,
+              and ML scoring — one API call.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <a
+                href="#/signup"
+                className="shine inline-flex items-center gap-2 rounded-xl bg-[var(--color-accent-primary)] px-5 py-2.5 text-[12.5px] font-bold text-[var(--color-text-on-accent)] transition-all duration-200 hover:bg-[var(--color-accent-primary-hover)] active:scale-[.98]"
+                style={{ boxShadow: "0 0 24px rgba(79,138,255,.28)" }}
+              >
+                Start validating
+                <span aria-hidden className="text-[10px]">→</span>
+              </a>
+              <a
+                href="#pipeline"
+                className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-border-primary)] px-5 py-2.5 text-[12.5px] font-bold text-[var(--text-1)] transition-all duration-200 hover:border-[var(--color-accent-primary)]/50 active:scale-[.98]"
+              >
+                See how it works
+              </a>
+            </div>
+          </motion.div>
+        </div>
       </div>
 
       {/* bottom-right: throughput sparkline */}

@@ -97,15 +97,15 @@ export const colorHuntDarkTheme: ThemeConfig = {
     Input: {
       colorBgContainer: "#0d2847",
       colorBorder: "rgba(255, 255, 255, 0.12)",
-      colorBorderHover: "rgba(110, 172, 218, 0.4)",
-      colorBorderFocused: "#6eacda",
+      hoverBorderColor: "rgba(110, 172, 218, 0.4)",
+      activeBorderColor: "#6eacda",
       activeShadow: "0 0 0 2px rgba(110, 172, 218, 0.15)",
     },
 
     Select: {
       colorBgContainer: "#0d2847",
       colorBorder: "rgba(255, 255, 255, 0.12)",
-      colorBorderHover: "rgba(110, 172, 218, 0.4)",
+      hoverBorderColor: "rgba(110, 172, 218, 0.4)",
       optionSelectedBg: "rgba(110, 172, 218, 0.15)",
     },
 
@@ -135,7 +135,6 @@ export const colorHuntDarkTheme: ThemeConfig = {
       colorItemBgActive: "rgba(110, 172, 218, 0.08)",
       colorItemText: "#a8b8c8",
       colorItemTextSelected: "#6eacda",
-      colorItemTextActive: "#6eacda",
       itemBorderRadius: 8,
       itemMarginInline: 4,
     },
