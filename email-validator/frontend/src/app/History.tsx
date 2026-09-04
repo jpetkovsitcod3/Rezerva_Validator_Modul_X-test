@@ -91,14 +91,14 @@ export default function History() {
       <div className="space-y-5">
         {/* toolbar */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-lg border border-[#EAEAEA] bg-white px-4 py-2.5 transition-colors duration-200 focus-within:border-[#111111] sm:max-w-xs">
-            <Icon name="search" size={14} className="shrink-0 text-[var(--text-3)]" />
+          <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white px-4 py-2.5 transition-colors duration-200 focus-within:border-[#111111] sm:max-w-xs">
+            <Icon name="search" size={14} className="shrink-0 text-white/30" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search addresses..."
               aria-label="Search history"
-              className="min-w-0 flex-1 bg-transparent text-[13px] text-[var(--text-1)] outline-none placeholder:text-[var(--text-3)]"
+              className="min-w-0 flex-1 bg-transparent text-[13px] text-white outline-none placeholder:text-white/30"
             />
           </div>
           <div className="flex items-center gap-1 rounded-xl border border-[var(--line-secondary)] bg-[var(--bg-2)] p-1">
@@ -109,7 +109,7 @@ export default function History() {
                 aria-pressed={status === f.key}
                 className={cn(
                   "rounded-lg px-3 py-1.5 text-[11.5px] font-bold transition-all duration-200",
-                  status === f.key ? "bg-[var(--accent-soft)] text-[var(--cyan)]" : "text-[var(--text-3)] hover:text-[var(--text-1)]"
+                  status === f.key ? "bg-[var(--accent-soft)] text-[var(--cyan)]" : "text-white/30 hover:text-white"
                 )}
               >
                 {f.label}
@@ -163,7 +163,7 @@ export default function History() {
                     <thead>
                       <tr className="border-b border-[var(--line)]">
                         {["Address", "Verdict", "Score", "Latency", "Checked", ""].map((h) => (
-                          <th key={h} className="font-data px-5 py-3.5 text-[9px] font-semibold tracking-[0.18em] text-[var(--text-3)] uppercase">
+                          <th key={h} className="font-data px-5 py-3.5 text-[9px] font-semibold tracking-[0.18em] text-white/30 uppercase">
                             {h}
                           </th>
                         ))}
@@ -172,15 +172,15 @@ export default function History() {
                     <tbody>
                       {data.rows.map((r) => (
                         <tr key={r.id} className="group border-b border-[var(--line)] transition-colors duration-150 last:border-0 hover:bg-[var(--accent-faint)]">
-                          <td className="font-data max-w-[260px] truncate px-5 py-3.5 text-[12.5px] font-semibold text-[var(--text-1)]">{r.email}</td>
+                          <td className="font-data max-w-[260px] truncate px-5 py-3.5 text-[12.5px] font-semibold text-white">{r.email}</td>
                           <td className="px-5 py-3.5"><StatusBadge status={r.status} /></td>
                           <td className="px-5 py-3.5">
                             <span className="font-data text-[13px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--amber)" : "var(--red)" }}>
                               {r.score}
                             </span>
                           </td>
-                          <td className="font-data px-5 py-3.5 text-[11.5px] text-[var(--text-2)] tabular-nums">{Math.round(r.totalMs)}ms</td>
-                          <td className="font-data px-5 py-3.5 text-[11px] text-[var(--text-3)]">
+                          <td className="font-data px-5 py-3.5 text-[11.5px] text-white/50 tabular-nums">{Math.round(r.totalMs)}ms</td>
+                          <td className="font-data px-5 py-3.5 text-[11px] text-white/30">
                             {timeAgo(r.ts)}
                             <span className="ml-2 rounded border border-[var(--line)] px-1 py-px text-[8px] tracking-[0.1em] uppercase">{r.mode}</span>
                           </td>
@@ -188,14 +188,14 @@ export default function History() {
                             <div className="flex justify-end gap-1.5 opacity-60 transition-opacity duration-200 group-hover:opacity-100">
                               <button
                                 onClick={() => openTrace(r)}
-                                className="rounded-md border border-[#EAEAEA] bg-white px-2.5 py-1.5 text-[10.5px] font-bold text-[#111111] transition-colors duration-200 hover:border-[#111111]"
+                                className="rounded-md border border-white/[0.08] bg-white px-2.5 py-1.5 text-[10.5px] font-bold text-white transition-colors duration-200 hover:border-[#111111]"
                               >
                                 Trace
                               </button>
                               <button
                                 onClick={() => setDeleting(r)}
                                 aria-label={`Delete ${r.email}`}
-                                className="rounded-md border border-[var(--line)] p-1.5 text-[var(--text-3)] transition-colors duration-200 hover:border-[#EAB9BB] hover:text-[#9F2F2D]"
+                                className="rounded-md border border-[var(--line)] p-1.5 text-white/30 transition-colors duration-200 hover:border-[#EAB9BB] hover:text-[#9F2F2D]"
                               >
                                 <Icon name="trash" size={11} />
                               </button>
@@ -221,10 +221,10 @@ export default function History() {
               <div className="flex flex-wrap items-center gap-5">
                 <ScoreDial score={viewing.score} size={76} />
                 <div className="min-w-0 flex-1">
-                  <p className="font-data truncate text-[14px] font-semibold text-[var(--text-1)]">{viewing.email}</p>
+                  <p className="font-data truncate text-[14px] font-semibold text-white">{viewing.email}</p>
                   <div className="mt-2 flex flex-wrap items-center gap-2.5">
                     <StatusBadge status={viewing.status} />
-                    <span className="font-data text-[10.5px] text-[var(--text-3)]">
+                    <span className="font-data text-[10.5px] text-white/30">
                       {Math.round(viewing.totalMs)}ms · {new Date(viewing.ts).toLocaleString()}
                     </span>
                   </div>

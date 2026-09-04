@@ -35,9 +35,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 3800);
   };
   const toneStyle: Record<Tone, string> = {
-    ok: "border-[#BFD8C0] text-[var(--green)]",
-    err: "border-[#EAB9BB] text-[var(--red)]",
-    info: "border-[#EAEAEA] text-[var(--text-1)]",
+    ok: "border-[#5BC07E]/30 text-[#5BC07E]",
+    err: "border-[#E68080]/30 text-[#E68080]",
+    info: "border-white/[0.1] text-white/80",
   };
   return (
     <ToastCtx.Provider value={{ push }}>
@@ -46,7 +46,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={cn("slide-up pointer-events-auto flex items-start gap-2.5 rounded-xl border border-[#EAEAEA] bg-white px-4 py-3", toneStyle[t.tone])}
+            className={cn("slide-up pointer-events-auto flex items-start gap-2.5 rounded-xl border bg-[#141414] px-4 py-3", toneStyle[t.tone])}
           >
             <Icon name={t.tone === "ok" ? "check" : t.tone === "err" ? "alert" : "sparkles"} size={15} className="mt-0.5 shrink-0" />
             <p className="text-[12.5px] leading-snug font-semibold text-[var(--text-1)]">{t.msg}</p>
@@ -111,16 +111,16 @@ export function Modal({
           <MOverlay
             ariaLabel="Close dialog"
             onClick={onClose}
-            className="absolute inset-0 bg-[rgba(17,17,17,0.4)]"
+            className="absolute inset-0 bg-black/60"
           />
           <MPanel
             innerRef={boxRef}
             tabIndex={-1}
-            className={cn("relative w-full rounded-xl border border-[#EAEAEA] bg-white p-6 outline-none", width)}
+            className={cn("relative w-full rounded-xl border border-white/[0.08] bg-[#141414] p-6 outline-none", width)}
           >
             <div className="mb-4 flex items-center justify-between gap-4">
-              <h3 className="font-display text-[18px] font-bold tracking-tight text-[var(--text-1)]">{title}</h3>
-              <button onClick={onClose} aria-label="Close" className="flex size-8 shrink-0 items-center justify-center rounded-md border border-[#EAEAEA] text-[var(--text-3)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]">
+              <h3 className="font-display text-[18px] font-bold tracking-tight text-white">{title}</h3>
+              <button onClick={onClose} aria-label="Close" className="flex size-8 shrink-0 items-center justify-center rounded-md border border-white/[0.08] text-white/30 transition-colors duration-200 hover:border-white/[0.15] hover:text-white/60">
                 <Icon name="close" size={14} />
               </button>
             </div>
@@ -190,7 +190,7 @@ export function StatusBadge({ status }: { status: VerdictStatus }) {
 }
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("rounded-xl border border-[#EAEAEA] bg-white", className)}>{children}</div>;
+  return <div className={cn("rounded-xl border border-white/[0.06] bg-white/[0.02]", className)}>{children}</div>;
 }
 
 export const StatTile = memo(function StatTile({
@@ -212,13 +212,13 @@ export const StatTile = memo(function StatTile({
     <Card className="hover-lift p-6">
       <div className="flex items-start justify-between">
         <div>
-          <p className="font-data text-[9.5px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">{label}</p>
+          <p className="font-data text-[9.5px] font-semibold tracking-[0.2em] text-white/30 uppercase">{label}</p>
           {loading ? (
-            <div className="shimmer mt-2.5 h-7 w-24 rounded-lg bg-[var(--bg-2)]" />
+            <div className="shimmer mt-2.5 h-7 w-24 rounded-lg bg-white/[0.04]" />
           ) : (
-            <p className="font-data mt-1.5 text-[26px] leading-none font-bold text-[var(--text-1)] tabular-nums">{value}</p>
+            <p className="font-data mt-1.5 text-[26px] leading-none font-bold text-white tabular-nums">{value}</p>
           )}
-          {sub && <div className="mt-2 text-[11.5px] text-[var(--text-3)]">{sub}</div>}
+          {sub && <div className="mt-2 text-[11.5px] text-white/30">{sub}</div>}
         </div>
         <span className="flex size-9 items-center justify-center rounded-xl border" style={{ color: accent, borderColor: `color-mix(in srgb, ${accent} 30%, transparent)`, background: `color-mix(in srgb, ${accent} 10%, transparent)` }}>
           <Icon name={icon} size={16} />
@@ -240,12 +240,12 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#EAEAEA] bg-white px-6 py-14 text-center">
-      <span className="flex size-12 items-center justify-center rounded-lg border border-[#EAEAEA] bg-[#F7F6F3] text-[var(--text-3)]">
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-white/[0.1] bg-white/[0.02] px-6 py-14 text-center">
+      <span className="flex size-12 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.04] text-white/30">
         <Icon name={icon} size={20} />
       </span>
-      <p className="font-display mt-4 text-[17px] font-bold text-[var(--text-1)]">{title}</p>
-      <p className="mt-1.5 max-w-sm text-[12.5px] leading-relaxed text-[var(--text-3)]">{body}</p>
+      <p className="font-display mt-4 text-[17px] font-bold text-white">{title}</p>
+      <p className="mt-1.5 max-w-sm text-[12.5px] leading-relaxed text-white/30">{body}</p>
       {action && <div className="mt-5">{action}</div>}
     </div>
   );
@@ -258,17 +258,17 @@ export function Pagination({ page, pages, onPage }: { page: number; pages: numbe
       <button
         onClick={() => onPage(page - 1)}
         disabled={page <= 1}
-        className="flex items-center gap-1.5 rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-[12px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)] disabled:pointer-events-none disabled:opacity-40"
+        className="flex items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-[12px] font-bold text-white/50 transition-colors duration-200 hover:border-white/[0.15] hover:text-white/80 disabled:pointer-events-none disabled:opacity-40"
       >
         <Icon name="arrowRight" size={12} className="rotate-180" /> Prev
       </button>
-      <span className="font-data text-[11px] text-[var(--text-3)]">
+      <span className="font-data text-[11px] text-white/30">
         page {page} / {pages}
       </span>
       <button
         onClick={() => onPage(page + 1)}
         disabled={page >= pages}
-        className="flex items-center gap-1.5 rounded-md border border-[#EAEAEA] bg-white px-3 py-2 text-[12px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)] disabled:pointer-events-none disabled:opacity-40"
+        className="flex items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-[12px] font-bold text-white/50 transition-colors duration-200 hover:border-white/[0.15] hover:text-white/80 disabled:pointer-events-none disabled:opacity-40"
       >
         Next <Icon name="arrowRight" size={12} />
       </button>
@@ -289,9 +289,9 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="font-data mb-1.5 flex items-baseline justify-between text-[10px] font-semibold tracking-[0.16em] text-[var(--text-2)] uppercase">
+      <span className="font-data mb-1.5 flex items-baseline justify-between text-[10px] font-semibold tracking-[0.16em] text-white/50 uppercase">
         {label}
-        {hint && <span className="normal-case tracking-normal text-[var(--text-3)]">{hint}</span>}
+        {hint && <span className="normal-case tracking-normal text-white/30">{hint}</span>}
       </span>
       {children}
       {error && (
@@ -304,7 +304,7 @@ export function Field({
 }
 
 export const inputCls =
-  "w-full rounded-md border border-[#EAEAEA] bg-white px-3.5 py-2.5 text-[13.5px] text-[var(--text-1)] outline-none transition-colors duration-200 placeholder:text-[var(--text-3)] focus:border-[#111111]";
+  "w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-3.5 py-2.5 text-[13.5px] text-white outline-none transition-colors duration-200 placeholder:text-white/25 focus:border-[#D4A574]/40 focus:ring-1 focus:ring-[#D4A574]/20";
 
 export function CopyBtn({ text, label = "Copy" }: { text: string; label?: string }) {
   const { push } = useToast();
@@ -348,7 +348,7 @@ export function PrimaryButton({ children, icon, loading, disabled, className, on
   type?: "button" | "submit";
   href?: string;
 }) {
-  const cls = cn(BTN_BASE, "bg-[#111111] text-white hover:bg-[#333333] px-5 py-2.5 text-[13px]", className);
+  const cls = cn(BTN_BASE, "bg-[#D4A574] text-[#0A0A0A] hover:bg-[#D4A574]/90 px-5 py-2.5 text-[13px]", className);
   const inner = <>{loading ? <Spinner size={13} /> : icon ? <Icon name={icon} size={14} /> : null}{children}</>;
   if (href) return <a href={href} className={cls} onClick={disabled ? undefined : onClick}>{inner}</a>;
   return <button type={type} onClick={onClick} disabled={disabled || loading} className={cls}>{inner}</button>;
@@ -364,7 +364,7 @@ export function SecondaryButton({ children, icon, loading, disabled, className, 
   type?: "button" | "submit";
 }) {
   return (
-    <button type={type} onClick={onClick} disabled={disabled || loading} className={cn(BTN_BASE, "border border-[#EAEAEA] bg-white text-[var(--text-1)] hover:border-[#111111] px-5 py-2.5 text-[13px]", className)}>
+    <button type={type} onClick={onClick} disabled={disabled || loading} className={cn(BTN_BASE, "border border-white/[0.1] bg-white/[0.03] text-white/70 hover:border-white/[0.2] hover:text-white px-5 py-2.5 text-[13px]", className)}>
       {loading ? <Spinner size={13} /> : icon ? <Icon name={icon} size={14} /> : null}{children}
     </button>
   );
@@ -380,7 +380,7 @@ export function DangerButton({ children, icon, loading, disabled, className, onC
   type?: "button" | "submit";
 }) {
   return (
-    <button type={type} onClick={onClick} disabled={disabled || loading} className={cn(BTN_BASE, "border border-[#EAB9BB] bg-[#FDEBEC] text-[#9F2F2D] hover:bg-[#F6DADB] px-4 py-2.5 text-[13px]", className)}>
+    <button type={type} onClick={onClick} disabled={disabled || loading} className={cn(BTN_BASE, "border border-[#E68080]/30 bg-[#E68080]/10 text-[#E68080] hover:bg-[#E68080]/15 px-4 py-2.5 text-[13px]", className)}>
       {loading ? <Spinner size={13} /> : icon ? <Icon name={icon} size={14} /> : null}{children}
     </button>
   );
@@ -395,7 +395,7 @@ export function GhostButton({ children, icon, disabled, className, onClick, type
   type?: "button" | "submit";
 }) {
   return (
-    <button type={type} onClick={onClick} disabled={disabled} className={cn(BTN_BASE, "border border-transparent text-[var(--text-2)] hover:border-[#EAEAEA] hover:bg-[#F7F6F3] hover:text-[var(--text-1)] px-4 py-2.5 text-[13px]", className)}>
+    <button type={type} onClick={onClick} disabled={disabled} className={cn(BTN_BASE, "border border-transparent text-white/50 hover:border-white/[0.1] hover:bg-white/[0.04] hover:text-white/80 px-4 py-2.5 text-[13px]", className)}>
       {icon ? <Icon name={icon} size={14} /> : null}{children}
     </button>
   );

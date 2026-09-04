@@ -10,8 +10,8 @@ function CountStat({ value, label }: { value: string; label: string }) {
   const n = useCountUp(target, inView && target > 0, 1100);
   return (
     <MItem>
-      <span ref={ref} className="font-data flex items-baseline gap-2 text-[10px] tracking-[0.14em] text-[var(--text-3)] uppercase">
-        <span className="text-[15px] font-bold text-[var(--text-1)] tabular-nums">
+      <span ref={ref} className="font-data flex items-baseline gap-2 text-[10px] tracking-[0.14em] text-white/30 uppercase">
+        <span className="text-[15px] font-bold text-white tabular-nums">
           {target > 0 ? `${Math.round(n)}${m![2]}` : value}
         </span>
         {label}
@@ -45,7 +45,7 @@ function CardShell({
       id={id}
       onPointerMove={onMove}
       className={cn(
-        "group relative overflow-hidden rounded-xl border border-[#EAEAEA] bg-white p-6 transition-[border-color,box-shadow] duration-200 hover:border-[#D8D4C8] hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
+        "group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] p-6 transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.04]",
         className
       )}
       style={{ transitionTimingFunction: "var(--ease-el)" }}
@@ -53,16 +53,16 @@ function CardShell({
       <span
         aria-hidden
         className="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ background: "radial-gradient(circle, rgba(17,17,17,0.04), transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, rgba(212,165,116,0.06), transparent 70%)" }}
       />
       <span
         className="flex size-9 items-center justify-center rounded-lg border"
-        style={{ color: accent, borderColor: `color-mix(in srgb, ${accent} 35%, transparent)`, background: `color-mix(in srgb, ${accent} 10%, transparent)` }}
+        style={{ color: accent, borderColor: `color-mix(in srgb, ${accent} 25%, transparent)`, background: `color-mix(in srgb, ${accent} 8%, transparent)` }}
       >
         <Icon name={icon} size={16} />
       </span>
-      <h3 className="font-display mt-4 text-[17px] font-bold text-[var(--text-1)]">{title}</h3>
-      <div className="relative mt-2.5 text-[13px] leading-[1.7] text-[var(--text-2)]">{children}</div>
+      <h3 className="font-display mt-4 text-[17px] font-bold text-white">{title}</h3>
+      <div className="relative mt-2.5 text-[13px] leading-[1.7] text-white/50">{children}</div>
     </article>
   );
 }
@@ -72,9 +72,9 @@ function SegmentedBar() {
   return (
     <div ref={ref} className="mt-5 flex gap-1.5" aria-label="Hardware offload utilization: 60%">
       {[0, 1, 2, 3, 4].map((i) => (
-        <span key={i} className="h-[5px] flex-1 overflow-hidden rounded-full bg-[var(--color-accent-primary)]/10">
+        <span key={i} className="h-[5px] flex-1 overflow-hidden rounded-full bg-white/[0.06]">
           <span
-            className={cn("block h-full w-full rounded-full bg-[var(--color-accent-primary)]", i >= 3 && "bg-[var(--color-status-warning)]")}
+            className={cn("block h-full w-full rounded-full bg-[#D4A574]", i >= 3 && "bg-[#E0BB8F]")}
             style={{
               transform: inView && i < 3 ? "scaleX(1)" : "scaleX(0)",
               transformOrigin: "left",
@@ -95,26 +95,25 @@ function ScoreDonut() {
     <div ref={ref} className="mt-5 flex items-center gap-4">
       <div className="relative size-[58px] shrink-0">
         <svg viewBox="0 0 100 100" className="size-full -rotate-90">
-          <circle cx="50" cy="50" r="42" fill="none" stroke="#EFEDE8" strokeWidth="10" />
+          <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="10" />
           <circle
-            cx="50" cy="50" r="42" fill="none" stroke="#111111" strokeWidth="10" strokeLinecap="round"
+            cx="50" cy="50" r="42" fill="none" stroke="#D4A574" strokeWidth="10" strokeLinecap="round"
             pathLength={100} strokeDasharray={`${v} ${100 - v}`}
             style={{ transition: "stroke-dasharray 1.1s var(--ease-el)" }}
           />
         </svg>
-        <span className="font-data absolute inset-0 flex items-center justify-center text-[12px] font-bold text-[var(--text-1)] tabular-nums">
+        <span className="font-data absolute inset-0 flex items-center justify-center text-[12px] font-bold text-white tabular-nums">
           {Math.round(val)}%
         </span>
       </div>
-      <div className="h-[6px] flex-1 overflow-hidden rounded-full bg-[var(--color-accent-primary)]/10">
+      <div className="h-[6px] flex-1 overflow-hidden rounded-full bg-white/[0.06]">
         <span
-          className="block h-full rounded-full bg-[var(--color-accent-primary)]"
+          className="block h-full rounded-full bg-[#D4A574]"
           style={{
             width: "100%",
             transform: inView ? "scaleX(0.96)" : "scaleX(0)",
             transformOrigin: "left",
             transition: "transform 1.1s var(--ease-el)",
-            
           }}
         />
       </div>
@@ -127,12 +126,12 @@ export default function Architecture() {
     <section id="architecture" className="px-5 py-20 md:px-10 md:py-28">
       <div className="mx-auto max-w-6xl">
         <MReveal>
-          <h2 className="font-display text-[clamp(1.6rem,3.2vw,2.3rem)] font-bold text-[var(--text-1)]">
+          <h2 className="font-display text-[clamp(1.6rem,3.2vw,2.3rem)] font-bold text-white">
             <KineticText per="line" text="Architectural Superiority" />
           </h2>
         </MReveal>
         <MReveal delay={0.08}>
-          <p className="mt-3 max-w-lg text-[13.5px] leading-relaxed text-[var(--text-3)]">
+          <p className="mt-3 max-w-lg text-[13.5px] leading-relaxed text-white/40">
             Modular components designed for high-frequency transactional environments.
             Every layer is isolated, observable, and replaceable.
           </p>
@@ -151,7 +150,7 @@ export default function Architecture() {
 
         <div className="mt-10 grid gap-4 lg:grid-cols-3">
           <MReveal delay={0.1} className="lg:col-span-2">
-            <CardShell icon="globe" accent="var(--palette-teal-300)" title="Hardware Acceleration" className="h-full">
+            <CardShell icon="globe" accent="#D4A574" title="Hardware Acceleration" className="h-full">
               Bypassing standard software stacks, Modul X interfaces directly with specialized
               hardware to execute MX lookups and SMTP handshakes concurrently.
               <SegmentedBar />
@@ -159,22 +158,22 @@ export default function Architecture() {
           </MReveal>
 
           <MReveal delay={0.18}>
-            <CardShell id="compliance" icon="shield" accent="var(--palette-teal-300)" title="Zero-Trust Processing" className="h-full">
+            <CardShell id="compliance" icon="shield" accent="#D4A574" title="Zero-Trust Processing" className="h-full">
               Data is processed in memory and immediately purged. No logs, no traces.
-              <span className="font-data mt-4 inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-accent-primary)]/30 bg-[var(--color-accent-primary)]/8 px-2.5 py-1 text-[8.5px] font-bold tracking-[0.16em] text-[var(--text-1)] uppercase">
-                <span className="pulse-green size-1.5 rounded-full bg-[var(--color-status-success)]" />
+              <span className="font-data mt-4 inline-flex items-center gap-1.5 rounded-lg border border-[#D4A574]/20 bg-[#D4A574]/[0.06] px-2.5 py-1 text-[8.5px] font-bold tracking-[0.16em] text-white/80 uppercase">
+                <span className="pulse-green size-1.5 rounded-full bg-[#5BC07E]" />
                 purged in &lt;1ms
               </span>
             </CardShell>
           </MReveal>
 
           <MReveal delay={0.26}>
-            <CardShell icon="network" accent="var(--palette-teal-300)" title="Global Edge Network" className="h-full">
+            <CardShell icon="network" accent="#D4A574" title="Global Edge Network" className="h-full">
               Distributed validation nodes ensure low latency regardless of origin.
               <span className="mt-4 flex items-center gap-2">
                 {["fra", "iad", "sin", "gru"].map((r, i) => (
-                  <span key={r} className="float-y font-data flex items-center gap-1.5 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-secondary)] px-2 py-1 text-[8.5px] font-bold tracking-[0.12em] text-[var(--palette-teal-200)] uppercase" style={{ animationDelay: `${i * -1.4}s` }}>
-                    <span className="pulse-blue size-1 rounded-full bg-[var(--palette-teal-300)]" style={{ animationDelay: `${i * 0.4}s` }} />
+                  <span key={r} className="float-y font-data flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2 py-1 text-[8.5px] font-bold tracking-[0.12em] text-[#D4A574]/70 uppercase" style={{ animationDelay: `${i * -1.4}s` }}>
+                    <span className="pulse-blue size-1 rounded-full bg-[#D4A574]" style={{ animationDelay: `${i * 0.4}s` }} />
                     {r}
                   </span>
                 ))}
@@ -183,7 +182,7 @@ export default function Architecture() {
           </MReveal>
 
           <MReveal delay={0.34} className="lg:col-span-2">
-            <CardShell icon="gauge" accent="var(--palette-teal-300)" title="Predictive Scoring Engine" className="h-full">
+            <CardShell icon="gauge" accent="#D4A574" title="Predictive Scoring Engine" className="h-full">
               Machine learning models analyze historical bounce patterns and domain reputation
               to assign a confidence score before SMTP connection is attempted.
               <ScoreDonut />

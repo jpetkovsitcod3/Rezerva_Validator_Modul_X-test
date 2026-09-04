@@ -338,7 +338,7 @@ export default function MapHero() {
   const ev = EVENTS[evIdx];
 
   return (
-    <div ref={ref} className="relative m-2 overflow-hidden rounded-lg border border-[var(--color-border-secondary)] bg-[var(--color-bg-primary)] sm:m-3">
+    <div ref={ref} className="relative mx-2 mt-16 overflow-hidden rounded-xl border border-white/[0.06] bg-[#0D0D0D] sm:mx-5 md:mx-8">
       {/* ambient orbs */}
       <div aria-hidden className="ambient-orb pointer-events-none absolute -top-32 -right-24 h-[420px] w-[560px]" style={{ background: "radial-gradient(ellipse at center, rgba(255,255,255,.07), transparent 65%)", filter: "blur(40px)" }} />
       <div aria-hidden className="ambient-orb pointer-events-none absolute -bottom-24 -left-16 h-[300px] w-[400px]" style={{ background: "radial-gradient(ellipse at center, rgba(214,182,94,.08), transparent 65%)", filter: "blur(50px)", animationDelay: "-4s" }} />
@@ -481,33 +481,33 @@ export default function MapHero() {
 
       {/* hero text overlay */}
       <div className="absolute inset-0 z-30 flex items-end">
-        <div className="mx-auto w-full max-w-6xl px-5 pb-24 pt-10 md:px-10 md:pb-32 md:pt-16">
+        <div className="mx-auto w-full max-w-6xl px-5 pb-20 pt-12 md:px-10 md:pb-28 md:pt-20">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, type: "spring", stiffness: 180, damping: 22 }}
             className="max-w-2xl"
           >
-            <span className="font-data inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-white/80 uppercase">7-layer validation engine</span>
-            <h1 className="mt-3 font-display text-[clamp(1.9rem,4.2vw,3.2rem)] font-bold leading-[1.1] text-white">
+            <span className="font-data inline-flex items-center gap-2 rounded-full border border-[#D4A574]/25 bg-[#D4A574]/10 px-3 py-1 text-[10px] font-semibold tracking-[0.2em] text-[#D4A574]/80 uppercase">7-layer validation engine</span>
+            <h1 className="mt-4 font-display text-[clamp(2.2rem,5vw,3.8rem)] font-bold leading-[1.08] text-white">
               Validate any address with{" "}
-              <span className="text-white">extreme prejudice</span>
+              <span className="text-[#D4A574]">extreme prejudice</span>
             </h1>
-            <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-white/70">
+            <p className="mt-4 max-w-md text-[14px] leading-relaxed text-white/55">
               Syntax, DNS, MX, disposable detection, catch-all probe, SMTP handshake,
               and ML scoring — one API call.
             </p>
-            <div className="mt-6 flex flex-wrap items-center gap-3">
+            <div className="mt-7 flex flex-wrap items-center gap-3">
               <a
                 href="#/signup"
-                className="group inline-flex items-center gap-2 rounded-md bg-white py-2.5 pr-2.5 pl-5 text-[12.5px] font-bold text-[#111111] transition-colors duration-200 hover:bg-[#EFEDE8] active:scale-[0.98]"
+                className="group inline-flex items-center gap-2 rounded-lg bg-white py-3 pr-3 pl-6 text-[13px] font-bold text-[#0A0A0A] transition-all duration-200 hover:bg-white/90 active:scale-[0.98]"
               >
                 Start Validating
-                <span aria-hidden className="flex size-7 items-center justify-center rounded-full bg-black/15 text-[11px] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:scale-105">→</span>
+                <span aria-hidden className="flex size-7 items-center justify-center rounded-full bg-black/10 text-[11px] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:scale-105">→</span>
               </a>
               <a
                 href="#pipeline"
-                className="inline-flex items-center gap-2 rounded-md border border-white/30 px-5 py-2.5 text-[12.5px] font-bold text-white transition-colors duration-200 hover:border-white/60 active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-6 py-3 text-[13px] font-bold text-white/80 transition-all duration-200 hover:border-white/40 hover:text-white active:scale-[0.98]"
               >
                 See How It Works
               </a>

@@ -11,24 +11,24 @@ import { springSoft } from "../lib/motion";
 function AuthFrame({ children, side }: { children: React.ReactNode; side: React.ReactNode }) {
   return (
     <RouteTransition>
-      <div className="grid min-h-screen bg-[var(--bg-1)] lg:grid-cols-[1fr_1.1fr]">
+      <div className="grid min-h-screen bg-[#0A0A0A] lg:grid-cols-[1fr_1.1fr]">
         {/* brand side */}
-        <div className="relative hidden overflow-hidden border-r border-[var(--line-secondary)] bg-[var(--bg-0)] lg:block">
+        <div className="relative hidden overflow-hidden border-r border-white/[0.06] lg:block">
           <div className="hero-fallback absolute inset-0" aria-hidden />
           <div className="hero-grid absolute inset-0" aria-hidden />
           <div className="relative flex h-full flex-col justify-between p-10">
             <a href="#/" className="flex w-fit items-center gap-2.5">
-              <span className="flex size-9 items-center justify-center rounded-lg border border-[#EAEAEA] bg-[#111111]">
+              <span className="flex size-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
                 <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden>
-                  <rect x="4" y="7" width="24" height="18" rx="3.5" stroke="#FFFFFF" strokeWidth="2.4" />
-                  <path d="m4 11 12 8 12-8" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                  <rect x="4" y="7" width="24" height="18" rx="3.5" stroke="#D4A574" strokeWidth="2.4" />
+                  <path d="m4 11 12 8 12-8" stroke="#D4A574" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
-              <span className="text-[16px] font-extrabold tracking-tight text-[var(--text-1)]">REACTOR</span>
+              <span className="font-display text-[16px] font-bold tracking-tight text-white">Bridge <span className="text-[#D4A574]">Modul X</span></span>
             </a>
             <div>{side}</div>
-            <a href="#/" className="font-data w-fit text-[10px] tracking-[0.2em] text-[var(--text-3)] uppercase transition-colors duration-200 hover:text-[var(--text-1)]">
-              &larr; back to reactor console
+            <a href="#/" className="font-data w-fit text-[10px] tracking-[0.2em] text-white/30 uppercase transition-colors duration-200 hover:text-white/60">
+              &larr; back to site
             </a>
           </div>
         </div>
@@ -41,30 +41,30 @@ function AuthFrame({ children, side }: { children: React.ReactNode; side: React.
 
 function DemoPanel({ onFill }: { onFill: (email: string) => void }) {
   return (
-    <div className="rounded-xl border border-[#EAEAEA] bg-white p-4">
-      <p className="font-data text-[9px] font-semibold tracking-[0.2em] text-[var(--cyan)] uppercase">
-        Demo access &middot; password: demo1234
+    <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
+      <p className="font-data text-[9px] font-semibold tracking-[0.2em] text-[#D4A574]/70 uppercase">
+        Demo access · password: demo1234
       </p>
       <div className="mt-3 grid grid-cols-2 gap-2.5">
         <button
           type="button"
           onClick={() => onFill("user@bridge.demo")}
-          className="rounded-lg border border-[#EAEAEA] bg-[#F7F6F3] px-3 py-2.5 text-left transition-colors duration-200 hover:border-[#111111]"
+          className="rounded-lg border border-white/[0.08] bg-white/[0.02] px-3 py-2.5 text-left transition-colors duration-200 hover:border-white/[0.15] hover:bg-white/[0.04]"
         >
-          <span className="flex items-center gap-1.5 text-[12px] font-extrabold text-[var(--text-1)]">
-            <Icon name="users" size={13} className="text-[var(--cyan)]" /> Demo user
+          <span className="flex items-center gap-1.5 text-[12px] font-extrabold text-white/70">
+            <Icon name="users" size={13} className="text-[#D4A574]/60" /> Demo user
           </span>
-          <span className="font-data mt-1 block truncate text-[9.5px] text-[var(--text-3)]">user@bridge.demo</span>
+          <span className="font-data mt-1 block truncate text-[9.5px] text-white/30">user@bridge.demo</span>
         </button>
         <button
           type="button"
           onClick={() => onFill("admin@bridge.demo")}
-          className="rounded-lg border border-[#EAEAEA] bg-[#F7F6F3] px-3 py-2.5 text-left transition-colors duration-200 hover:border-[#111111]"
+          className="rounded-lg border border-white/[0.08] bg-white/[0.02] px-3 py-2.5 text-left transition-colors duration-200 hover:border-white/[0.15] hover:bg-white/[0.04]"
         >
-          <span className="flex items-center gap-1.5 text-[12px] font-extrabold text-[var(--text-1)]">
-            <Icon name="lock" size={13} className="text-[var(--amber)]" /> Demo admin
+          <span className="flex items-center gap-1.5 text-[12px] font-extrabold text-white/70">
+            <Icon name="lock" size={13} className="text-[#E0BB8F]/70" /> Demo admin
           </span>
-          <span className="font-data mt-1 block truncate text-[9.5px] text-[var(--text-3)]">admin@bridge.demo</span>
+          <span className="font-data mt-1 block truncate text-[9.5px] text-white/30">admin@bridge.demo</span>
         </button>
       </div>
     </div>
@@ -122,10 +122,10 @@ export function LoginPage() {
           <Icon name="arrowRight" size={14} className="rotate-180 text-[var(--cyan)]" />
           <span className="font-data text-[10px] tracking-[0.2em] text-[var(--text-3)] uppercase">back</span>
         </a>
-        <h2 className="font-display text-[28px] font-bold tracking-tight text-[var(--text-1)]">Sign in</h2>
-        <p className="mt-1.5 text-[13px] text-[var(--text-3)]">
+        <h2 className="font-display text-[28px] font-bold tracking-tight text-white">Sign in</h2>
+        <p className="mt-1.5 text-[13px] text-white/40">
           New here?{" "}
-          <a href="#/signup" className="font-bold text-[#111111] underline decoration-[#D8D4C8] underline-offset-2 hover:decoration-[#111111]">
+          <a href="#/signup" className="font-bold text-[#D4A574] underline decoration-[#D4A574]/30 underline-offset-2 hover:decoration-[#D4A574]">
             Create an account
           </a>
         </p>
@@ -154,7 +154,7 @@ export function LoginPage() {
             />
           </Field>
           {err && (
-            <p role="alert" className="slide-up flex items-start gap-2 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-3.5 py-2.5 text-[12.5px] font-semibold text-[#9F2F2D]">
+            <p role="alert" className="slide-up flex items-start gap-2 rounded-lg border border-[#E68080]/30 bg-[#E68080]/10 px-3.5 py-2.5 text-[12.5px] font-semibold text-[#E68080]">
               <Icon name="alert" size={14} className="mt-0.5 shrink-0" /> {err}
             </p>
           )}
@@ -256,7 +256,7 @@ export function SignupPage() {
             <input type="password" autoComplete="new-password" className={inputCls} placeholder="••••••••" value={pw} onChange={(e) => setPw(e.target.value)} required />
           </Field>
           {err && (
-            <p role="alert" className="slide-up flex items-start gap-2 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-3.5 py-2.5 text-[12.5px] font-semibold text-[#9F2F2D]">
+            <p role="alert" className="slide-up flex items-start gap-2 rounded-lg border border-[#E68080]/30 bg-[#E68080]/10 px-3.5 py-2.5 text-[12.5px] font-semibold text-[#E68080]">
               <Icon name="alert" size={14} className="mt-0.5 shrink-0" /> {err}
             </p>
           )}

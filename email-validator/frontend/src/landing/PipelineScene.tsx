@@ -424,10 +424,10 @@ export default function PipelineScene() {
         </div>
 
         {/* ============ the scene ============ */}
-        <div ref={viewRef} className="relative mt-10 overflow-hidden rounded-xl border border-[#EAEAEA] bg-white">
+        <div ref={viewRef} className="relative mt-10 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0D0D0D]">
           {/* corner brackets */}
           {["-left-px -top-px border-l-2 border-t-2", "-right-px -top-px border-r-2 border-t-2", "-bottom-px -left-px border-b-2 border-l-2", "-bottom-px -right-px border-b-2 border-r-2"].map((pos) => (
-            <span key={pos} className={`absolute ${pos} z-30 h-4 w-4 border-white/50`} aria-hidden />
+            <span key={pos} className={`absolute ${pos} z-30 h-4 w-4 border-[#D4A574]/30`} aria-hidden />
           ))}
 
           <div ref={stageRef} className="relative aspect-[3/2] w-full overflow-hidden">
@@ -518,10 +518,10 @@ export default function PipelineScene() {
                     )}
 
                     {hoverGate === i && (
-                      <div className={`absolute left-1/2 z-40 w-60 -translate-x-1/2 rounded-lg border border-[#EAEAEA] bg-white p-3 ${above ? "top-full mt-2" : "bottom-full mb-2"}`}>
-                        <div className="font-display text-xs font-bold uppercase tracking-wider text-[#111111]">Layer {i + 1} — {LAYERS[i].title}</div>
-                        <p className="mt-1.5 text-[11px] leading-relaxed text-[var(--text-2)]">{LAYERS[i].detail}</p>
-                        <div className="font-data mt-2 border-t border-[var(--color-border-secondary)] pt-1.5 text-[10px] text-[var(--color-status-error)]">rejects: {LAYERS[i].fail}</div>
+                      <div className={`absolute left-1/2 z-40 w-60 -translate-x-1/2 rounded-lg border border-white/[0.1] bg-[#141414] p-3 shadow-xl ${above ? "top-full mt-2" : "bottom-full mb-2"}`}>
+                        <div className="font-display text-xs font-bold uppercase tracking-wider text-white">Layer {i + 1} — {LAYERS[i].title}</div>
+                        <p className="mt-1.5 text-[11px] leading-relaxed text-white/50">{LAYERS[i].detail}</p>
+                        <div className="font-data mt-2 border-t border-white/[0.06] pt-1.5 text-[10px] text-[#E68080]">rejects: {LAYERS[i].fail}</div>
                       </div>
                     )}
                   </div>
@@ -562,48 +562,48 @@ export default function PipelineScene() {
 
         {/* ============ log + gate inspector ============ */}
         <div className="mt-6 grid gap-4 lg:grid-cols-5">
-          <section className="border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] lg:col-span-3">
-            <div className="flex items-center justify-between border-b border-[var(--color-border-secondary)] px-4 py-2.5">
-              <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-[var(--text-1)]">Validation event log</h3>
-              <span className="font-data flex items-center gap-1.5 text-[10px] uppercase text-[var(--text-3)]">
-                <span className={`h-1.5 w-1.5 rounded-full ${running ? "pv-blink bg-[var(--color-status-success)]" : "bg-[var(--text-3)]"}`} />
+          <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] lg:col-span-3">
+            <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-2.5">
+              <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-white/80">Validation event log</h3>
+              <span className="font-data flex items-center gap-1.5 text-[10px] uppercase text-white/30">
+                <span className={`h-1.5 w-1.5 rounded-full ${running ? "pv-blink bg-[#5BC07E]" : "bg-white/30"}`} />
                 {running ? "streaming" : "scroll to activate"}
               </span>
             </div>
             <div role="log" aria-label="Validation event log" className="font-data h-[230px] overflow-hidden px-4 py-3 text-[11px] leading-relaxed">
               {log.length === 0 ? (
-                <p className="text-[var(--text-3)]">awaiting first packet…</p>
+                <p className="text-white/25">awaiting first packet…</p>
               ) : (
                 log.map((l, i) => (
                   <p key={`${l.label}-${l.t}`} className="transition-opacity duration-300" style={{ opacity: Math.max(0.35, 1 - i * 0.09) }}>
-                    <span className="text-[var(--text-3)]">[{l.t}]</span> <span className="text-[var(--text-2)]">{l.label}</span>{" "}
-                    <span className={l.kind === "fail" ? "text-[var(--color-status-error)]" : "text-[var(--color-status-success)]"}>{l.msg}</span>
+                    <span className="text-white/25">[{l.t}]</span> <span className="text-white/50">{l.label}</span>{" "}
+                    <span className={l.kind === "fail" ? "text-[#E68080]" : "text-[#5BC07E]"}>{l.msg}</span>
                   </p>
                 ))
               )}
             </div>
           </section>
 
-          <section className="border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] p-5 lg:col-span-2">
-            <p className="font-data text-[10px] font-bold uppercase tracking-[0.24em] text-[var(--palette-teal-300)]">gate inspector</p>
+          <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 lg:col-span-2">
+            <p className="font-data text-[10px] font-bold uppercase tracking-[0.24em] text-[#D4A574]/70">gate inspector</p>
             {layer ? (
               <div key={inspected} className="slide-up mt-3">
                 <div className="flex items-center gap-3">
-                  <span className="flex size-10 items-center justify-center rounded-lg border border-[#EAEAEA] bg-[#F7F6F3] text-[#111111]">
+                  <span className="flex size-10 items-center justify-center rounded-lg border border-white/[0.1] bg-white/[0.04] text-[#D4A574]">
                     <LayerIcon className="h-5 w-5" aria-hidden />
                   </span>
                   <div>
-                    <h3 className="font-display text-[15px] font-bold text-[var(--text-1)]">{layer.title}</h3>
-                    <p className="font-data text-[9.5px] uppercase tracking-wider text-[var(--text-3)]">{layer.short} · {layer.ms}</p>
+                    <h3 className="font-display text-[15px] font-bold text-white">{layer.title}</h3>
+                    <p className="font-data text-[9.5px] uppercase tracking-wider text-white/30">{layer.short} · {layer.ms}</p>
                   </div>
                 </div>
-                <p className="mt-3 text-[12.5px] leading-relaxed text-[var(--text-2)]">{layer.detail}</p>
-                <p className="font-data mt-3 border-t border-[var(--color-border-secondary)] pt-2.5 text-[10.5px] text-[var(--color-status-error)]">
-                  <span className="text-[var(--text-3)]">eject condition:</span> {layer.fail}
+                <p className="mt-3 text-[12.5px] leading-relaxed text-white/50">{layer.detail}</p>
+                <p className="font-data mt-3 border-t border-white/[0.06] pt-2.5 text-[10.5px] text-[#E68080]">
+                  <span className="text-white/30">eject condition:</span> {layer.fail}
                 </p>
               </div>
             ) : (
-              <p className="mt-3 text-[12.5px] leading-relaxed text-[var(--text-3)]">
+              <p className="mt-3 text-[12.5px] leading-relaxed text-white/25">
                 Hover or focus any gate on the belt — or wait for a packet to trigger one — to read its rule here.
               </p>
             )}
@@ -614,30 +614,30 @@ export default function PipelineScene() {
         <div role="list" className="mt-5 grid grid-cols-1 gap-2 lg:hidden">
           {LAYERS.map((s, i) => (
             <MItem key={s.id}>
-              <div role="listitem" className="flex items-center gap-3 rounded-lg border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)] px-3.5 py-2.5">
-                <span className="font-data w-5 text-[10px] text-[var(--text-3)]">{String(i + 1).padStart(2, "0")}</span>
-                <s.icon className="h-4 w-4 shrink-0 text-[var(--palette-teal-300)]" aria-hidden />
+              <div role="listitem" className="flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3.5 py-2.5">
+                <span className="font-data w-5 text-[10px] text-white/30">{String(i + 1).padStart(2, "0")}</span>
+                <s.icon className="h-4 w-4 shrink-0 text-[#D4A574]/70" aria-hidden />
                 <span className="flex-1">
-                  <span className="block text-[12.5px] font-semibold text-[var(--text-1)]">{s.title}</span>
-                  <span className="font-data block text-[9.5px] text-[var(--text-3)]">{s.ms}</span>
+                  <span className="block text-[12.5px] font-semibold text-white/80">{s.title}</span>
+                  <span className="font-data block text-[9.5px] text-white/30">{s.ms}</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="pulse-green size-1.5 rounded-full bg-[var(--color-status-success)]" />
-                  <span className="font-data text-[8px] font-bold tracking-[0.18em] text-[var(--text-2)]">PASS</span>
+                  <span className="pulse-green size-1.5 rounded-full bg-[#5BC07E]" />
+                  <span className="font-data text-[8px] font-bold tracking-[0.18em] text-white/50">PASS</span>
                 </span>
               </div>
             </MItem>
           ))}
         </div>
 
-        <Stagger className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-border-secondary)] pt-5" stagger={0.08}>
+        <Stagger className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-5" stagger={0.08}>
           <MItem>
-            <span className="font-data text-[10px] uppercase tracking-widest text-[var(--text-3)]">
+            <span className="font-data text-[10px] uppercase tracking-widest text-white/25">
               7-layer validation pipeline · data filtered with extreme prejudice
             </span>
           </MItem>
           <MItem>
-            <span className="font-data flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-[var(--text-3)]">
+            <span className="font-data flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-white/25">
               <span className={`h-1.5 w-1.5 rounded-full ${running ? "bg-white pv-blink" : "bg-white/40"}`} />
               {running ? "pipeline nominal" : "awaiting scroll"}
             </span>

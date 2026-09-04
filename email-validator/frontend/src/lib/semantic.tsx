@@ -15,12 +15,12 @@ import { cn } from "../utils/cn";
 
 const BTN_VARIANTS: Record<string, string> = {
   primary:
-    "bg-[#111111] text-white hover:bg-[#333333] border border-transparent",
-  dark: "border border-[#EAEAEA] bg-white text-[var(--text-1)] hover:border-[#111111]",
+    "bg-[#D4A574] text-[#0A0A0A] hover:bg-[#D4A574]/90 border border-transparent",
+  dark: "border border-white/[0.1] bg-white/[0.03] text-white/70 hover:border-white/[0.2] hover:text-white",
   danger:
-    "border border-[#EAB9BB] bg-[#FDEBEC] text-[#9F2F2D] hover:bg-[#F6DADB]",
+    "border border-[#E68080]/30 bg-[#E68080]/10 text-[#E68080] hover:bg-[#E68080]/15",
   ghost:
-    "border border-transparent bg-transparent text-[var(--text-2)] hover:border-[#EAEAEA] hover:bg-[#F7F6F3] hover:text-[var(--text-1)]",
+    "border border-transparent bg-transparent text-white/50 hover:border-white/[0.1] hover:bg-white/[0.04] hover:text-white/80",
 };
 
 export function SuiButton({
@@ -134,7 +134,7 @@ export function SuiStatistic({
       >
         {value}
       </span>
-      <span className="font-data mt-1.5 block text-[8.5px] font-semibold tracking-[0.18em] text-[var(--text-3)] uppercase">
+      <span className="font-data mt-1.5 block text-[8.5px] font-semibold tracking-[0.18em] text-white/30 uppercase">
         {label}
       </span>
     </div>
@@ -307,11 +307,11 @@ export function SuiMessage({
 export function SuiDivider({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-4" role="separator" aria-label={label}>
-      <span className="h-px flex-1 bg-[#EAEAEA]" />
-      <span className="font-data text-[9px] font-semibold tracking-[0.24em] text-[var(--text-3)] uppercase">
+      <span className="h-px flex-1 bg-white/[0.08]" />
+      <span className="font-data text-[9px] font-semibold tracking-[0.24em] text-white/25 uppercase">
         {label}
       </span>
-      <span className="h-px flex-1 bg-[#EAEAEA]" />
+      <span className="h-px flex-1 bg-white/[0.08]" />
     </div>
   );
 }

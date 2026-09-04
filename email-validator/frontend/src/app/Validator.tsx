@@ -140,8 +140,8 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_1.1fr]">
       <Card className="p-6">
-        <h3 className="font-display text-[19px] font-bold text-[var(--text-1)]">Single check</h3>
-        <p className="mt-1 text-[12.5px] text-[var(--text-3)]">
+        <h3 className="font-display text-[19px] font-bold text-white">Single check</h3>
+        <p className="mt-1 text-[12.5px] text-white/30">
           Quick = syntax + DNS, free. Deep = all 7 layers, 1 credit.
         </p>
 
@@ -162,10 +162,10 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
                 mode === key ? "bg-[#111111]" : "hover:bg-[#F1EFEA]"
               )}
             >
-              <span className={cn("block text-[13px] font-extrabold", mode === key ? "text-white" : "text-[var(--text-2)]")}>
+              <span className={cn("block text-[13px] font-extrabold", mode === key ? "text-white" : "text-white/50")}>
                 {label}
               </span>
-              <span className="font-data block text-[8.5px] tracking-[0.14em] text-[var(--text-3)] uppercase">{sub}</span>
+              <span className="font-data block text-[8.5px] tracking-[0.14em] text-white/30 uppercase">{sub}</span>
             </button>
           ))}
         </div>
@@ -173,7 +173,7 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
         <form onSubmit={onSubmit} className="mt-4">
           <div
             className={cn(
-              "flex items-center gap-2.5 rounded-lg border border-[#EAEAEA] bg-white px-4 py-3 transition-colors duration-200 focus-within:border-[#111111]",
+              "flex items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white px-4 py-3 transition-colors duration-200 focus-within:border-[#111111]",
               formErr ? "border-[var(--red)]" : "border-[var(--line)]"
             )}
           >
@@ -183,7 +183,7 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@company.com"
               aria-label="Email to validate"
-              className="font-data min-w-0 flex-1 bg-transparent text-[13.5px] text-[var(--text-1)] outline-none placeholder:text-[var(--text-3)]"
+              className="font-data min-w-0 flex-1 bg-transparent text-[13.5px] text-white outline-none placeholder:text-white/30"
             />
             <button
               type="submit"
@@ -199,14 +199,14 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
 
         {recent.length > 0 && (
           <div className="mt-4">
-            <p className="font-data text-[9px] font-semibold tracking-[0.18em] text-[var(--text-3)] uppercase">recent</p>
+            <p className="font-data text-[9px] font-semibold tracking-[0.18em] text-white/30 uppercase">recent</p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {recent.map((r) => (
                 <button
                   key={r}
                   onClick={() => run(r)}
                   disabled={phase === "running"}
-                  className="font-data rounded-full border border-[var(--line)] px-2.5 py-1 text-[10px] text-[var(--text-3)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)] disabled:opacity-50"
+                  className="font-data rounded-full border border-[var(--line)] px-2.5 py-1 text-[10px] text-white/30 transition-colors duration-200 hover:border-[#111111] hover:text-white disabled:opacity-50"
                 >
                   {r}
                 </button>
@@ -220,7 +220,7 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
             <SuiMessage tone="danger" title={rateErr ? "Rate limit" : "Out of credits"}>
               {rateErr || creditErr}
               {rateErr && (
-                <span className="font-data mt-1.5 block text-[9.5px] tracking-[0.12em] text-[var(--text-3)] uppercase">
+                <span className="font-data mt-1.5 block text-[9.5px] tracking-[0.12em] text-white/30 uppercase">
                   limit: {RATE_LIMIT_PER_MIN} checks / minute
                 </span>
               )}
@@ -230,13 +230,13 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
 
         {phase === "idle" && !creditErr && !rateErr && (
           <div className="mt-6 rounded-xl border border-dashed border-[var(--line)] p-5 text-center">
-            <p className="font-data text-[10px] tracking-[0.18em] text-[var(--text-3)] uppercase">try a tricky one</p>
+            <p className="font-data text-[10px] tracking-[0.18em] text-white/30 uppercase">try a tricky one</p>
             <div className="mt-3 flex flex-wrap justify-center gap-1.5">
               {["james@gmial.com", "promo@mailinator.com", "info@megacorp.com"].map((s) => (
                 <button
                   key={s}
                   onClick={() => run(s)}
-                  className="font-data rounded-full border border-[var(--line)] px-2.5 py-1 text-[10px] text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]"
+                  className="font-data rounded-full border border-[var(--line)] px-2.5 py-1 text-[10px] text-white/50 transition-colors duration-200 hover:border-[#111111] hover:text-white"
                 >
                   {s}
                 </button>
@@ -255,7 +255,7 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
           <div>
             <div className="flex items-center gap-3">
               <Spinner size={16} />
-              <p className="font-data truncate text-[12.5px] text-[var(--text-2)]">{email}</p>
+              <p className="font-data truncate text-[12.5px] text-white/50">{email}</p>
               <span className="font-data ml-auto rounded-full border border-[var(--line)] px-2 py-0.5 text-[8.5px] tracking-[0.14em] text-[var(--cyan)] uppercase">
                 {resultMode} mode
               </span>
@@ -274,13 +274,13 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
             <div className="flex flex-wrap items-center gap-5">
               <ScoreDial score={result.score} />
               <div className="min-w-0 flex-1">
-                <p className="font-data truncate text-[13px] font-semibold text-[var(--text-1)]">{result.email}</p>
+                <p className="font-data truncate text-[13px] font-semibold text-white">{result.email}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-2.5">
                   <StatusBadge status={result.status} />
-                  <span className="font-data rounded-full border border-[var(--line)] px-2 py-0.5 text-[8.5px] tracking-[0.14em] text-[var(--text-3)] uppercase">
+                  <span className="font-data rounded-full border border-[var(--line)] px-2 py-0.5 text-[8.5px] tracking-[0.14em] text-white/30 uppercase">
                     {resultMode}
                   </span>
-                  <span className="font-data text-[10.5px] text-[var(--text-3)]">{result.totalMs}ms</span>
+                  <span className="font-data text-[10.5px] text-white/30">{result.totalMs}ms</span>
                 </div>
                 <p className="mt-2 text-[12.5px] font-semibold" style={{ color: result.status === "valid" ? "var(--green)" : result.status === "risky" ? "var(--amber)" : "var(--red)" }}>
                   {result.action}
@@ -358,19 +358,19 @@ function DomainIntel() {
     <div className="space-y-4">
       <Card className="relative overflow-hidden p-6">
         <RibbonCorner color="var(--green)">free</RibbonCorner>
-        <h3 className="text-[15px] font-extrabold text-[var(--text-1)]">Domain intelligence</h3>
-        <p className="mt-1 text-[12.5px] leading-relaxed text-[var(--text-3)]">
+        <h3 className="text-[15px] font-extrabold text-white">Domain intelligence</h3>
+        <p className="mt-1 text-[12.5px] leading-relaxed text-white/30">
           MX, SPF, DMARC and DKIM for any domain — the same report the engine consults during layers 2–3. Free, unlimited.
         </p>
         <form onSubmit={onSubmit} className="mt-4 flex flex-wrap items-center gap-2.5">
-          <div className={cn("flex min-w-[220px] flex-1 items-center gap-2.5 rounded-lg border border-[#EAEAEA] bg-white px-4 py-3 transition-colors duration-200 focus-within:border-[#111111]", err ? "border-[var(--red)]" : "border-[var(--line)]")}>
+          <div className={cn("flex min-w-[220px] flex-1 items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white px-4 py-3 transition-colors duration-200 focus-within:border-[#111111]", err ? "border-[var(--red)]" : "border-[var(--line)]")}>
             <Icon name="globe" size={16} className="shrink-0 text-[var(--cyan)]" />
             <input
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
               placeholder="company.com"
               aria-label="Domain to inspect"
-              className="font-data min-w-0 flex-1 bg-transparent text-[13.5px] text-[var(--text-1)] outline-none placeholder:text-[var(--text-3)]"
+              className="font-data min-w-0 flex-1 bg-transparent text-[13.5px] text-white outline-none placeholder:text-white/30"
             />
           </div>
           <PrimaryButton icon="search" type="submit" loading={loading} disabled={loading} className="py-3">
@@ -378,7 +378,7 @@ function DomainIntel() {
           </PrimaryButton>
           <div className="flex w-full gap-1.5 pt-1 sm:w-auto sm:pt-0">
             {["gmail.com", "stripe.com", "megacorp.com", "dead-domain.io"].map((d) => (
-              <button type="button" key={d} onClick={() => lookup(d)} disabled={loading} className="font-data rounded-full border border-[var(--line)] px-2.5 py-1 text-[10px] text-[var(--text-3)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)] disabled:opacity-50">
+              <button type="button" key={d} onClick={() => lookup(d)} disabled={loading} className="font-data rounded-full border border-[var(--line)] px-2.5 py-1 text-[10px] text-white/30 transition-colors duration-200 hover:border-[#111111] hover:text-white disabled:opacity-50">
                 {d}
               </button>
             ))}
@@ -402,13 +402,13 @@ function DomainIntel() {
             <div className="flex flex-wrap items-center gap-5">
               <ScoreDial score={report.score} />
               <div className="min-w-0 flex-1">
-                <p className="font-data text-[16px] font-bold text-[var(--text-1)]">{report.domain}</p>
+                <p className="font-data text-[16px] font-bold text-white">{report.domain}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-2.5">
                   <span className={cn("font-data flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9.5px] font-bold tracking-[0.12em] uppercase", report.exists ? "border-[#BFD8C0] text-[var(--green)]" : "border-[#EAB9BB] text-[var(--red)]")}>
                     <span className={cn("size-1.5 rounded-full", report.exists ? "pulse-green bg-[var(--green)]" : "bg-[var(--red)]")} />
                     {report.exists ? "Resolving" : "NXDOMAIN"}
                   </span>
-                  <span className="font-data text-[10.5px] text-[var(--text-3)]">{report.mx.length} MX · {report.dkim.length} DKIM</span>
+                  <span className="font-data text-[10.5px] text-white/30">{report.mx.length} MX · {report.dkim.length} DKIM</span>
                 </div>
                 <p className="mt-2 text-[12.5px] font-semibold" style={{ color: report.score >= 80 ? "var(--green)" : report.score >= 55 ? "var(--amber)" : "var(--red)" }}>
                   {report.verdict}
@@ -422,8 +422,8 @@ function DomainIntel() {
             <Card className="p-5">
               <div className="flex items-center gap-2.5">
                 <Icon name="server" size={15} className="text-[var(--cyan)]" />
-                <h4 className="text-[13.5px] font-extrabold text-[var(--text-1)]">MX records</h4>
-                <span className="font-data ml-auto text-[9px] tracking-[0.16em] text-[var(--text-3)] uppercase">mail exchangers</span>
+                <h4 className="text-[13.5px] font-extrabold text-white">MX records</h4>
+                <span className="font-data ml-auto text-[9px] tracking-[0.16em] text-white/30 uppercase">mail exchangers</span>
               </div>
               {report.mx.length === 0 ? (
                 <p className="font-data mt-4 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-3.5 py-3 text-[11px] text-[var(--red)]">
@@ -433,10 +433,10 @@ function DomainIntel() {
                 <ul className="mt-3.5 space-y-2">
                   {report.mx.map((m) => (
                     <li key={m.host} className="flex items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--bg-2)] px-3.5 py-2.5">
-                      <span className="font-data rounded-md border border-[#111111] bg-[#F7F6F3] px-2 py-1 text-[10px] font-bold text-[#111111]">
+                      <span className="font-data rounded-md border border-[#111111] bg-white/[0.03] px-2 py-1 text-[10px] font-bold text-white">
                         pri {m.priority}
                       </span>
-                      <span className="font-data min-w-0 flex-1 truncate text-[12px] text-[var(--text-1)]">{m.host}</span>
+                      <span className="font-data min-w-0 flex-1 truncate text-[12px] text-white">{m.host}</span>
                       <span className="pulse-green size-1.5 shrink-0 rounded-full bg-[var(--green)]" />
                     </li>
                   ))}
@@ -448,8 +448,8 @@ function DomainIntel() {
             <Card className="p-5">
               <div className="flex items-center gap-2.5">
                 <Icon name="shield" size={15} className="text-[var(--cyan)]" />
-                <h4 className="text-[13.5px] font-extrabold text-[var(--text-1)]">SPF</h4>
-                <span className="font-data ml-auto text-[9px] tracking-[0.16em] text-[var(--text-3)] uppercase">sender policy</span>
+                <h4 className="text-[13.5px] font-extrabold text-white">SPF</h4>
+                <span className="font-data ml-auto text-[9px] tracking-[0.16em] text-white/30 uppercase">sender policy</span>
               </div>
               {!report.spf ? (
                 <p className="font-data mt-4 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-3.5 py-3 text-[11px] text-[var(--red)]">
@@ -462,7 +462,7 @@ function DomainIntel() {
                   </code>
                   <div className="mt-3 flex flex-wrap items-center gap-1.5">
                     {report.spf.mechanisms.map((m) => (
-                      <span key={m} className="font-data rounded-md border border-[var(--line)] bg-[var(--bg-2)] px-2 py-1 text-[10px] text-[var(--text-2)]">{m}</span>
+                      <span key={m} className="font-data rounded-md border border-[var(--line)] bg-[var(--bg-2)] px-2 py-1 text-[10px] text-white/50">{m}</span>
                     ))}
                     <span className={cn("font-data ml-auto rounded-full px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", report.spf.strict ? "bg-[#EDF3EC] text-[var(--green)]" : "bg-[#FBF3DB] text-[var(--amber)]")}>
                       {report.spf.strict ? "hard fail" : "soft fail"}
@@ -476,8 +476,8 @@ function DomainIntel() {
             <Card className="p-5">
               <div className="flex items-center gap-2.5">
                 <Icon name="lock" size={15} className="text-[var(--cyan)]" />
-                <h4 className="text-[13.5px] font-extrabold text-[var(--text-1)]">DMARC</h4>
-                <span className="font-data ml-auto text-[9px] tracking-[0.16em] text-[var(--text-3)] uppercase">policy</span>
+                <h4 className="text-[13.5px] font-extrabold text-white">DMARC</h4>
+                <span className="font-data ml-auto text-[9px] tracking-[0.16em] text-white/30 uppercase">policy</span>
               </div>
               {!report.dmarc ? (
                 <p className="font-data mt-4 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-3.5 py-3 text-[11px] text-[var(--red)]">
@@ -493,7 +493,7 @@ function DomainIntel() {
                       <div className="h-full rounded-full transition-[width] duration-700" style={{ width: report.dmarc.policy === "reject" ? "100%" : report.dmarc.policy === "quarantine" ? "62%" : "24%", background: policyColor(report.dmarc.policy), transitionTimingFunction: "var(--ease-el)" }} />
                     </div>
                   </div>
-                  <p className="font-data mt-3 truncate text-[10.5px] text-[var(--text-3)]">reports → {report.dmarc.rua}</p>
+                  <p className="font-data mt-3 truncate text-[10.5px] text-white/30">reports → {report.dmarc.rua}</p>
                 </div>
               )}
             </Card>
@@ -502,8 +502,8 @@ function DomainIntel() {
             <Card className="p-5">
               <div className="flex items-center gap-2.5">
                 <Icon name="code" size={15} className="text-[var(--cyan)]" />
-                <h4 className="text-[13.5px] font-extrabold text-[var(--text-1)]">DKIM</h4>
-                <span className="font-data ml-auto text-[9px] tracking-[0.16em] text-[var(--text-3)] uppercase">signing keys</span>
+                <h4 className="text-[13.5px] font-extrabold text-white">DKIM</h4>
+                <span className="font-data ml-auto text-[9px] tracking-[0.16em] text-white/30 uppercase">signing keys</span>
               </div>
               {report.dkim.length === 0 ? (
                 <p className="font-data mt-4 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-3.5 py-3 text-[11px] text-[var(--red)]">
@@ -513,10 +513,10 @@ function DomainIntel() {
                 <ul className="mt-3.5 space-y-2">
                   {report.dkim.map((k) => (
                     <li key={k.selector} className="flex items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--bg-2)] px-3.5 py-2.5">
-                      <span className="font-data rounded-md border border-[var(--line)] px-2 py-1 text-[10px] text-[var(--text-2)]">
+                      <span className="font-data rounded-md border border-[var(--line)] px-2 py-1 text-[10px] text-white/50">
                         {k.selector}._domainkey
                       </span>
-                      <span className="font-data ml-auto text-[10.5px] text-[var(--text-3)]">{k.bits}-bit</span>
+                      <span className="font-data ml-auto text-[10.5px] text-white/30">{k.bits}-bit</span>
                       <span className={cn("flex size-5 items-center justify-center rounded-full", k.valid ? "bg-[#EDF3EC] text-[var(--green)]" : "bg-[#FDEBEC] text-[var(--red)]")}>
                         <Icon name={k.valid ? "check" : "close"} size={10} weight="bold" />
                       </span>
@@ -639,15 +639,15 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
       <Card className="p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h3 className="text-[15px] font-extrabold text-[var(--text-1)]">Bulk list clean</h3>
-            <p className="mt-1 max-w-md text-[12.5px] leading-relaxed text-[var(--text-3)]">
+            <h3 className="text-[15px] font-extrabold text-white">Bulk list clean</h3>
+            <p className="mt-1 max-w-md text-[12.5px] leading-relaxed text-white/30">
               Paste addresses (one per line, commas fine) or load a CSV. Jobs are tracked and survive reloads — find past runs below.
             </p>
           </div>
           <button
             onClick={() => fileRef.current?.click()}
             disabled={running}
-            className="flex items-center gap-2 rounded-lg border border-[#EAEAEA] bg-white px-4 py-2.5 text-[12.5px] font-bold text-[var(--text-1)] transition-colors duration-200 hover:border-[#111111] disabled:opacity-60"
+            className="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white px-4 py-2.5 text-[12.5px] font-bold text-white transition-colors duration-200 hover:border-[#111111] disabled:opacity-60"
           >
             <Icon name="database" size={14} /> Load .csv / .txt
           </button>
@@ -661,15 +661,15 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
           rows={6}
           placeholder={"maya@stripe.com\njames@gmial.com\npromo@mailinator.com, info@megacorp.com"}
           aria-label="Email list"
-          className="font-data mt-4 w-full resize-y rounded-lg border border-[#EAEAEA] bg-white p-4 text-[12.5px] leading-relaxed text-[var(--text-1)] outline-none transition-colors duration-200 placeholder:text-[var(--text-3)] focus:border-[#111111] disabled:opacity-60"
+          className="font-data mt-4 w-full resize-y rounded-lg border border-white/[0.08] bg-white p-4 text-[12.5px] leading-relaxed text-white outline-none transition-colors duration-200 placeholder:text-white/30 focus:border-[#111111] disabled:opacity-60"
         />
 
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <span className="font-data rounded-full border border-[var(--line)] px-3 py-1.5 text-[10.5px] text-[var(--text-2)]">
+          <span className="font-data rounded-full border border-[var(--line)] px-3 py-1.5 text-[10.5px] text-white/50">
             {list.length} unique address{list.length === 1 ? "" : "es"}
           </span>
           {user && user.role !== "admin" && (
-            <span className={cn("font-data rounded-full border px-3 py-1.5 text-[10.5px]", short > 0 ? "border-[#EAB9BB] text-[var(--red)]" : "border-[var(--line)] text-[var(--text-2)]")}>
+            <span className={cn("font-data rounded-full border px-3 py-1.5 text-[10.5px]", short > 0 ? "border-[#EAB9BB] text-[var(--red)]" : "border-[var(--line)] text-white/50")}>
               cost: {needCredits} credits · balance: {user.credits}
             </span>
           )}
@@ -712,13 +712,13 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
       {results.length > 0 && (
         <Card className="p-6">
           <div className="flex flex-wrap items-center gap-2.5">
-            <h4 className="text-[14px] font-extrabold text-[var(--text-1)]">Results</h4>
+            <h4 className="text-[14px] font-extrabold text-white">Results</h4>
             <span className="font-data rounded-full bg-[#EDF3EC] px-2.5 py-1 text-[10px] font-bold text-[var(--green)]">{counts.valid} valid</span>
             <span className="font-data rounded-full bg-[#FBF3DB] px-2.5 py-1 text-[10px] font-bold text-[var(--amber)]">{counts.risky} risky</span>
             <span className="font-data rounded-full bg-[#FDEBEC] px-2.5 py-1 text-[10px] font-bold text-[var(--red)]">{counts.invalid} invalid</span>
             <button
               onClick={() => exportRows(results.map((r) => ({ email: r.email, status: r.status, score: r.score })), `bridge-bulk-${new Date().toISOString().slice(0, 10)}.csv`)}
-              className="ml-auto flex items-center gap-2 rounded-lg border border-[#EAEAEA] bg-white px-3.5 py-2 text-[12px] font-bold text-[#111111] transition-colors duration-200 hover:border-[#111111]"
+              className="ml-auto flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white px-3.5 py-2 text-[12px] font-bold text-white transition-colors duration-200 hover:border-[#111111]"
             >
               <Icon name="download" size={12} /> Export CSV ({results.length})
             </button>
@@ -726,8 +726,8 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
           <ul className="mt-4 max-h-[300px] space-y-1 overflow-y-auto pr-1">
             {results.map((r) => (
               <li key={r.id} className="feed-in flex items-center gap-3 rounded-lg px-3 py-2 transition-colors duration-150 hover:bg-[var(--bg-2)]">
-                <span className="font-data min-w-0 flex-1 truncate text-[12px] text-[var(--text-1)]">{r.email}</span>
-                <span className="font-data text-[10px] text-[var(--text-3)] tabular-nums">{Math.round(r.totalMs)}ms</span>
+                <span className="font-data min-w-0 flex-1 truncate text-[12px] text-white">{r.email}</span>
+                <span className="font-data text-[10px] text-white/30 tabular-nums">{Math.round(r.totalMs)}ms</span>
                 <span className="font-data w-9 text-right text-[11px] font-bold tabular-nums" style={{ color: r.status === "valid" ? "var(--green)" : r.status === "risky" ? "var(--amber)" : "var(--red)" }}>
                   {r.score}
                 </span>
@@ -742,8 +742,8 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
       <Card className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="text-[14px] font-extrabold text-[var(--text-1)]">Bulk jobs</h4>
-            <p className="font-data mt-0.5 text-[9.5px] tracking-[0.16em] text-[var(--text-3)] uppercase">persisted — survive reloads</p>
+            <h4 className="text-[14px] font-extrabold text-white">Bulk jobs</h4>
+            <p className="font-data mt-0.5 text-[9.5px] tracking-[0.16em] text-white/30 uppercase">persisted — survive reloads</p>
           </div>
           {jobs && <span className="font-data rounded-full border border-[var(--line)] px-2.5 py-1 text-[10px] text-[var(--cyan)]">{jobs.length} total</span>}
         </div>
@@ -751,22 +751,22 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
           {!jobs ? (
             <div className="space-y-2.5">{[...Array(2)].map((_, i) => <div key={i} className="shimmer h-14 rounded-xl bg-[var(--bg-2)]" />)}</div>
           ) : jobs.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-[var(--line)] px-5 py-7 text-center text-[12.5px] text-[var(--text-3)]">
+            <p className="rounded-xl border border-dashed border-[var(--line)] px-5 py-7 text-center text-[12.5px] text-white/30">
               No jobs yet — your first bulk run lands here.
             </p>
           ) : (
             <ul className="space-y-2">
               {jobs.map((j) => (
-                <li key={j.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-[#EAEAEA] bg-white px-4 py-3 transition-colors duration-200 hover:border-[#D8D4C8]">
+                <li key={j.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-white/[0.08] bg-white px-4 py-3 transition-colors duration-200 hover:border-[#D8D4C8]">
                   <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg border", j.status === "completed" ? "border-[#BFD8C0] bg-[#EDF3EC] text-[var(--green)]" : "border-[#EAB9BB] bg-[#FDEBEC] text-[var(--red)]")}>
                     <Icon name={j.status === "completed" ? "check" : "close"} size={15} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-[12.5px] font-bold text-[var(--text-1)]">
+                    <p className="text-[12.5px] font-bold text-white">
                       {j.processed}/{j.total} checked
-                      <span className="font-data ml-2 text-[9.5px] font-semibold tracking-[0.12em] text-[var(--text-3)] uppercase">{j.status}</span>
+                      <span className="font-data ml-2 text-[9.5px] font-semibold tracking-[0.12em] text-white/30 uppercase">{j.status}</span>
                     </p>
-                    <p className="font-data mt-0.5 text-[10px] text-[var(--text-3)]">
+                    <p className="font-data mt-0.5 text-[10px] text-white/30">
                       {timeAgo(j.startedAt)} ·{" "}
                       <span className="text-[var(--green)]">{j.valid} valid</span> ·{" "}
                       <span className="text-[var(--amber)]">{j.risky} risky</span> ·{" "}
@@ -776,7 +776,7 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
                   <button
                     onClick={() => exportRows(j.rows, `bridge-${j.id}.csv`)}
                     disabled={j.rows.length === 0}
-                    className="flex items-center gap-1.5 rounded-md border border-[var(--line)] px-3 py-1.5 text-[10.5px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)] disabled:opacity-40"
+                    className="flex items-center gap-1.5 rounded-md border border-[var(--line)] px-3 py-1.5 text-[10.5px] font-bold text-white/50 transition-colors duration-200 hover:border-[#111111] hover:text-white disabled:opacity-40"
                   >
                     <Icon name="download" size={10} /> CSV
                   </button>
@@ -824,7 +824,7 @@ export default function Validator() {
               aria-pressed={tab === key}
               className={cn(
                 "relative flex items-center gap-2 rounded-lg px-4 py-2 text-[12.5px] font-bold transition-colors duration-200",
-                tab === key ? "text-[#111111]" : "text-[var(--text-3)] hover:text-[var(--text-1)]"
+                tab === key ? "text-white" : "text-white/30 hover:text-white"
               )}
             >
               {tab === key && (

@@ -43,16 +43,16 @@ function MetricCard({ value, suffix, label, sub, accent }: { value: number; suff
     <div className="metallic-panel relative flex flex-1 flex-col gap-1.5 p-6">
       <span className="screw-bottom" />
       <div className="flex items-center justify-between">
-        <span className="font-data text-[9.5px] font-semibold tracking-[0.18em] text-[var(--text-3)] uppercase">{label}</span>
+        <span className="font-data text-[9.5px] font-semibold tracking-[0.18em] text-white/30 uppercase">{label}</span>
         <span className="size-1.5 rounded-full" style={{ background: accent }} />
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="font-data text-[1.7rem] font-bold leading-none tabular-nums text-[#111111]">
+        <span className="font-data text-[1.7rem] font-bold leading-none tabular-nums text-white">
           {v.toLocaleString()}
         </span>
         {suffix && <span className="text-xs font-bold tracking-wide" style={{ color: accent }}>{suffix}</span>}
       </div>
-      <span className="text-[10.5px] text-[var(--text-3)]">{sub}</span>
+      <span className="text-[10.5px] text-white/30">{sub}</span>
     </div>
   );
 }
@@ -64,17 +64,17 @@ function GlobalMeshMap({ validatedToday }: { validatedToday: number }) {
       <div className="relative z-10 mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon name="globe" size={15} className="text-[var(--palette-teal-300)]" weight="bold" />
-          <h3 className="font-data text-[10px] font-bold tracking-[0.22em] text-[#111111] uppercase">Global mesh</h3>
-          <span className="ml-2 text-[10px] tracking-wider text-[var(--text-3)] uppercase">{REGION_NODES.length} regions · 12 routes</span>
+          <h3 className="font-data text-[10px] font-bold tracking-[0.22em] text-white uppercase">Global mesh</h3>
+          <span className="ml-2 text-[10px] tracking-wider text-white/30 uppercase">{REGION_NODES.length} regions · 12 routes</span>
         </div>
         <div className="text-right">
-          <span className="block font-data text-[9px] tracking-[0.2em] text-[var(--text-3)] uppercase">Validated today</span>
-          <span className="font-data text-[1.4rem] leading-none font-bold text-[#111111] tabular-nums">
+          <span className="block font-data text-[9px] tracking-[0.2em] text-white/30 uppercase">Validated today</span>
+          <span className="font-data text-[1.4rem] leading-none font-bold text-white tabular-nums">
             {validatedToday.toLocaleString()}
           </span>
         </div>
       </div>
-      <div className="relative flex-1 overflow-hidden rounded-lg border border-[var(--line)] bg-[#F7F6F3]">
+      <div className="relative flex-1 overflow-hidden rounded-lg border border-white/[0.06] bg-[#0D0D0D]">
         <svg viewBox="0 0 900 420" className="size-full" preserveAspectRatio="xMidYMid slice">
           <defs>
             <radialGradient id="mapGlow" cx="50%" cy="50%" r="60%">
@@ -115,9 +115,9 @@ function GlobalMeshMap({ validatedToday }: { validatedToday: number }) {
             </g>
           ))}
         </svg>
-        <div className="absolute right-3 bottom-3 left-3 flex flex-wrap items-center gap-2 rounded-lg border border-[#EAEAEA] bg-white/90 px-3 py-2 text-[10.5px] text-[var(--text-2)] sm:flex-nowrap">
+        <div className="absolute right-3 bottom-3 left-3 flex flex-wrap items-center gap-2 rounded-lg border border-white/[0.08] bg-white/90 px-3 py-2 text-[10.5px] text-[var(--text-2)] sm:flex-nowrap">
           <Icon name="alert" size={13} weight="bold" className="text-[var(--palette-amber-300)]" />
-          <span className="font-data text-[9.5px] tracking-[0.2em] text-[var(--text-3)] uppercase">Anomaly</span>
+          <span className="font-data text-[9.5px] tracking-[0.2em] text-white/30 uppercase">Anomaly</span>
           <span>Route <span className="font-data text-[var(--palette-teal-300)]">AP-South › EU-West</span> · spike 245ms</span>
         </div>
       </div>
@@ -134,18 +134,18 @@ function PipelineLayer({ index, label, status, totalLayers }: { index: number; l
           className={cn(
             "flex size-10 items-center justify-center rounded-xl border text-[12.5px] font-bold tabular-nums transition-all",
             isActive
-              ? "border-[#111111] bg-[#F7F6F3] text-[#111111]"
+              ? "border-[#111111] bg-white/[0.03] text-white"
               : "border-[#EAD9A8] bg-[#FBF3DB] text-[#956400]"
           )}
         >
           {index + 1}
         </div>
-        <span className="font-data text-[9px] font-semibold tracking-[0.14em] text-[var(--text-3)] uppercase">{label}</span>
+        <span className="font-data text-[9px] font-semibold tracking-[0.14em] text-white/30 uppercase">{label}</span>
       </div>
       {index < totalLayers - 1 && (
         <div className="mb-5 flex flex-1 items-center">
           <div className="h-px flex-1 bg-[var(--line)]" />
-          <Icon name="arrowRight" size={10} weight="bold" className="mx-1 text-[var(--text-3)]/70" />
+          <Icon name="arrowRight" size={10} weight="bold" className="mx-1 text-white/30/70" />
           <div className="h-px flex-1 bg-[var(--line)]" />
         </div>
       )}
@@ -162,11 +162,11 @@ function PipelinePanel({ stats }: { stats: Stats | null }) {
       <div className="relative z-10 mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon name="layers" size={15} weight="bold" className="text-[var(--palette-teal-300)]" />
-          <h3 className="font-display text-[19px] font-bold tracking-tight text-[#111111]">7-layer validation pipeline</h3>
+          <h3 className="font-display text-[19px] font-bold tracking-tight text-white">7-layer validation pipeline</h3>
         </div>
         <div className="flex items-center gap-3 text-[10px] tracking-wider uppercase">
-          <span className="flex items-center gap-1.5 text-[var(--text-3)]"><span className="size-1.5 rounded-sm bg-[var(--palette-teal-300)]" />Trusted</span>
-          <span className="flex items-center gap-1.5 text-[var(--text-3)]"><span className="size-1.5 rounded-sm bg-[var(--palette-amber-300)]" />Soft block</span>
+          <span className="flex items-center gap-1.5 text-white/30"><span className="size-1.5 rounded-sm bg-[var(--palette-teal-300)]" />Trusted</span>
+          <span className="flex items-center gap-1.5 text-white/30"><span className="size-1.5 rounded-sm bg-[var(--palette-amber-300)]" />Soft block</span>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 lg:grid-cols-7">
@@ -180,7 +180,7 @@ function PipelinePanel({ stats }: { stats: Stats | null }) {
           />
         ))}
       </div>
-      <div className="mt-4 flex flex-col gap-2 rounded-xl border border-[var(--line)] bg-[var(--bg-1)] p-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-4 flex flex-col gap-2 rounded-xl border border-white/[0.06] bg-[var(--bg-1)] p-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 text-[12px] text-[var(--text-2)]">
           <Icon name="flask" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
           A sequential, rigorous filter that rejects <span className="font-data text-[var(--palette-amber-300)]">{(riskyRatio * 100).toFixed(1)}%</span> with extreme prejudice.
@@ -207,9 +207,9 @@ function VerdictSplit({ stats }: { stats: Stats | null }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon name="chart" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
-          <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">Verdict split</h3>
+          <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-white/30 uppercase">Verdict split</h3>
         </div>
-        <span className="font-data text-[10px] tracking-[0.18em] text-[var(--text-3)] uppercase">{fmt(total)} total</span>
+        <span className="font-data text-[10px] tracking-[0.18em] text-white/30 uppercase">{fmt(total)} total</span>
       </div>
       <div className="flex h-2 w-full overflow-hidden rounded-full bg-[var(--bg-2)]">
         {total > 0 ? segs.map((s) => (
@@ -223,15 +223,15 @@ function VerdictSplit({ stats }: { stats: Stats | null }) {
       </div>
       <div className="grid grid-cols-3 gap-2">
         {segs.map((s) => (
-          <div key={s.key} className="flex flex-col rounded-lg border border-[var(--line)] bg-[var(--bg-1)] px-2.5 py-2">
-            <span className="flex items-center gap-1.5 text-[9.5px] tracking-wider text-[var(--text-3)] uppercase">
+          <div key={s.key} className="flex flex-col rounded-lg border border-white/[0.06] bg-[var(--bg-1)] px-2.5 py-2">
+            <span className="flex items-center gap-1.5 text-[9.5px] tracking-wider text-white/30 uppercase">
               <span className="size-1.5 rounded-full" style={{ background: s.color }} />
               {s.label}
             </span>
             <span className="font-data mt-0.5 text-[1.05rem] font-bold tabular-nums" style={{ color: s.color }}>
               {fmt(s.value)}
             </span>
-            <span className="font-data text-[10px] text-[var(--text-3)]">
+            <span className="font-data text-[10px] text-white/30">
               {total ? ((s.value / total) * 100).toFixed(1) : "0.0"}%
             </span>
           </div>
@@ -251,13 +251,13 @@ function LatencyP50({ stats }: { stats: Stats | null }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon name="gauge" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
-          <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">P50 latency</h3>
+          <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-white/30 uppercase">P50 latency</h3>
         </div>
-        <span className="font-data text-[9.5px] text-[var(--text-3)]">target ≤ 40ms</span>
+        <span className="font-data text-[9.5px] text-white/30">target ≤ 40ms</span>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="font-data text-[1.7rem] font-bold tabular-nums text-[#111111]">{ms}</span>
-        <span className="font-data text-[12px] text-[var(--text-3)]">ms</span>
+        <span className="font-data text-[1.7rem] font-bold tabular-nums text-white">{ms}</span>
+        <span className="font-data text-[12px] text-white/30">ms</span>
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--bg-2)]">
         <span
@@ -281,9 +281,9 @@ function TrendStrip({ series }: { series: Stats["series"] }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon name="activity" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
-          <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">14-day volume</h3>
+          <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-white/30 uppercase">14-day volume</h3>
         </div>
-        <span className="font-data text-[10px] text-[var(--text-3)]">peak {fmt(max)}</span>
+        <span className="font-data text-[10px] text-white/30">peak {fmt(max)}</span>
       </div>
       <div className="flex h-[68px] items-end gap-1">
         {series.map((p, i) => {
@@ -304,15 +304,15 @@ function TrendStrip({ series }: { series: Stats["series"] }) {
 
 function RecentRow({ r }: { r: ValidationRecord }) {
   return (
-    <li className="grid grid-cols-[40px_1fr_auto_auto] items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 transition-colors duration-200 hover:border-[var(--line)] hover:bg-[var(--bg-2)]">
+    <li className="grid grid-cols-[40px_1fr_auto_auto] items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 transition-colors duration-200 hover:border-white/[0.06] hover:bg-[var(--bg-2)]">
       <ScoreDial score={r.score} size={36} />
       <div className="min-w-0">
-        <p className="truncate font-data text-[12.5px] font-semibold text-[#111111]">{r.email}</p>
-        <p className="font-data mt-0.5 text-[9.5px] tracking-[0.06em] text-[var(--text-3)]">
+        <p className="truncate font-data text-[12.5px] font-semibold text-white">{r.email}</p>
+        <p className="font-data mt-0.5 text-[9.5px] tracking-[0.06em] text-white/30">
           {timeAgo(r.ts)} · {Math.round(r.totalMs)}ms · 7 layers
         </p>
       </div>
-      <span className="font-data text-[10px] tracking-wider text-[var(--text-3)] uppercase">{r.mode}</span>
+      <span className="font-data text-[10px] tracking-wider text-white/30 uppercase">{r.mode}</span>
       <StatusBadge status={r.status} />
     </li>
   );
@@ -385,7 +385,7 @@ export default function Overview() {
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1.6fr_1fr]">
           <Card className="p-6">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">Recent validations</h3>
+              <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-white/30 uppercase">Recent validations</h3>
               <a href="#/app/history" className="font-data text-[10px] font-semibold tracking-[0.18em] text-[var(--palette-teal-300)] uppercase hover:underline">
                 View all →
               </a>
@@ -415,12 +415,12 @@ export default function Overview() {
               <span className="screw-bottom" />
               <div className="flex items-center gap-2">
                 <Icon name="lifebuoy" size={14} weight="bold" className="text-[var(--palette-teal-300)]" />
-                <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">Integration note</h3>
+                <h3 className="font-data text-[10px] font-semibold tracking-[0.2em] text-white/30 uppercase">Integration note</h3>
               </div>
               <p className="text-[12px] leading-relaxed text-[var(--text-2)]">
                 Webhooks are signed with HMAC-SHA256. The <code className="font-data text-[var(--palette-teal-300)]">bridge-uid</code> rotates every 24h, so replay attempts after revocation land on a 401 — no extra auth layer needed.
               </p>
-              <a href="#/app/settings" className="font-data mt-1 self-start rounded-md border border-[#EAEAEA] px-3 py-1.5 text-[10px] font-bold tracking-[0.16em] text-[var(--text-2)] uppercase transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]">
+              <a href="#/app/settings" className="font-data mt-1 self-start rounded-md border border-white/[0.08] px-3 py-1.5 text-[10px] font-bold tracking-[0.16em] text-[var(--text-2)] uppercase transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]">
                 Configure
               </a>
             </div>

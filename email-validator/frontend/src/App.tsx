@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { ScrollProgress } from "./lib/ui";
 import { AuthProvider, Guard, useRoute } from "./lib/auth";
 import { ToastProvider } from "./app/ui";
-import Sidebar from "./landing/Sidebar";
+import { LandingNav } from "./landing/LandingPage";
 import MapHero from "./landing/MapHero";
 import TrustBar from "./landing/TrustBar";
 import PipelineScene from "./landing/PipelineScene";
@@ -10,7 +10,6 @@ import Architecture from "./landing/Architecture";
 import PricingBand from "./landing/PricingBand";
 import CTABand from "./landing/CTABand";
 import FooterLanding from "./landing/FooterLanding";
-import LandingPage from "./landing/LandingPage";
 import Shell from "./app/Shell";
 import { RouteTransition } from "./lib/route-transition";
 import { LoginPage, SignupPage } from "./app/Auth";
@@ -29,9 +28,9 @@ import {
 function Landing() {
   return (
     <RouteTransition>
-      <div className="lz-dots min-h-screen bg-[var(--color-bg-canvas)] text-[var(--color-text-primary)]">
-        <div id="top" className="grid lg:grid-cols-[240px_1fr]">
-          <Sidebar />
+      <div className="min-h-screen bg-[#0A0A0A] text-white">
+        <LandingNav />
+        <div id="top">
           <MapHero />
         </div>
         <TrustBar />
