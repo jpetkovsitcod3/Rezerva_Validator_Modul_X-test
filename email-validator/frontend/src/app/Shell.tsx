@@ -132,6 +132,11 @@ export default function Shell({
 
   return (
     <div className="flex min-h-[100dvh] overflow-hidden p-4 text-sm">
+      {/* Skip link for keyboard navigation */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       {/* mobile drawer backdrop */}
       <button
         aria-label="Close menu"
@@ -149,6 +154,7 @@ export default function Shell({
           "z-50 flex w-64 flex-shrink-0 flex-col gap-4 overflow-y-auto transition-transform duration-300 lg:translate-x-0",
           drawer ? "fixed top-0 bottom-0 left-0" : "fixed top-0 bottom-0 left-0 -translate-x-full lg:static lg:translate-x-0"
         )}
+        aria-label={area === "admin" ? "Admin navigation" : "Dashboard navigation"}
       >
         {/* brand */}
         <div className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
@@ -227,9 +233,9 @@ export default function Shell({
           <div className="flex min-w-0 items-start gap-3">
             <button
               type="button"
-              aria-label="Open menu"
+              aria-label="Open navigation menu"
               onClick={() => setDrawer(true)}
-              className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] text-white/60 transition-colors duration-200 hover:bg-white/[0.06] hover:text-white lg:hidden"
+              className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] text-white/60 transition-colors duration-200 hover:bg-white/[0.06] hover:text-white lg:hidden"
             >
               <Icon name="menu" size={17} />
             </button>
@@ -309,7 +315,7 @@ export default function Shell({
         </header>
 
         {/* content */}
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        <main id="main-content" className="flex-1 overflow-y-auto" tabIndex={-1}>{children}</main>
       </div>
     </div>
   );

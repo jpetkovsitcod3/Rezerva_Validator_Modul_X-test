@@ -32,6 +32,8 @@ export default defineConfig({
         },
       },
     },
+    // Enable minification and tree shaking
+    minify: "esbuild",
   },
   optimizeDeps: {
     include: ["framer-motion"],

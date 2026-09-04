@@ -91,7 +91,7 @@ export default function History() {
       <div className="space-y-5">
         {/* toolbar */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white px-4 py-2.5 transition-colors duration-200 focus-within:border-[#111111] sm:max-w-xs">
+          <div className="flex min-w-[220px] flex-1 items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 transition-colors duration-200 focus-within:border-[#D4A574]/40 sm:max-w-xs">
             <Icon name="search" size={14} className="shrink-0 text-white/30" />
             <input
               value={search}
@@ -188,14 +188,14 @@ export default function History() {
                             <div className="flex justify-end gap-1.5 opacity-60 transition-opacity duration-200 group-hover:opacity-100">
                               <button
                                 onClick={() => openTrace(r)}
-                                className="rounded-md border border-white/[0.08] bg-white px-2.5 py-1.5 text-[10.5px] font-bold text-white transition-colors duration-200 hover:border-[#111111]"
+                                className="rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5 text-[10.5px] font-bold text-white transition-colors duration-200 hover:border-[#D4A574]/40"
                               >
                                 Trace
                               </button>
                               <button
                                 onClick={() => setDeleting(r)}
                                 aria-label={`Delete ${r.email}`}
-                                className="rounded-md border border-[var(--line)] p-1.5 text-white/30 transition-colors duration-200 hover:border-[#EAB9BB] hover:text-[#9F2F2D]"
+                                className="rounded-md border border-[var(--line)] p-1.5 text-white/30 transition-colors duration-200 hover:border-white/[0.15] hover:text-[#E68080]"
                               >
                                 <Icon name="trash" size={11} />
                               </button>

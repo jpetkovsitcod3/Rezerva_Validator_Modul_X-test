@@ -101,7 +101,7 @@ export function ApiKeysPage() {
           {!keys ? (
             [...Array(2)].map((_, i) => <div key={i} className="shimmer h-16 rounded-xl bg-[var(--bg-2)]" />)
           ) : keys.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-[var(--line)] px-5 py-8 text-center text-[12.5px] text-white/30">
+            <p className="rounded-xl border border-dashed border-white/[0.06] px-5 py-8 text-center text-[12.5px] text-white/30">
               No keys yet — generate your first one on the left.
             </p>
           ) : (
@@ -112,7 +112,7 @@ export function ApiKeysPage() {
                   k.revokedAt ? "border-white/[0.08] opacity-55" : "border-white/[0.08] hover:border-[#D8D4C8]"
                 }`}
               >
-                <span className={`flex size-9 items-center justify-center rounded-lg border ${k.revokedAt ? "border-white/[0.08] text-white/30" : "border-[#111111] bg-white/[0.03] text-white"}`}>
+                <span className={`flex size-9 items-center justify-center rounded-lg border ${k.revokedAt ? "border-white/[0.08] text-white/30" : "border-[#D4A574]/40 bg-white/[0.03] text-white"}`}>
                   <Icon name="key" size={15} />
                 </span>
                 <div className="min-w-0 flex-1">
@@ -123,7 +123,7 @@ export function ApiKeysPage() {
                   </p>
                 </div>
                 {k.revokedAt ? (
-                  <span className="font-data rounded-full border border-[#EAB9BB] px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] text-[var(--red)] uppercase">
+                  <span className="font-data rounded-full border border-[#E68080]/30 px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] text-[#E68080] uppercase">
                     revoked
                   </span>
                 ) : (
@@ -131,7 +131,7 @@ export function ApiKeysPage() {
                     <CopyBtn text={k.key} />
                     <button
                       onClick={() => setRevoking(k)}
-                      className="rounded-md border border-[var(--line)] px-2.5 py-1.5 text-[11px] font-bold text-white/30 transition-colors duration-200 hover:border-[#EAB9BB] hover:text-[#9F2F2D]"
+                      className="rounded-md border border-white/[0.06] px-2.5 py-1.5 text-[11px] font-bold text-white/30 transition-colors duration-200 hover:border-[#E68080]/30 hover:text-[#E68080]"
                     >
                       Revoke
                     </button>
@@ -150,7 +150,7 @@ export function ApiKeysPage() {
             <p className="text-[12.5px] leading-relaxed text-white/50">
               For security, this is the <strong className="text-white">only time</strong> the full secret is shown.
             </p>
-            <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-[#111111] bg-white/[0.03] p-3.5">
+            <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-[#D4A574]/40 bg-white/[0.03] p-3.5">
               <code className="font-data min-w-0 flex-1 break-all text-[11.5px] text-[var(--cyan)]">{fresh.key}</code>
               <CopyBtn text={fresh.key} label="Copy key" />
             </div>
@@ -246,7 +246,7 @@ export function SettingsPage() {
             <Field label="Email" hint="used for sign-in">
               <input type="email" className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
             </Field>
-            {profileErr && <p role="alert" className="font-data text-[11px] text-[var(--red)]">{profileErr}</p>}
+            {profileErr && <p role="alert" className="font-data text-[11px] text-[#E68080]">{profileErr}</p>}
             <PrimaryButton type="submit" loading={saving} disabled={saving}>
               Save profile
             </PrimaryButton>
@@ -263,12 +263,12 @@ export function SettingsPage() {
             <Field label="New password" hint="min 8 characters">
               <input type="password" autoComplete="new-password" className={inputCls} value={newPw} onChange={(e) => setNewPw(e.target.value)} />
             </Field>
-            {pwErr && <p role="alert" className="font-data text-[11px] text-[var(--red)]">{pwErr}</p>}
+            {pwErr && <p role="alert" className="font-data text-[11px] text-[#E68080]">{pwErr}</p>}
             <GhostButton type="submit" disabled={pwSaving}>
               Change password
             </GhostButton>
           </form>
-          <div className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--bg-2)] p-4">
+          <div className="mt-6 rounded-xl border border-white/[0.06] bg-[var(--bg-2)] p-4">
             <p className="font-data text-[9px] font-semibold tracking-[0.2em] text-white/30 uppercase">demo note</p>
             <p className="mt-1.5 text-[11.5px] leading-relaxed text-white/30">
               This demo stores a salted digest in your browser only — no server, no telemetry. Real deployments hash with Argon2id server-side.

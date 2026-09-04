@@ -335,6 +335,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  /* Improved focus visibility for accessibility */
+  &:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+  }
 }
 ::selection {
   background: rgba(212, 165, 116, 0.3);
@@ -344,6 +349,32 @@ body {
   outline: 2px solid var(--color-border-focus);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Enhanced focus states for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-accent-primary);
+  color: var(--color-text-on-accent);
+  padding: 8px 16px;
+  z-index: 100;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 ::-webkit-scrollbar {
   width: 8px;

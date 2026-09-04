@@ -155,7 +155,7 @@ export function Confirm({
     <Modal open={open} onClose={onClose} title={title} width="max-w-md">
       <div className="text-[13.5px] leading-relaxed text-[var(--text-2)]">{body}</div>
       <div className="mt-6 flex justify-end gap-2.5">
-        <button onClick={onClose} className="rounded-md border border-[#EAEAEA] px-4 py-2.5 text-[13px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]">
+        <button onClick={onClose} className="rounded-md border border-white/[0.08] px-4 py-2.5 text-[13px] font-bold text-white/50 transition-colors duration-200 hover:border-white/[0.15] hover:text-white/80">
           Cancel
         </button>
         <button
@@ -176,7 +176,7 @@ export function Confirm({
 
 /* ================= bits ================= */
 
-export function StatusBadge({ status }: { status: VerdictStatus }) {
+export const StatusBadge = memo(function StatusBadge({ status }: { status: VerdictStatus }) {
   const m = STATUS_META[status];
   return (
     <span
@@ -187,11 +187,11 @@ export function StatusBadge({ status }: { status: VerdictStatus }) {
       {m.label}
     </span>
   );
-}
+});
 
-export function Card({ children, className }: { children: ReactNode; className?: string }) {
+export const Card = memo(function Card({ children, className }: { children: ReactNode; className?: string }) {
   return <div className={cn("rounded-xl border border-white/[0.06] bg-white/[0.02]", className)}>{children}</div>;
-}
+});
 
 export const StatTile = memo(function StatTile({
   label,
@@ -326,7 +326,7 @@ export function CopyBtn({ text, label = "Copy" }: { text: string; label?: string
         push("Copied to clipboard", "info");
         setTimeout(() => setDone(false), 1600);
       }}
-      className="flex shrink-0 items-center gap-1.5 rounded-md border border-[#EAEAEA] bg-white px-2.5 py-1.5 text-[11px] font-bold text-[var(--text-2)] transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)]"
+      className="flex shrink-0 items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5 text-[11px] font-bold text-white/50 transition-colors duration-200 hover:border-white/[0.15] hover:text-white/80"
     >
       <Icon name={done ? "check" : "code"} size={11} />
       {done ? "Copied" : label}
