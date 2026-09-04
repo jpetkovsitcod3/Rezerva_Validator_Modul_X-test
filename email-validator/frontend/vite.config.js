@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  base: "/Rezerva_Validator_Modul_X-test/",
+  base: "/",
   plugins: [react(), tailwindcss()],
   define: {
     __HF_API_URL__: JSON.stringify(
