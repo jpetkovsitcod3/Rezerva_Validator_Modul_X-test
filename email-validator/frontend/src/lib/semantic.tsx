@@ -172,7 +172,7 @@ export function SuiProgress({
         </div>
       )}
       <div
-        className="h-2 overflow-hidden rounded-full bg-[#EFEDE8]"
+        className="h-2 overflow-hidden rounded-full bg-[var(--bg-3)]"
         role="progressbar"
         aria-valuenow={Math.round(pct)}
         aria-valuemin={0}

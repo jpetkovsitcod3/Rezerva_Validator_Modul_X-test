@@ -80,7 +80,7 @@ export function AdminOverviewPage() {
                       <span className="text-[12.5px] font-bold text-[var(--text-2)] capitalize">{s}</span>
                       <span className="font-data text-[11.5px] text-[var(--text-3)] tabular-nums">{v.toLocaleString()} · {pct}%</span>
                     </div>
-                    <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-[#EFEDE8]">
+                    <div className="mt-1.5 h-2.5 overflow-hidden rounded-full bg-[var(--bg-3)]">
                       <div className="h-full rounded-full" style={{ width: ov ? `${pct}%` : "0%", background: color, transition: "width .8s var(--ease-el)" }} />
                     </div>
                   </div>
@@ -118,8 +118,8 @@ export function AdminOverviewPage() {
                       <span className="block truncate text-[12.5px] font-bold text-[var(--text-1)]">{u.name}</span>
                       <span className="font-data block truncate text-[10px] text-[var(--text-3)]">{u.email}</span>
                     </span>
-                    {u.role === "admin" && (
-                      <span className="font-data rounded-full border border-[#BFD8C0] px-2 py-0.5 text-[8.5px] font-bold tracking-[0.12em] text-[var(--green)] uppercase">admin</span>
+                      {u.role === "admin" && (
+                      <span className="font-data rounded-full border border-[#5BC07E]/30 px-2 py-0.5 text-[8.5px] font-bold tracking-[0.12em] text-[var(--green)] uppercase">admin</span>
                     )}
                     {u.status === "suspended" && (
                       <span className="font-data rounded-full border border-[#EAB9BB] px-2 py-0.5 text-[8.5px] font-bold tracking-[0.12em] text-[var(--red)] uppercase">susp</span>
@@ -287,7 +287,7 @@ export function AdminUsersPage() {
               </thead>
               <tbody>
                 {filtered.map((u) => (
-                  <tr key={u.id} className="border-b border-[var(--line)] transition-colors duration-150 last:border-0 hover:bg-[#F7F6F3]">
+                  <tr key={u.id} className="border-b border-[var(--line)] transition-colors duration-150 last:border-0 hover:bg-[var(--bg-2)]">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
                         <span className="font-data bg-[#111111] flex size-8 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white">
@@ -300,7 +300,7 @@ export function AdminUsersPage() {
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={cn("font-data rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", u.role === "admin" ? "border-[#EAEAEA] text-[var(--text-2)]" : "border-[var(--line)] text-[var(--text-2)]")}>
+                      <span className={cn("font-data rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", u.role === "admin" ? "border-[var(--line)] text-[var(--text-2)]" : "border-[var(--line)] text-[var(--text-2)]")}>
                         {u.role}
                       </span>
                     </td>
@@ -308,7 +308,7 @@ export function AdminUsersPage() {
                       {u.role === "admin" ? "∞" : u.credits.toLocaleString()}
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={cn("flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 font-data text-[9px] font-bold tracking-[0.12em] uppercase", u.status === "active" ? "bg-[#EDF3EC] text-[var(--green)]" : "bg-[#FDEBEC] text-[var(--red)]")}>
+                      <span className={cn("flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 font-data text-[9px] font-bold tracking-[0.12em] uppercase", u.status === "active" ? "bg-[#5BC07E]/15 text-[var(--green)]" : "bg-[var(--red)]/15 text-[var(--red)]")}>
                         <span className={cn("size-1.5 rounded-full", u.status === "active" ? "pulse-green bg-[var(--green)]" : "bg-[var(--red)]")} />
                         {u.status}
                       </span>
@@ -334,7 +334,7 @@ export function AdminUsersPage() {
                             <button
                               onClick={() => patch(u, { status: u.status === "active" ? "suspended" : "active" }, u.status === "active" ? `${u.name} suspended — sign-in blocked` : `${u.name} reactivated`)}
                               disabled={!!actionBusy}
-                              className={cn("rounded-md border px-2.5 py-1.5 text-[10.5px] font-bold transition-colors duration-200 disabled:opacity-50", u.status === "active" ? "border-[#EAB9BB] text-[var(--red)] hover:bg-[#F6DADB]" : "border-[#BFD8C0] text-[var(--green)] hover:bg-[#DCE7DB]")}
+                              className={cn("rounded-md border px-2.5 py-1.5 text-[10.5px] font-bold transition-colors duration-200 disabled:opacity-50", u.status === "active" ? "border-[var(--red)]/30 text-[var(--red)] hover:bg-[var(--red)]/10" : "border-[#5BC07E]/30 text-[var(--green)] hover:bg-[#5BC07E]/10")}
                             >
                               {u.status === "active" ? "Suspend" : "Reactivate"}
                             </button>
@@ -367,10 +367,10 @@ export function AdminUsersPage() {
                 <p className="truncate font-display text-[17px] font-bold text-[var(--text-1)]">{viewing.name}</p>
                 <p className="font-data truncate text-[10.5px] text-[var(--text-3)]">{viewing.email} · joined {timeAgo(viewing.createdAt)}</p>
               </div>
-              <span className={cn("font-data rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", viewing.role === "admin" ? "border-[#EAEAEA] text-[var(--text-2)]" : "border-[var(--line)] text-[var(--text-2)]")}>
+              <span className={cn("font-data rounded-full border px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", viewing.role === "admin" ? "border-[var(--line)] text-[var(--text-2)]" : "border-[var(--line)] text-[var(--text-2)]")}>
                 {viewing.role}
               </span>
-              <span className={cn("font-data rounded-full px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", viewing.status === "active" ? "bg-[#EDF3EC] text-[var(--green)]" : "bg-[#FDEBEC] text-[var(--red)]")}>
+              <span className={cn("font-data rounded-full px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", viewing.status === "active" ? "bg-[#5BC07E]/15 text-[var(--green)]" : "bg-[var(--red)]/15 text-[var(--red)]")}>
                 {viewing.status}
               </span>
             </div>
@@ -426,7 +426,7 @@ export function AdminUsersPage() {
             </Field>
             <div className="flex flex-wrap gap-1.5">
               {[50, 100, 500].map((n) => (
-                <button type="button" key={n} onClick={() => setCreditDelta(String(n))} className="font-data rounded-md border border-[#EAEAEA] px-3 py-1 text-[10px] text-[var(--text-2)] hover:border-[#111111] hover:text-[var(--text-1)]">
+                <button type="button" key={n} onClick={() => setCreditDelta(String(n))} className="font-data rounded-md border border-[var(--line)] px-3 py-1 text-[10px] text-[var(--text-2)] hover:border-white/30 hover:text-[var(--text-1)]">
                   +{n}
                 </button>
               ))}
@@ -530,7 +530,7 @@ export function AdminLogsPage() {
                 </thead>
                 <tbody>
                   {data.rows.map((r) => (
-                    <tr key={r.id} className="group border-b border-[var(--line)] transition-colors duration-150 last:border-0 hover:bg-[#F7F6F3]">
+                    <tr key={r.id} className="group border-b border-[var(--line)] transition-colors duration-150 last:border-0 hover:bg-[var(--bg-2)]">
                       <td className="font-data px-5 py-3 text-[10.5px] whitespace-nowrap text-[var(--text-3)]">{timeAgo(r.ts)}</td>
                       <td className="max-w-[160px] truncate px-5 py-3 text-[12.5px] font-semibold text-[var(--text-2)]">{users.get(r.userId) ?? "deleted user"}</td>
                       <td className="font-data max-w-[240px] truncate px-5 py-3 text-[12px] text-[var(--text-1)]">{r.email}</td>
@@ -640,7 +640,7 @@ export function AdminBlocklistPage() {
                 Block domain
               </DangerButton>
             </form>
-            <div className="mt-6 rounded-xl border border-[#EAEAEA] bg-[#F7F6F3] p-4">
+            <div className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--bg-2)] p-4">
               <p className="font-data text-[9px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">propagation</p>
               <p className="mt-1.5 text-[11.5px] leading-relaxed text-[var(--text-3)]">
                 Entries land in the engine's <span className="font-data text-[var(--text-1)]">disposable_domains</span> set on Redis and stay in effect for every pending and future validation.
@@ -681,14 +681,14 @@ export function AdminBlocklistPage() {
                     <span className="font-data w-5 shrink-0 text-[10.5px] font-bold text-[var(--text-3)] tabular-nums">
                       #{(i + 1).toString().padStart(2, "0")}
                     </span>
-                    <span className="flex size-6 shrink-0 items-center justify-center rounded-md border border-[#EAB9BB] bg-[#FDEBEC] text-[var(--red)]">
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-md border border-[var(--red)]/30 bg-[var(--red)]/15 text-[var(--red)]">
                       <Icon name="ban" size={11} />
                     </span>
                     <span className="font-data min-w-0 flex-1 truncate text-[12px] text-[var(--text-1)]">{d}</span>
                     <button
                       onClick={() => remove(d)}
                       disabled={removing === d}
-                      className="rounded-md border border-[var(--line)] bg-white px-2.5 py-1 font-data text-[10px] font-bold tracking-[0.06em] text-[var(--text-3)] uppercase transition-colors duration-200 hover:border-[#111111] hover:text-[var(--text-1)] disabled:opacity-50"
+                      className="rounded-md border border-[var(--line)] bg-[var(--bg-3)] px-2.5 py-1 font-data text-[10px] font-bold tracking-[0.06em] text-[var(--text-3)] uppercase transition-colors duration-200 hover:border-white/30 hover:text-[var(--text-1)] disabled:opacity-50"
                     >
                       {removing === d ? "…" : "Unblock"}
                     </button>
@@ -756,7 +756,7 @@ export function AdminSettingsPage() {
                     aria-label={`Toggle ${l.name}`}
                     disabled={locked}
                     onClick={() => setS({ ...s, enabled: { ...s.enabled, [l.key]: !on } })}
-                    className={cn("relative h-6 w-11 shrink-0 rounded-full border transition-colors duration-200 disabled:cursor-not-allowed", on ? "border-[#111111] bg-[#111111]" : "border-[#EAEAEA] bg-[#EFEDE8]")}
+                    className={cn("relative h-6 w-11 shrink-0 rounded-full border transition-colors duration-200 disabled:cursor-not-allowed", on ? "border-[#111111] bg-[#111111]" : "border-[var(--line)] bg-[var(--bg-3)]")}
                   >
                     <span className={cn("absolute top-1/2 size-4.5 -translate-y-1/2 rounded-full transition-all duration-200", on ? "left-[calc(100%-20px)] bg-white" : "left-[3px] bg-[#A3A099]")} />
                   </button>
@@ -783,14 +783,14 @@ export function AdminSettingsPage() {
         <PrimaryButton icon="check" onClick={save} disabled={!s || saving} className="mt-6">
           Save engine config
         </PrimaryButton>
-        <div className="mt-6 rounded-xl border border-[#EAEAEA] bg-[#F7F6F3] p-4">
+        <div className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--bg-2)] p-4">
           <p className="font-data text-[9px] font-semibold tracking-[0.2em] text-[var(--text-3)] uppercase">integration note</p>
           <p className="mt-1.5 text-[11.5px] leading-relaxed text-[var(--text-3)]">
             Blocklist and layer changes propagate to every pending and future validation — nothing cached survives a config save.
           </p>
         </div>
 
-        <div className="mt-6 rounded-xl border border-[#EAB9BB] bg-[#FDEBEC] p-5">
+            <div className="mt-6 rounded-xl border border-[var(--red)]/30 bg-[var(--red)]/10 p-5">
           <p className="font-data text-[9px] font-semibold tracking-[0.2em] text-[var(--red)] uppercase">danger zone</p>
           <p className="mt-1.5 text-[12px] leading-relaxed text-[var(--text-2)]">
             Reset the entire workspace to the factory demo seed — users, credits, history, jobs, keys, blocklist. Demo logins stay valid.

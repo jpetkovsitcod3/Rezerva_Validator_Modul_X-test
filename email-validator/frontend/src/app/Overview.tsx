@@ -135,7 +135,7 @@ function PipelineLayer({ index, label, status, totalLayers }: { index: number; l
             "flex size-10 items-center justify-center rounded-xl border text-[12.5px] font-bold tabular-nums transition-all",
             isActive
               ? "border-[#111111] bg-white/[0.03] text-white"
-              : "border-[#EAD9A8] bg-[#FBF3DB] text-[#956400]"
+              : "border-[var(--amber)]/30 bg-[var(--amber)]/15 text-[var(--amber)]"
           )}
         >
           {index + 1}
@@ -145,7 +145,7 @@ function PipelineLayer({ index, label, status, totalLayers }: { index: number; l
       {index < totalLayers - 1 && (
         <div className="mb-5 flex flex-1 items-center">
           <div className="h-px flex-1 bg-[var(--line)]" />
-          <Icon name="arrowRight" size={10} weight="bold" className="mx-1 text-white/30/70" />
+          <Icon name="arrowRight" size={10} weight="bold" className="mx-1 text-white/30" />
           <div className="h-px flex-1 bg-[var(--line)]" />
         </div>
       )}

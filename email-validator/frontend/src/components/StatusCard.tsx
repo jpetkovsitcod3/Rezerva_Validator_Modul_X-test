@@ -7,23 +7,23 @@ export type StatusTone = "ok" | "warn" | "err" | "info";
 const TONE_META: Record<StatusTone, { icon: IconName; ring: string; dot: string }> = {
   ok: {
     icon: "check",
-    ring: "border-[#BFD8C0] bg-[#EDF3EC] text-[var(--green)]",
+    ring: "border-[#5BC07E]/30 bg-[#5BC07E]/15 text-[var(--green)]",
     dot: "bg-[var(--green)]",
   },
   warn: {
     icon: "alert",
-    ring: "border-[#EAD9A8] bg-[#FBF3DB] text-[var(--amber)]",
+    ring: "border-[#E0BB8F]/30 bg-[#E0BB8F]/15 text-[var(--amber)]",
     dot: "bg-[var(--amber)]",
   },
   err: {
     icon: "alert",
-    ring: "border-[#EAB9BB] bg-[#FDEBEC] text-[var(--red)]",
+    ring: "border-[#E68080]/30 bg-[#E68080]/15 text-[var(--red)]",
     dot: "bg-[var(--red)]",
   },
   info: {
     icon: "sparkles",
-    ring: "border-[#EAEAEA] bg-[#F7F6F3] text-[var(--text-1)]",
-    dot: "bg-[#111111]",
+    ring: "border-[var(--line)] bg-[var(--bg-2)] text-[var(--text-1)]",
+    dot: "bg-white",
   },
 };
 
@@ -54,7 +54,7 @@ export default function StatusCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-xl border border-[#EAEAEA] bg-white p-6 transition-[border-color,box-shadow] duration-200 hover:border-[#D8D4C8] hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)]",
+        "group relative overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--bg-1)] p-6 transition-[border-color,box-shadow] duration-200 hover:border-[var(--color-border-secondary)]",
         className
       )}
     >

@@ -469,10 +469,10 @@ export default function MapHero() {
               {ev.tone === "#9F2F2D" ? "✕" : "✓"}
             </span>
             <span className="min-w-0">
-              <span className="font-data block truncate text-[10.5px] font-semibold text-[var(--text-1)]">{ev.who}</span>
+              <span className="font-data block truncate text-[10.5px] font-semibold text-[#0A0A0A]">{ev.who}</span>
               <span className="font-data flex items-center gap-1.5 text-[9px] tracking-[0.08em]" style={{ color: ev.tone }}>
                 {ev.what}
-                <span className="text-[7px] text-[var(--text-3)]">· {ev.region}</span>
+                <span className="text-[7px] text-[#3D3D3D]">· {ev.region}</span>
               </span>
             </span>
           </motion.div>

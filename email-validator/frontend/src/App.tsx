@@ -53,7 +53,8 @@ function AppRoutes() {
 
   if (route === "/login") return <LoginPage />;
   if (route === "/signup") return <SignupPage />;
-  if (route === "/landing") return <LandingPage />;
+  // The main landing also lives at /landing so it can be linked from anywhere.
+  if (route === "/landing") return <Landing />;
 
   if (route.startsWith("/app")) {
     const page =

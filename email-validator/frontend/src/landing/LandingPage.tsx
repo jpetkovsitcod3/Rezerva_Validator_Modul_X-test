@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Icon, type IconName } from "../lib/ui";
+import { Icon } from "../lib/ui";
 import { cn } from "../utils/cn";
 
 const NAV_ITEMS = [
