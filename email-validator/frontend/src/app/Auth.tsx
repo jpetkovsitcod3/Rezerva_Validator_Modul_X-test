@@ -222,7 +222,7 @@ export function SignupPage() {
           <ul className="mt-6 space-y-2.5">
             {["All 7 layers from day one", "No credit card, no time limit", "API keys the moment you sign in"].map((t) => (
               <li key={t} className="flex items-center gap-2.5 text-[13.5px] text-[var(--text-2)]">
-                <span className="flex size-5 items-center justify-center rounded-full bg-[#EDF3EC] text-[var(--green)]">
+                <span className="flex size-5 items-center justify-center rounded-full bg-[#5BC07E]/15 text-[var(--green)]">
                   <Icon name="check" size={10} weight="bold" />
                 </span>
                 {t}

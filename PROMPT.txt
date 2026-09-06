@@ -1,32 +1,820 @@
-# EMAIL-VALIDATOR-PRO-ONESHOT-PROMPT (REGENERATED + SUMMARISED, NO EMPTY LINES)
-BUILD-A-PRODUCTION-READY-FULL-STACK-EMAIL-VALIDATOR-WEBAPP:FASTAPI-BACKEND(PYTHON-7-LAYER-VALIDATION-ENGINE)+REACT-FRONTEND(ANT-DESIGN-5-DARK-THEME)+DOCKER-COMPOSE.IMPLEMENT-ALL-CODE-EXACTLY-AS-SPECIFIED,CREATE-EVERY-FILE-LISTED,THEN-COMMIT-AND-PUSH-TO-GITHUB.
-PROJECT-STRUCTURE:email-validator/backend/app/{__init__.py,main.py,config.py,models.py,validator/{__init__.py,syntax.py,dns_check.py,disposable.py,catch_all.py,smtp_verify.py,scoring.py,proxy_engine.py,engine.py},api/{__init__.py,routes.py,middleware.py},tasks/{__init__.py,celery_tasks.py},utils/{__init__.py,cache.py,logger.py}}+backend/{requirements.txt,Dockerfile,.env}+frontend/src/{main.jsx,App.jsx,theme/darkTheme.js,components/Layout/AppLayout.jsx,components/Validator/{SingleValidator.jsx,BulkValidator.jsx,ResultCard.jsx,ScoreGauge.jsx,LayerTimeline.jsx,DomainInfo.jsx},components/Dashboard/{StatCards.jsx,ValidationHistory.jsx},components/Common/{AnimatedLogo.jsx,ParticleBackground.jsx},services/api.js,hooks/useValidation.js,styles/global.css}+frontend/{index.html,vite.config.js,package.json}+docker-compose.yml+README.md.
-STEP1-BACKEND-ENV:mkdir-p-email-validator/backend/app/validator,email-validator/backend/app/api,email-validator/backend/app/tasks,email-validator/backend/app/utils,email-validator/frontend;cd-email-validator/backend;python3-m-venv-venv;source-venv/bin/activate;pip-install-fastapi==0.115.0-uvicorn[standard]==0.30.6-gunicorn==23.0.0-pydantic[email]==2.9.2-pydantic-settings==2.5.2-email-validator==2.2.0-dnspython==2.7.0-aiohttp==3.10.5-httpx==0.27.2-PySocks==1.7.1-aiosmtplib==3.0.1-disposable-email-domains==0.0.97-celery==5.4.0-redis==5.1.1-slowapi==0.1.9-python-multipart==0.0.12-python-dotenv==1.0.1-sqlmodel==0.0.21-asyncpg==0.29.0-structlog==24.4.0-cachetools==5.5.0-tldextract==5.1.3-idna==3.10-certifi==2024.8.30-ujson==5.10.0-orjson==3.10.7;pip-freeze>requirements.txt.
-STEP2-.env:APP_NAME=EmailValidator-Pro,APP_VERSION=2.0.0,DEBUG=true,SECRET_KEY=change-in-prod,HOST=0.0.0.0,PORT=8000,DATABASE_URL=postgresql+asyncpg://emailval:emailval123@localhost:5432/emailval_db,REDIS_URL=redis://localhost:6379/0,REDIS_CACHE_TTL=86400,CORS_ORIGINS=["http://localhost:5173","http://localhost:3000","http://127.0.0.1:5173"],SMTP_TIMEOUT=10,DNS_TIMEOUT=5,MAX_BULK_EMAILS=10000,RATE_LIMIT_PER_MINUTE=60,USE_PROXIES=false,CELERY_BROKER_URL=redis://localhost:6379/1,CELERY_RESULT_BACKEND=redis://localhost:6379/2.
-STEP3-config.py:use-pydantic-settings-BaseSettings-with-SettingsConfigDict(env_file=.env);fields=app_name,app_version,debug,secret_key,host,port,workers,database_url(default-sqlite+aiosqlite:///./emailval.db),redis_url,redis_cache_ttl,cors_origins:List[str],smtp_timeout,dns_timeout,max_bulk_emails,rate_limit_per_minute,use_proxies:bool,proxy_list:List[str],celery_broker_url,celery_result_backend;instantiate-settings=Settings().
-STEP4-models.py:pydantic-BaseModel+field_validator+Enum;classes-ValidationStatus(VALID/INVALID/RISKY/UNKNOWN),RiskLevel(LOW/MEDIUM/HIGH),SyntaxResult(passed,normalized_email,local_part,domain,error),DNSResult(domain_exists,has_mx_records,mx_records:List[Dict],has_spf,spf_record,has_dmarc,dmarc_record,has_dkim,error),DisposableResult(is_disposable,is_free_provider,is_role_based,provider_name),CatchAllResult(is_catch_all,confidence,error),SMTPResult(verified,smtp_code,smtp_message,server_banner,supports_tls,error,via_proxy),ScoringResult(score,risk_level,breakdown:Dict,warnings:List),ValidationResult(email,status,syntax,dns,disposable,catch_all,smtp,scoring,processing_time_ms,validated_at),SingleEmailRequest(email-with-strip-lower-validator),BulkEmailRequest(emails:List[str]-max-10000,webhook_url-optional),BulkValidationResponse(task_id,status,total,message),TaskStatusResponse(task_id,status,progress,total,results).
-STEP5-syntax.py(Layer1):RFC5321-regex+email_validator-library(validate_email-check_deliverability=False);return-SyntaxResult(passed,normalized_email,local_part,domain);length-checks(max-254-total,64-local-part);fallback-to-regex-on-EmailNotValidError.
-STEP6-dns_check.py(Layers2-3):async-dns.asyncresolver.Resolver-with-timeout;resolve-MX(has_mx,list-priority-sorted);NXDOMAIN->domain_exists=False;NoAnswer->A/AAAA-fallback;resolve-SPF-TXT-startswith-v=spf1;resolve-_dmarc.{domain}-TXT-containing-DMARC1;resolve-{selector}._domainkey.{domain}-TXT-with-selectors[default,google,selector1,selector2,dkim,k1]-for-DKIM;return-DNSResult.
-STEP7-disposable.py(Layer4):check-disposable-against-disposable_email_domains.blocklist;FREE_PROVIDERS-set(gmail,yahoo,hotmail,outlook,aol,icloud,protonmail,zoho,etc);ROLE_BASED_PREFIXES-set(admin,info,support,sales,contact,hello,noreply,webmaster,etc);detect-is_disposable,is_free_provider,is_role_based(exact+prefix-match);provider_name-map.
-STEP8-proxy_engine.py:Proxy-dataclass(host,port,proxy_type,username,password,success_count,fail_count,last_used,blacklisted,success_rate-property);ProxyPool-class-with-asyncio.Lock,add_proxy,get_active_proxies,get_proxy(strategy=round_robin/random/least_used/best_rate),report_success,report_failure(blacklist-after-10-fails),stats-property;singleton-proxy_pool=ProxyPool().
-STEP9-smtp_verify.py(Layers5-6):AsyncSMTPVerifier-using-asyncio.get_event_loop().run_in_executor;PROBE_SENDERS-list;GIBBERISH_LOCAL="xdz9k2mrpqwf8nvj3ths";verify(email,mx_host,use_proxy)-smtplib.SMTP-or-socks.socksocket-with-set_proxy(SOCKS5/SOCKS4/HTTP);EHLO-handshake,banner,STARTTLS-detect,mail(sender),rcpt(email)->250=valid;catch-SMTPRecipientsRefused,SMTPConnectError,socket.timeout,ConnectionRefusedError;check_catch_all-probes-gibberish-email-returns(is_catch_all,confidence-0.95/0.90/0.0);smtp_verifier-singleton-with-settings.smtp_timeout.
-STEP10-scoring.py(Layer7):calculate_score(syntax,dns,disposable,catch_all,smtp);start-100;rules-syntax-fail-50,domain-not-exist-30,no-mx-20,spf+3,dmarc+3,dkim+2,disposable-40,role-based-10,free-provider-5,catchall-20,smtp-verified+10,not-verified-30,inconclusive-5;clamp-0-100;risk-LOW>=75-MEDIUM>=45-else-HIGH;return-ScoringResult-with-breakdown-and-warnings.
-STEP11-engine.py(Master):EmailValidationEngine-validate(email,deep=True);run-layer1-syntax(short-circuit-INVALID-if-fail),layer2-3-dns+mx(short-circuit-INVALID-if-no-domain/mx),layer4-disposable,deep-fast-path-if-not-deep,layers5-6-run-catch_all+SMTP-via-asyncio.gather(return_exceptions=True),layer7-scoring;determine_status(score>=75-VALID,>=45-RISKY,>0-UNKNOWN,else-INVALID);measure-processing_time_ms;singleton-engine;log-with-structlog.
-STEP12-utils/cache.py:redis.asyncio-aioredis-from_url(settings.redis_url,decode_responses=True,socket_connect_timeout=2,socket_timeout=2);get_redis-lazy-singleton;get_cache(key)->Optional[str];set_cache(key,value,ttl);graceful-None-on-errors.
-STEP13-utils/logger.py:structlog.configure-with-stdlib-processors,TimeStamper(iso),format_exc_info,ConsoleRenderer;logging.basicConfig(INFO);setup_logging().
-STEP14-api/routes.py:APIRouter-prefix-used-at-app-level;POST-/validate/single-response_model=ValidationResult-param-deep-Query(default-True)-with-redis-cache-key-val:{email}:{deep/fast}-then-engine.validate;POST-/validate/bulk-response_model=BulkValidationResponse-uses-celery_bulk_validate_task.delay-with-fallback-to-sync-for-<=100-if-celery-unavailable(HTTP503-for-large);GET-/validate/bulk/status/{task_id}-AsyncResult-polls-celery;GET-/domain/{domain}-returns-check_dns;GET-/validate/quick/{email}-engine.validate(deep=False);GET-/health-returns-status,app,version,timestamp;GET-/stats-returns-proxy_pool.stats+version.
-STEP15-main.py:FastAPI(title,description-7-layer-features,docs_url=/docs,redoc_url=/redoc,lifespan);slowapi-Limiter(key_func=get_remote_address)-with-RateLimitExceeded-handler;CORS-middleware(allow_origins=settings.cors_origins,allow_credentials,methods,headers);http-middleware-adds-X-Process-Time;global-Exception-handler-returns-JSONResponse-500;include_router(router,prefix=/api/v1);GET-/root-returns-app-info;setup_logging-on-startup.
-STEP16-tasks/celery_tasks.py:Celery("emailvalidator",broker=settings.celery_broker_url,backend=settings.celery_result_backend,include=["app.tasks.celery_tasks"]);conf-task_serializer=json,worker_concurrency=10,time-limit-600;task-bulk_validate_task(bind=True,max_retries=3,rate_limit=100/m)-runs-asyncio-event-loop-validating-each-email-deep=False-updating-PROGRESS-state,sends-httpx-webhook-if-webhook_url;raise-self.retry(exc,countdown=5)-on-error.
-STEP17-run-backend:T1-uvicorn-app.main:app--reload--host-0.0.0.0--port-8000;T2-redis-server;T3-celery-A-app.tasks.celery_tasks.celery_app-worker--loglevel=info--concurrency=10;API-at-http://localhost:8000-docs-at-/docs.
-STEP18-frontend-setup:cd-email-validator/frontend;npm-create-vite@latest-.-template-react;npm-install-antd@5.21.0-@ant-design/icons@5.5.0-@ant-design/colors@7.2.0-axios@1.7.7-react-router-dom@6.27.0-framer-motion@11.11.7-react-countup@6.5.3-react-circular-progressbar@2.1.0-recharts@2.13.3-@uiw/react-heat-map@2.2.4-dayjs@1.11.13-react-virtualized-auto-sizer@1.0.24-react-window@1.8.10-papaparse@5.4.1.
-STEP19-darkTheme.js:export-darkThemeConfig={algorithm:theme.darkAlgorithm,token:{colorPrimary:#6366f1,colorSuccess:#10b981,colorWarning:#f59e0b,colorError:#ef4444,colorInfo:#3b82f6,colorBgBase:#0a0a0f,colorBgContainer:#13131a,colorBgElevated:#1a1a2e,colorTextBase:#e2e8f0,colorTextSecondary:#94a3b8,colorBorder:#2a2a3a,fontFamily:Inter+JetBrains-Mono,borderRadius:12,controlHeight:40,boxShadow-glow}};components-overrides-for-Layout,Card,Button,Input,Table,Tag,Progress,Tabs,Statistic,Tooltip,Select,Timeline,Upload,Notification,Message,Spin,Alert;export-STATUS_COLORS={valid,invalid,risky,unknown}-with-bg,border,text,glow;export-STATUS_ICONS.
-STEP20-services/api.js:axios-create(baseURL=${VITE_API_URL||http://localhost:8000}/api/v1,timeout-60000);request/response-interceptors-with-timing;export-emailApi-{validateSingle(email,deep),quickValidate(email),validateBulk(emails,webhookUrl),getBulkStatus(taskId),getDomainInfo(domain),health()}.
-STEP21-hooks/useValidation.js:useSingleValidation-{result,loading,error,history(50-max),validate(email,deep),reset};useBulkValidation-{taskId,status,results,progress,total,startBulk(emails),reset}-with-2s-setInterval-polling-for-celery-task-results.
-STEP22-components:ScoreGauge.jsx-SVG-circular-progress-with-framer-motion-animated-ring+score+label(color-by-score);LayerTimeline.jsx-Ant-Timeline-with-7-layer-items(icon-passed+tag+desc)-motion-delay-stagger;ResultCard.jsx-status-card-with-gradient-header,ScoreGauge,email-info,tags,CheckRow-grid(SPF/DMARC/DKIM/MX/Disposable/SMTP),warnings-Alerts,timeline-card;SingleValidator.jsx-hero-header-gradient-title,search-input-card,deep-SMTP-switch,example-chips,ResultCard,recent-history-list;BulkValidator.jsx-paste-TextArea+CSV-Upload.Dragger(papaparse),unique-email-count,Start-button,processing-progress-bar,summary-stat-cards(valid/invalid/risky/unknown),export-CSV-button,results-Table-with-filter/sort/pagination;AppLayout.jsx-Sider(animated-logo,Menu-single/bulk,collapse-toggle)+Header(API-Online-badge,GitHub-icon)+Content(AnimatePresence-page-switch)+Footer;DomainInfo.jsx-domain-detail-view;Dashboard/StatCards.jsx+ValidationHistory.jsx-stats-cards+history-table;Common/AnimatedLogo.jsx+Common/ParticleBackground.jsx-visual-flair.
-STEP23-App.jsx:ConfigProvider(theme=darkThemeConfig)>AppLayout(activePage-state,setActivePage)>pages{single:SingleValidator,bulk:BulkValidator};main.jsx-ReactDOM.createRoot.render(StrictMode>App);styles/global.css-Google-Fonts-Inter+JetBrains-Mono,reset,scrollbar,antd-overrides(menu,input,button,card,progress,tag,timeline,table,dragger,notification),keyframes-pulse-glow/float/gradient-shift;index.html-root-div+inline-dark-background-style+link-icon;vite.config.js-server.port-5173-host-true-proxy-/api->localhost:8000,build-manualChunks(vendor-react,vendor-antd,vendor-motion,vendor-charts).
-STEP24-docker-compose.yml:services-api(FastAPI-Dockerfile,port-8000,env-REDIS_URL/CELERY/CORS/DEBUG,depends_on-redis-healthy,uvicorn-command,healthcheck-curl-/api/v1/health),worker(celery-concurrency-8),frontend(node:20-alpine-port-5173-VITE_API_URL-npm-install&&npm-run-dev---host),redis(redis:7.4-alpine-port-6379-appendonly-healthcheck);volumes-redis_data;network-emailval-network;backend/Dockerfile-python:3.12-slim-apt-curl+build-essential-pip-install-requirements-EXPOSE-8000-uvicorn.
-STEP25-run-optionA(no-docker):4-terminals-backend-uvicorn,redis-server,celery-worker,frontend-npm-install&&npm-run-dev;optionB(docker):docker-compose-up--build-d;access-frontend-http://localhost:5173-docs-http://localhost:8000/docs-redoc-/redoc-health-/api/v1/health.
-STEP26-test:curl-POST-/api/v1/validate/single-d'{"email":"test@gmail.com"}';curl-/api/v1/validate/quick/user@outlook.com;curl-/api/v1/domain/gmail.com;curl-POST-/api/v1/validate/bulk;curl-/api/v1/health.
-STEP27-debug:port-25-blocked->smtp-unknown-normal;redis-connect-fix-redis-server--daemonize-yes;dns-timeout->raise-DNS_TIMEOUT;cors-errors->add-origin-to-CORS_ORIGINS;npm-version-conflict->npm-install--legacy-peer-deps;api-works-without-celery-single-validation-bulk-falls-back-sync-<=100.
-DEPLOY:git-init,git-add-.,git-commit-m"build-fullstack-email-validator-pro",set-remote-origin,git-push-origin-<branch>,open-PR-to-main.
-DONE-ONCE-EVERY-FILE-CREATED,APP-RUNS-AND-API-/docs-RETURNS-200-AND-PUSHED-TO-GITHUB.
+You are a senior full-stack engineer + product designer + motion designer. Build, in one shot, a production-grade **Bridge Modul X** web app — a 7-layer email validation product with a **premium dark theme** (antique-gold + near-black surfaces, serif display + grotesque body, glass-free, gradient-free, neon-free, glow-free). Match the look of the live reference at https://sitcod3-bridge-modul-x-fe.hf.space/ for the landing page, and extend it with a full user dashboard and admin dashboard, both auth-gated via Supabase. **All deliverables in the same repository, working, debugged, polished.**
+
+# 0. NON-NEGOTIABLE RULES (READ FIRST)
+
+1. **Single repo, two top-level apps**: `apps/web` (React/Vite/TS, the entire UI — landing + user + admin) and `apps/api` (FastAPI). Use a workspace root `package.json` only if it helps. Keep the structure obvious.
+2. **No mocks pretending to be Supabase**. The web app talks to Supabase directly from the browser using `@supabase/supabase-js` with the **anon key**; the API talks to Supabase with the **service_role key** server-side. Provide RLS policies.
+3. **No placeholder TODOs in code paths that ship**. Every button either works or is removed. If a backend route is not ready, the frontend must call a working stub that returns the documented shape and clearly log a `[stub]` warning.
+4. **Type-safe end to end**: shared `types/` package (or `packages/contracts`) is encouraged. If you skip it, mirror types manually in both apps but never `as any` to silence an error — fix the type.
+5. **No gradients, no glassmorphism, no neon glows, no drop shadows on text, no Tailwind `backdrop-blur`** on surfaces. The design system explicitly bans these (see §3). Flat hairlines, solid surfaces, solid gold accent (`#D4A574`).
+6. **Accessibility**: focus-visible 2px gold outline on every interactive element, skip-link, `prefers-reduced-motion` honored, color contrast ≥ 4.5:1 on body text, every icon has a label or `aria-hidden`.
+7. **Responsive**: mobile 375, tablet 768, desktop 1280, wide 1536. No horizontal scrollbars at any breakpoint.
+8. **Performance budget**: landing LCP < 2.0s on cable, route chunks < 200KB gz, no image > 200KB without `loading="lazy"` and width/height set.
+9. **Debug aggressively**: before declaring done, run the app, click every nav link, submit every form, test login + signup + logout, verify Supabase queries return rows, check the network tab for 4xx/5xx, check the console for errors and warnings, check `prefers-reduced-motion` in DevTools, run a Lighthouse pass. **Do not ship a build with console errors.**
+10. **Polish**: 1px hairline borders not 2px, `tracking-tight` on display headings, `tabular-nums` on all numeric counters, monospace (`font-data`) for all log/counter/event lines, consistent 8px spacing scale, consistent corner radius scale (sm 6, md 10, lg 14, xl 20), consistent icon weight (Phosphor `bold` everywhere).
+
+# 1. TECH STACK — PIN THESE VERSIONS
+
+- **Frontend**: Vite 5, React 18.3, TypeScript 5.5, React Router 6.26, Tailwind CSS 3.4, Framer Motion 11, Phosphor Icons (`@phosphor-icons/react`), Zustand 4 for local UI state, React Hook Form 7 + Zod 3 for forms, Recharts 2 for charts, `@supabase/supabase-js` 2, `clsx` + `tailwind-merge` via a `cn()` helper, `react-hot-toast` for toasts, `dayjs` for dates, `papaparse` for CSV, `file-saver` for downloads.
+- **Backend**: FastAPI 0.115, Pydantic v2, `supabase` 2 (Python), `httpx` 0.27, `dnspython` 2.6, `email-validator` 2.2, `pyyaml`, `uvicorn[standard]`, `python-jose[cryptography]` for JWT verification, `python-multipart`.
+- **Tooling**: ESLint 9 (flat config) + Prettier 3 + `eslint-plugin-react-hooks` + `@typescript-eslint`; Vitest 2 + Testing Library for unit/component; Playwright 1.47 for e2e; `ruff` + `black` for Python.
+- **Package manager**: pnpm 9 (use `pnpm-workspace.yaml`). If pnpm is unavailable, fall back to npm workspaces — do not silently use a different tool.
+
+# 2. REPO LAYOUT
+
+```
+.
+├── apps/
+│   ├── web/                          # React/Vite/TS — entire UI
+│   │   ├── index.html
+│   │   ├── vite.config.ts
+│   │   ├── tailwind.config.ts
+│   │   ├── postcss.config.cjs
+│   │   ├── tsconfig.json
+│   │   ├── .env.example
+│   │   ├── public/
+│   │   │   ├── favicon.svg
+│   │   │   ├── img/world-map.jpg     # 1920x900, dark, desaturated
+│   │   │   └── img/pipeline.jpg      # 1920x1080, isometric conveyor
+│   │   └── src/
+│   │       ├── main.tsx
+│   │       ├── App.tsx               # router + providers
+│   │       ├── routes.tsx            # all route definitions
+│   │       ├── lib/
+│   │       │   ├── supabase.ts       # browser client (anon)
+│   │       │   ├── api.ts            # typed fetch wrapper → /api/v1/*
+│   │       │   ├── auth.tsx          # AuthProvider + useAuth + Guard
+│   │       │   ├── engine.ts         # 7-layer engine (shared types only)
+│   │       │   ├── cn.ts
+│   │       │   ├── format.ts         # number, date, ms formatters
+│   │       │   └── toast.ts
+│   │       ├── components/
+│   │       │   ├── primitives/       # Button, Input, Card, Badge, Tabs,
+│   │       │   │                     # Modal, Drawer, Tooltip, Menu, Table,
+│   │       │   │                     # EmptyState, Skeleton, Stat, Logo
+│   │       │   ├── layout/           # MarketingShell, AppShell, AdminShell
+│   │       │   ├── marketing/        # Nav, Hero, TrustBar, Pipeline,
+│   │       │   │                     # Architecture, Pricing, CTA, Footer
+│   │       │   └── ui/               # ScoreGauge, LayerTimeline, JsonView,
+│   │       │                         # Sparkline, DataTable, ChartCard
+│   │       ├── pages/
+│   │       │   ├── marketing/        # Landing.tsx (and any sub-routes)
+│   │       │   ├── auth/             # Login.tsx, Signup.tsx, Forgot.tsx
+│   │       │   ├── app/              # Overview, Validator, History,
+│   │       │   │                     #   Bulk, Domains, ApiKeys, Settings
+│   │       │   └── admin/            # Overview, Users, Logs, Blocklist,
+│   │       │                         #   Settings, Audit
+│   │       ├── styles/
+│   │       │   ├── tokens.css        # CSS variables (see §3)
+│   │       │   ├── globals.css       # @tailwind base/components/utilities
+│   │       │   └── animations.css    # keyframes; all respects PRM
+│   │       └── types/
+│   │           └── index.ts          # all shared types
+│   └── api/                          # FastAPI
+│       ├── pyproject.toml
+│       ├── app/
+│       │   ├── main.py               # FastAPI app, CORS, lifespan
+│       │   ├── config.py             # pydantic-settings, env vars
+│       │   ├── deps.py               # get_current_user, require_admin
+│       │   ├── supabase_admin.py     # service_role client
+│       │   ├── routes/
+│       │   │   ├── health.py
+│       │   │   ├── validate.py       # single + bulk + status
+│       │   │   ├── domain.py
+│       │   │   ├── history.py
+│       │       ├── stats.py
+│       │       └── admin.py          # blocklist, settings, logs
+│       │   ├── validator/            # engine (mirror of web, but real)
+│       │   │   ├── syntax.py
+│       │   │   ├── dns.py
+│       │   │   ├── mx.py
+│       │   │   ├── disposable.py
+│       │   │   ├── catchall.py
+│       │   │   ├── smtp.py
+│       │   │   └── scoring.py
+│       │   └── models.py             # Pydantic v2 schemas
+│       ├── tests/
+│       │   ├── test_validator.py
+│       │   ├── test_routes.py
+│       │   └── conftest.py
+│       └── Dockerfile
+├── packages/
+│   └── contracts/                    # shared TS types + Zod schemas
+│       ├── package.json
+│       └── src/index.ts
+├── supabase/
+│   ├── schema.sql                    # tables + RLS + triggers + seed
+│   ├── seed.sql                      # demo admin + demo user
+│   └── README.md                     # how to apply
+├── .github/workflows/ci.yml
+├── pnpm-workspace.yaml
+├── package.json
+├── README.md
+├── .env.example
+└── PROMPT.txt                        # this file
+```
+
+# 3. DESIGN SYSTEM (THE LOOK)
+
+This is the **only** allowed look. Do not deviate. Every component reads from these tokens.
+
+## 3.1 Surfaces (dark-first)
+
+| Token              | Value     | Use                                        |
+|--------------------|-----------|--------------------------------------------|
+| `--bg-canvas`      | `#0A0A0A` | Page background                            |
+| `--bg-primary`     | `#141414` | Cards, panels                              |
+| `--bg-secondary`   | `#1A1A1A` | Nested cards, table rows on hover          |
+| `--bg-tertiary`    | `#242424` | Inputs, code blocks, subtle wells          |
+| `--bg-elevated`    | `#1F1F1F` | Modals, popovers, dropdowns                |
+| `--bg-inverse`     | `#F9F9F9` | Light text on dark, only for logo inverse  |
+
+## 3.2 Text
+
+| Token              | Value     | Use                                  |
+|--------------------|-----------|--------------------------------------|
+| `--text-primary`   | `#F9F9F9` | Headings, primary copy               |
+| `--text-secondary` | `#E6E6E6` | Body copy                            |
+| `--text-tertiary`  | `#A3A3A3` | Captions, labels, helper text        |
+| `--text-inverse`   | `#0A0A0A` | Text on gold/light surfaces          |
+| `--text-link`      | `#D4A574` | Links (underline on hover only)      |
+
+## 3.3 Accent (antique gold — the only color that may "pop")
+
+| Token                  | Value          | Use                          |
+|------------------------|----------------|------------------------------|
+| `--accent-primary`     | `#D4A574`      | Primary CTAs, focus, links   |
+| `--accent-primary-hover` | `#E0BB8F`    | Hover state                  |
+| `--accent-primary-active`| `#C9945D`    | Active/pressed               |
+| `--accent-secondary`   | `#C9945D`      | Secondary highlights         |
+
+## 3.4 Status (foreground + background pairs — never color alone)
+
+| Status  | Foreground  | Background  | Border      | Icon shape       |
+|---------|-------------|-------------|-------------|------------------|
+| Success | `#5BC07E`   | `#0C2D17`   | `#197036`   | Check, filled    |
+| Warning | `#E0BB8F`   | `#3A2700`   | `#7F4A12`   | Triangle, outline|
+| Error   | `#E68080`   | `#380303`   | `#701919`   | X, filled        |
+| Info    | `#6FB1F2`   | `#0A1F30`   | `#194470`   | i, outline       |
+
+Always pair the color with a **label, icon, or shape**. Never communicate status with color alone.
+
+## 3.5 Borders & dividers
+
+- Default hairline: `1px solid var(--border-primary)` (`#242424`)
+- Subtle divider: `1px solid rgba(255,255,255,0.06)`
+- Focus ring: `2px solid var(--accent-primary)` with `2px` offset, never removed
+- Corner radius: `sm 6px / md 10px / lg 14px / xl 20px / full 9999px`
+
+## 3.6 Typography (three-register editorial)
+
+- **Display** (serif): `'Playfair Display', Georgia, 'Times New Roman', serif` — H1, H2, hero
+- **Body** (grotesque): system stack `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif`
+- **Mono** (data): `ui-monospace, 'SF Mono', 'JetBrains Mono', Consolas, monospace` — all counters, log lines, code, scores
+
+Sizes: `xs 11 / sm 13 / base 15 / md 17 / lg 20 / xl 24 / 2xl 30 / 3xl 40 / 4xl clamp(44,7vw,96)` px. Display weight 700, body 400/500, mono 600. Line-height tight 1.15 / normal 1.5 / relaxed 1.7. Tracking tight -0.02em on display, wide 0.16em on mono uppercase labels.
+
+## 3.7 Spacing
+
+4px base: `0,1,2,3,4,6,8,12,16,24,32,48,64,96` (Tailwind scale covers this).
+
+## 3.8 Motion (classic preset — refined, not bouncy)
+
+- `--dur-instant 50ms`, `--dur-fast 150ms`, `--dur-normal 250ms`, `--dur-slow 400ms`, `--dur-slower 600ms`, `--dur-ambient 900ms`
+- `--ease-default cubic-bezier(0.25,0.1,0.25,1)`, `--ease-out cubic-bezier(0,0,0.2,1)`, `--ease-cinematic cubic-bezier(0.22,1,0.36,1)`, `--ease-spring cubic-bezier(0.34,1.56,0.64,1)` (use sparingly)
+- All animations wrapped in `@media (prefers-reduced-motion: reduce) { animation: none !important; }`
+- Page transitions: crossfade + 6px slide, 250ms, both directions supported via `view-transition-name` (progressive enhancement — browsers without VT just snap)
+
+## 3.9 Banned (will be rejected in review)
+
+- ❌ Any CSS `linear-gradient` / `radial-gradient` on text or surfaces (a single 1px hairline conic is allowed only on a special "live" status pill)
+- ❌ `backdrop-filter: blur()` (no glassmorphism)
+- ❌ `text-shadow` (no text glow)
+- ❌ `box-shadow` with color (only neutral `0 1px 2px rgb(0 0 0 / 0.3)` is allowed, never colored)
+- ❌ Neon, glitch, chrome, iridescent, holographic effects
+- ❌ Animated background videos
+- ❌ More than 2 font families
+
+# 4. LANDING PAGE (PUBLIC, NO AUTH)
+
+Single route `/` (also `/landing`). Match the content of the live reference exactly. Sections in order, top to bottom:
+
+## 4.1 Top nav (sticky, 56px, blurs only `bg-canvas/85` color overlay — no backdrop blur)
+
+- Left: Logo (8x8 rounded square with envelope glyph in gold, tiny gold pulse dot, wordmark "Bridge **Modul X**" with "Modul X" in gold)
+- Center: Product, Architecture, Pricing, Docs (anchor links)
+- Right: Sign In (text), Start Free (white solid button, dark text)
+- Mobile: hamburger reveals a 56px-tall slide-down menu, same items
+
+## 4.2 Hero — `MapHero`
+
+- Full-bleed dark container with rounded `xl` corners, hairline border
+- Background: `world-map.jpg` at 80% opacity, desaturated + sepia'd via `filter: saturate(.7) sepia(.18) brightness(.82)`
+- Overlays: 3 ambient orbs (no blur over 80px), 1 hero grid (40% opacity, radial mask), 1 radar sweep conic gradient rotating 24s
+- 12 SVG arc paths (US-E↔EU-W, EU-W↔AP-S, AP-S↔AP-NE, US-E↔SA-E, EU-W↔AF-N, AP-E↔OC-E, US-W↔US-E, EU-C↔AP-S, US-E↔AP-NE, SA-E↔AF-N, EU-W↔US-E, AP-NE↔EU-E), each with a faint white glow stroke + a brighter dashed `lz-dash` core stroke (`stroke-dasharray: 4 6`, animated `stroke-dashoffset` 1.1s linear)
+- 11 hub markers at exact percentages: US-E (22,36), US-W (15,38), EU-W (44,30), EU-C (50,28), EU-E (56,32), AP-S (70,38), AP-E (80,34), AP-NE (85,42), SA-E (28,62), AF-N (50,48), OC-E (76,56). Each hub: pulsing ring + 8px white dot + 7px mono label above the dot
+- 21 small relay nodes (5px dots) scattered, each with a `pulse-green` ripple
+- **Imperative packet system**: spawn packets every 250ms on random arcs, animate along the arc using a 200-point LUT (`getPointAtLength`), each with a glow + core + highlight, a 20x2 trail gradient stretched by `rotate + scaleX`, and a 24px ripple on arrival (75% white, 25% gold). Cap at 30 concurrent packets, fade out at arc endpoints, full cleanup on unmount
+- Top-left chip: `Global mesh · 11 hubs · 12 routes` (mono, 9px, hairline border, dark `bg-black/40`)
+- Top-right counter: live-updating validated count, slides digit by digit, `font-data tabular-nums` (start at 2,412,806, increment 3-9 every 1.2s)
+- Bottom-left feed (md+): rotating event card, white background, 9px mono, swaps every 2.8s with framer-motion `popLayout`. Events (in order, looped):
+  1. `maya@stripe.com` — 96/100 · safe to send · us-east
+  2. `james@gmial.com` — 8/100 · hard bounce · eu-west
+  3. `promo@mailinator.com` — 4/100 · disposable · ap-south
+  4. `info@megacorp.com` — 58/100 · review · us-west
+  5. `ops@beacon.dev` — 91/100 · safe to send · eu-central
+  6. `cto@rival.io` — 72/100 · risky domain · ap-east
+  7. `hello@freshmail.co` — 99/100 · pristine · sa-east
+  8. `noreply@shadow.net` — 2/100 · spam trap · af-north
+- Bottom-right (lg+): Throughput sparkline card — 64x18 SVG with gradient-filled area, sliding number, "req/s" unit, updates every 1.4s
+- Bottom-center: `System Operational · 99.999% Uptime` status pill with white pulse dot
+- Hero text overlay (bottom-aligned, max-w-2xl):
+  - Eyebrow chip: `7-layer validation engine` in gold, mono uppercase
+  - H1: `Validate any address with extreme prejudice` (clamp(2.2rem, 5vw, 3.8rem), serif display, white with "extreme prejudice" in gold)
+  - Sub: 14px, white/55, max-w-md
+  - CTAs: `Start Validating →` (white solid) + `See How It Works` (hairline outline)
+- Aspect ratio: `4/3` mobile, `16/9` sm, `2.15/1` lg
+
+## 4.3 TrustBar (marquee)
+
+- Full-bleed dark band, hairline borders top + bottom
+- Centered eyebrow: `Trusted by teams at forward-thinking companies` (15px, secondary text)
+- Below: infinite-marquee strip, 34s linear, pauses on hover, mask-faded at edges. Logos (8, exact order): **Stripe / Notion / Linear / Vercel / Supabase / Figma / Resend / Railway** — each as a 24px-tall mono wordmark in `text-tertiary` with 64px gap. Add a sub-line: `& more across fintech, devtools, and enterprise SaaS` (mono, 11px, tertiary)
+- Logos are simple text (no images) for performance and theming
+
+## 4.4 PipelineScene — `7-Layer Validation Pipeline`
+
+- Section eyebrow: `How it works`
+- H2: `7-Layer Validation Pipeline` (display, balance-wrapped)
+- Sub: `A sequential, rigorous process designed to filter invalid data with extreme prejudice.`
+- Container: rounded `xl`, hairline border, `bg-primary`, contains `pipeline.jpg` as a full-bleed background at 70% opacity
+- 7 gate dots positioned at exact percentages over the image, each is a 12px gold circle with `box-shadow: 0 0 0 3px rgba(212,165,116,0.3)` when active. On hover or focus, a flash animates (green pass or red fail)
+- Live packet cubes travel between gates: gold border 1.5px, gold 12% fill bg, 5x5 white highlight. Drop animation when rejected (translateY 64px, scale 0.4, rotate 24deg, fade). Ping ring (34px, error border) on rejection
+- Right-side live counters (mono, tabular-nums): inbound (start 12,847, +1-4 / 1.3s), rejected (start 1,902), trusted (computed)
+- Right-side inspector panel: shows the currently focused gate's number, name, ms timing, status badge. Initial state: "Hover or focus any gate on the belt — or wait for a packet to trigger one — to read its rule here." Below, a 7-row table of all gates (01..07) with name, ms (e.g. 0.3 / 8 / 13 / 0.8 / 21 / 246 / 2.0), PASS badge
+- Bottom-left badge: `7-layer validation pipeline · data filtered with extreme prejudice`
+- Bottom-right: `awaiting scroll` → on scroll, becomes `pipeline active`
+
+## 4.5 Architecture — `Architectural Superiority`
+
+- Eyebrow: `Why Modul X`
+- H2: `Architectural Superiority`
+- Sub: `Modular components designed for high-frequency transactional environments. Every layer is isolated, observable, and replaceable.`
+- 4-up stat row (mono, 4xl display, tabular-nums, animated count-up on scroll-into-view): `0` edge regions, `0ms` p50 latency, `0` logs retained, `0B` outcomes trained. Animate to real numbers (24, 38, 0, 8) over 1.4s with cubic-out easing, respect `prefers-reduced-motion`
+- 4 feature cards in 2x2 grid (md: 1x4 on lg):
+  1. **Hardware Acceleration** — `Bypassing standard software stacks, Modul X interfaces directly with specialized hardware to execute MX lookups and SMTP handshakes concurrently.`
+  2. **Zero-Trust Processing** — `Data is processed in memory and immediately purged. No logs, no traces.` + inline pill `purged in <1ms`
+  3. **Global Edge Network** — `Distributed validation nodes ensure low latency regardless of origin.` + a tiny inline mesh diagram (3 hexagons connected)
+  4. **Predictive Scoring Engine** — `Machine learning models analyze historical bounce patterns and domain reputation to assign a confidence score before SMTP connection is attempted.`
+- Each card: `bg-primary`, hairline border, `radius-lg`, hover: 1px border shift to `--bg-tertiary`, `translateY(-2px)`, optional subtle neutral shadow
+
+## 4.6 PricingBand
+
+- Eyebrow: `Pricing`
+- H2: `Simple, Transparent Pricing`
+- Sub: `Start free. Scale when you need to. No surprises.`
+- 3 tiers in a row, middle tier is `Most Popular` (gold top accent 2px, slight `scale(1.02)` on md+):
+  1. **Starter** — `$0` / `forever` — 100 validations/day, layers 1-4, community support — `Start Free` (outline)
+  2. **Pro** — `$29` / `seat / mo` — All 7 layers + SMTP probes, 10k validations/mo, API, webhooks & alerts — `Start 14-day Trial` (solid white)
+  3. **Enterprise** — `Custom` / `annual` — Unlimited volume, SSO/SAML + DPA, dedicated success manager — `Talk to Sales` (outline)
+- Bottom footnote: `No credit card required · Cancel anytime · SOC2 Type II` (mono, tertiary, centered)
+
+## 4.7 CTABand
+
+- Full-width dark band, hairline borders, generous padding (96px vertical)
+- H2: `Stop guessing. Start validating.` (display, white)
+- Sub: `Join thousands of teams that rely on Modul X to protect their sender reputation, reduce bounces, and keep their lists pristine.`
+- 2 buttons: `Get Started Free →` (solid white) + `Open Validator` (outline). The second one links to `#/app/validator` (will redirect to login if not authed)
+- Footnote: `No credit card required · Cancel anytime · SOC2 Type II`
+
+## 4.8 FooterLanding
+
+- 5-column grid (collapses to 1 on mobile):
+  1. Brand: logo + 1-line description + small "made for builders" line
+  2. Product: Validator, Bulk Validation, Domain Intel, API, Pricing
+  3. Resources: Documentation, Status, Changelog, Blog
+  4. Company: About, Customers, Careers, Contact
+  5. Legal: Privacy, Terms, Security, DPA
+- Bottom strip: © 2026 Bridge Modul X, Inc. · Made for builders · social icons (mono: gh, x, li)
+
+# 5. AUTH (Supabase email + password)
+
+- Routes: `#/login`, `#/signup`, `#/forgot`
+- Use `supabase.auth.signInWithPassword`, `signUp`, `signOut`, `resetPasswordForEmail`
+- On signup, write a `profiles` row with `id = auth.users.id`, `email`, `display_name`, `role = 'user'` (RLS enforced)
+- `AuthProvider` exposes `{ user, profile, role, booting, login, signup, logout, refresh }`; `profile` is fetched from `profiles` table after auth state changes
+- `Guard` component: shows `<BootSplash />` while booting, redirects to `/login` if unauthed, to `/app` if authed user hits `/admin/*`, to `/app` if admin user hits `/login` (already authed)
+- Login/Signup cards: 380px wide, `bg-primary`, `radius-lg`, hairline border, gold logo top, `Sign in with email` button solid white, `Continue with Google` outline (use `supabase.auth.signInWithOAuth({ provider: 'google' })` if `VITE_SUPABASE_GOOGLE_OAUTH=true` else hide), link to the other mode below, "Forgot password?" link
+- Form validation via Zod + React Hook Form; surface field errors in `text-error` below each field; shake animation on submit with errors
+- Toasts on success/failure via `react-hot-toast` (dark theme: `bg-elevated`, hairline border, status icon + message)
+
+# 6. USER DASHBOARD (`/app/*`)
+
+AppShell: left sidebar 240px (collapsible to 64px icon-rail on md), top bar 56px with breadcrumb + search + user menu. Main content: max-w 1200, padding 24.
+
+Routes:
+- `/app` (Overview)
+- `/app/validator`
+- `/app/bulk`
+- `/app/history`
+- `/app/domains`
+- `/app/keys`
+- `/app/settings`
+
+## 6.1 Overview
+
+- Greeting: `Good {morning|afternoon|evening}, {display_name}` + last login timestamp
+- 4 stat cards (last 30 days, count-up on mount):
+  1. Total validations (number, +% delta vs prev 30 days)
+  2. Valid rate (% with sparkline)
+  3. Risky caught (count)
+  4. Avg latency (ms, sparkline)
+- "Recent activity" table: 10 most recent `validation_results` with email, domain, score, status badge, timestamp
+- "Top disposable domains" horizontal bar list (top 5 from history)
+- "System status" panel: API health, p50, p95, error rate — fetched from `/api/v1/health`
+
+## 6.2 Validator
+
+- Two tabs: `Single` | `Bulk`
+- **Single**: large input with email regex on blur, "Validate" gold solid button. Result card appears below with: score gauge (0-100, color from status), status badge, action text, 7-layer timeline (each layer: name, ms, status icon, note), raw JSON toggle, "Save to history" toggle. Demo seed: try `test@gmail.com` (high), `james@gmial.com` (typo), `promo@mailinator.com` (disposable), `info@megacorp.com` (catch-all)
+- **Bulk**: textarea (paste, comma- or newline-separated), drag-drop CSV, max 1000 per batch. Progress bar, cancel button, results table (virtualized for >100 rows), columns: email, score, status, layers-passed, action. Export CSV button. "Last 10 bulk jobs" history
+
+## 6.3 History
+
+- DataTable with columns: email, domain, score, status, layers, created_at
+- Filters: status multi-select, domain search, score range slider, date range
+- Row click opens detail drawer with full layer breakdown + raw JSON
+- Bulk actions: delete selected, export selected
+- Pagination: 25 / 50 / 100, server-side via Supabase
+- Empty state with illustration (simple SVG: envelope + question mark) + "Run your first validation" CTA
+
+## 6.4 Domains
+
+- Domain intelligence report: input a domain, get MX / SPF / DMARC / DKIM
+- Visual: 4 cards in a 2x2 grid, each with a "verified" badge if present
+- "Recent lookups" list
+- "Save domain" toggle to add to a personal watchlist (`watched_domains` table)
+
+## 6.5 ApiKeys
+
+- List of keys (show last 4 chars only, full key revealed once on create)
+- Create key modal: name, scopes (read/validate/admin), expires (optional)
+- Rotate, revoke actions with confirm modal
+- Usage chart per key (last 30 days, Recharts area)
+- Webhook URL field per key, "Send test" button
+
+## 6.6 Settings
+
+- Profile: display name, avatar (Supabase storage upload, 1MB max, jpg/png), email (read-only)
+- Security: change password, enable 2FA (TOTP via Supabase MFA), list active sessions, "Sign out all"
+- Notifications: email digests (daily/weekly/off), webhook for risky results
+- Billing: current plan, next renewal, invoices list, "Manage in Stripe" link (stub OK)
+- Danger zone: delete account (typed confirmation, irreversible)
+
+# 7. ADMIN DASHBOARD (`/admin/*`)
+
+Same shell pattern, slightly different nav. Guarded by `role === 'admin'`.
+
+Routes:
+- `/admin` (Overview)
+- `/admin/users`
+- `/admin/logs`
+- `/admin/blocklist`
+- `/admin/settings`
+- `/admin/audit`
+
+## 7.1 Overview
+
+- System-wide stats: total users, total validations (today/7d/30d), MRR placeholder, error rate
+- Time-series chart of validations per hour (Recharts, last 24h)
+- Top users by volume (table)
+- "Recent signups" list
+- "System events" feed (errors, rate-limit hits, admin actions)
+
+## 7.2 Users
+
+- DataTable: email, display_name, role, plan, created_at, last_sign_in_at, status
+- Filters: role, plan, status, search
+- Row actions: view, impersonate (writes `audit_log` entry), suspend, promote to admin, delete
+- Bulk actions: export CSV, send announcement email
+- "Create user" button → modal with email + temp password (sends invite)
+
+## 7.3 Logs
+
+- Real-time-ish log viewer (poll `/api/v1/admin/logs` every 5s)
+- Each line: timestamp (mono, tabular), level badge (color-coded), service, message, request_id
+- Filter by level, service, time range, free text search
+- "Pause" toggle
+- Click any line → drawer with full JSON + trace
+
+## 7.4 Blocklist
+
+- Two tables: `disposable_domains` and `role_addresses`
+- Add/remove rows inline, with "reason" field
+- Bulk paste (one per line) textarea
+- Import CSV button
+- Last-edited-by + timestamp on every row
+
+## 7.5 Settings
+
+- Tabs: Engine, Rate Limits, SMTP Proxies, Feature Flags
+- **Engine**: toggle each of 7 layers on/off globally, set default scoring weights (sliders 0-1, must sum to 1.0, show sum with red border if not)
+- **Rate Limits**: per-tier limits table (free/pro/enterprise) with cells editable inline
+- **SMTP Proxies**: list of proxies with health dots (green/red), last-checked, throughput; add/remove
+- **Feature Flags**: key/value toggles, scoped (global / per-plan)
+
+## 7.6 Audit
+
+- Append-only log of every admin action: who, what, target, before/after JSON, timestamp, IP
+- Filter by actor, action type, target type, time range
+- Export to CSV
+
+# 8. SUPABASE (auth, DB, RLS)
+
+## 8.1 Tables
+
+```sql
+-- 1. profiles (mirror of auth.users, public-safe fields)
+create table public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text not null,
+  display_name text,
+  avatar_url text,
+  role text not null default 'user' check (role in ('user','admin')),
+  plan text not null default 'free' check (plan in ('free','pro','enterprise')),
+  status text not null default 'active' check (status in ('active','suspended','deleted')),
+  last_sign_in_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- 2. validation_results
+create table public.validation_results (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  email text not null,
+  domain text not null,
+  score smallint not null check (score between 0 and 100),
+  status text not null check (status in ('valid','risky','invalid')),
+  action text not null,
+  layers jsonb not null,           -- array of {key,name,status,ms,note}
+  total_ms numeric(8,2) not null,
+  is_bulk boolean not null default false,
+  bulk_job_id uuid,
+  created_at timestamptz not null default now()
+);
+create index on public.validation_results (user_id, created_at desc);
+create index on public.validation_results (domain);
+create index on public.validation_results (status);
+
+-- 3. bulk_jobs
+create table public.bulk_jobs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  filename text,
+  total integer not null,
+  processed integer not null default 0,
+  valid_count integer not null default 0,
+  risky_count integer not null default 0,
+  invalid_count integer not null default 0,
+  status text not null default 'pending' check (status in ('pending','running','completed','failed','cancelled')),
+  started_at timestamptz,
+  finished_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+-- 4. domain_records
+create table public.domain_records (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  domain text not null,
+  exists boolean not null,
+  mx jsonb,
+  spf jsonb,
+  dmarc jsonb,
+  dkim jsonb,
+  score smallint,
+  verdict text,
+  created_at timestamptz not null default now(),
+  unique (user_id, domain, created_at)
+);
+
+-- 5. watched_domains
+create table public.watched_domains (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  domain text not null,
+  notify_on_change boolean not null default true,
+  created_at timestamptz not null default now(),
+  unique (user_id, domain)
+);
+
+-- 6. api_keys
+create table public.api_keys (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  name text not null,
+  prefix text not null,         -- first 8 chars, for display
+  hash text not null,            -- bcrypt of full key
+  scopes text[] not null default '{read,validate}',
+  webhook_url text,
+  expires_at timestamptz,
+  last_used_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+-- 7. disposable_domains (admin-managed)
+create table public.disposable_domains (
+  id uuid primary key default gen_random_uuid(),
+  domain text not null unique,
+  reason text,
+  added_by uuid references public.profiles(id),
+  created_at timestamptz not null default now()
+);
+
+-- 8. role_addresses
+create table public.role_addresses (
+  id uuid primary key default gen_random_uuid(),
+  local_part text not null unique,
+  reason text,
+  added_by uuid references public.profiles(id),
+  created_at timestamptz not null default now()
+);
+
+-- 9. settings (key/value, admin-managed)
+create table public.app_settings (
+  key text primary key,
+  value jsonb not null,
+  updated_by uuid references public.profiles(id),
+  updated_at timestamptz not null default now()
+);
+
+-- 10. audit_log (append-only)
+create table public.audit_log (
+  id uuid primary key default gen_random_uuid(),
+  actor_id uuid references public.profiles(id),
+  action text not null,
+  target_type text not null,
+  target_id text,
+  before jsonb,
+  after jsonb,
+  ip inet,
+  user_agent text,
+  created_at timestamptz not null default now()
+);
+create index on public.audit_log (created_at desc);
+create index on public.audit_log (actor_id);
+
+-- 11. app_logs (operational, for admin viewer)
+create table public.app_logs (
+  id bigserial primary key,
+  ts timestamptz not null default now(),
+  level text not null check (level in ('debug','info','warn','error')),
+  service text not null,
+  message text not null,
+  request_id text,
+  meta jsonb
+);
+create index on public.app_logs (ts desc);
+```
+
+## 8.2 RLS (enable on every table; default deny)
+
+- `profiles`: users can `select` and `update` their own row; admins can do anything
+- `validation_results`: users can `select/insert` their own; admins can `select all`
+- `bulk_jobs`: users can CRUD their own; admins can read all
+- `domain_records`, `watched_domains`, `api_keys`: owner-only; admin read-all
+- `disposable_domains`, `role_addresses`, `app_settings`: admin-only
+- `audit_log`: admin select only; inserts via service_role only
+- `app_logs`: service_role write only; admin select only
+
+Provide a `supabase/schema.sql` that creates tables, indexes, and policies in the right order, plus a `supabase/seed.sql` that inserts a demo admin (`admin@demo.test` / `Demo!2026`) and a demo user (`user@demo.test` / `Demo!2026`), and pre-seeds 50 disposable domains and the default engine settings.
+
+## 8.3 Triggers
+
+- `on_auth_user_created` → insert into `profiles` from `auth.users`
+- `set_updated_at` on `profiles`, `app_settings`
+- Append admin role changes to `audit_log` via `after update` trigger on `profiles`
+
+# 9. API (FastAPI) — `/api/v1/*`
+
+- `GET  /health` → `{ status, version, db_ok, supabase_ok, ts }`
+- `POST /auth/exchange` → accepts Supabase access_token, returns app session cookie (HttpOnly, SameSite=Lax) + user payload
+- `POST /auth/logout` → clears cookie
+- `GET  /me` → current user (from Supabase JWT, verified with `SUPABASE_JWT_SECRET`)
+- `POST /validate/single` → `{ email, deep? }` → full verdict
+- `POST /validate/bulk` → `{ emails: string[] }` → `{ job_id }`; processes synchronously up to 100, else enqueues (Celery if REDIS_URL set, else in-memory queue stub)
+- `GET  /validate/bulk/{job_id}` → job status
+- `GET  /validate/quick/{email}` → syntax + DNS only
+- `GET  /domain/{domain}` → domain intel
+- `GET  /history?limit=&offset=&status=&q=` → user's history from Supabase
+- `GET  /stats` → aggregate stats for the user
+- `GET  /admin/users` → all users (admin only)
+- `POST /admin/users/{id}/suspend|restore|promote|demote`
+- `GET  /admin/logs?level=&service=&q=&since=` → from `app_logs`
+- `GET/POST/DELETE /admin/blocklist/{disposable|role}`
+- `GET/PUT /admin/settings`
+- `GET  /admin/audit`
+
+All admin routes require `role='admin'`. All routes require a valid Supabase JWT in `Authorization: Bearer ...` except `/health` and `/auth/*`. Use `pydantic-settings` for config, `python-jose` for JWT verification against `SUPABASE_JWT_SECRET`.
+
+CORS: allow `http://localhost:5173` and `WEB_ORIGIN` from env.
+
+# 10. 7-LAYER VALIDATION ENGINE
+
+Implement in `apps/api/app/validator/`. Mirror types in `packages/contracts/src/index.ts`.
+
+For each layer: pure function `(input, context) -> LayerResult`, deterministic per email (use FNV-1a hash + Mulberry32 PRNG) so the demo behaves like a real backend: same address → same verdict, every time. Layers:
+
+1. **Syntax** — RFC 5322 regex, max length 320
+2. **DNS** — `dns.resolver.resolve` (A/AAAA/NS), reject NXDOMAIN, detect typo via TYPO_MAP and return `did_you_mean`
+3. **MX** — `dns.resolver.resolve(domain, 'MX')`, reject null-mx, return priority-sorted hosts
+4. **Disposable** — membership in `disposable_domains` table (admin-managed) + small built-in seed (mailinator.com, tempmail.io, guerrillamail.com, 10minutemail.com, yopmail.com, trashmail.com, sharklasers.com, getnada.com, temp-mail.org, maildrop.cc, dispostable.com, fakeinbox.com)
+5. **Catch-All** — SMTP `RCPT TO` probe to a random non-existent local part; if accepted, mark `catchall=true`
+6. **SMTP** — full handshake (HELO/EHLO, MAIL FROM, RCPT TO, QUIT) on port 25 with timeout 5s; return `pass | fail (550) | warn (451 greylist) | unknown (timeout/blocked)`
+7. **ML Scoring** — weighted sum of signals: deliverable (0.40), domain age (0.10), free provider (0.05), role local (0.05), disposable (0.20), catch-all (0.20) → 0-100
+
+Return shape:
+```ts
+type LayerKey = 'syntax'|'dns'|'mx'|'disposable'|'catchall'|'smtp'|'scoring';
+type LayerStatus = 'pass'|'fail'|'warn'|'skip'|'off';
+interface LayerResult { key: LayerKey; name: string; status: LayerStatus; ms: number; note: string }
+type VerdictStatus = 'valid'|'invalid'|'risky';
+interface Verdict {
+  email: string; domain: string; score: number; status: VerdictStatus; action: string;
+  layers: LayerResult[]; total_ms: number;
+}
+```
+
+Rules:
+- Score < 40 → `invalid`, action `"Do not send — hard bounce likely"`
+- 40 ≤ Score < 75 → `risky`, action `"Manual review — route to human"`
+- Score ≥ 75 → `valid`, action `"Safe to send"`
+
+A web-side mirror in `apps/web/src/lib/engine.ts` provides an **offline demo mode** when `VITE_OFFLINE_DEMO=true` so the UI works without the API. It must produce identical verdicts to the backend for the same email (because the same seed → same verdict). In offline mode, `smtp` layer is always `unknown` and the verdict defaults to `risky` with a UI note.
+
+# 11. SHARED CONTRACTS (`packages/contracts`)
+
+Mirror every API request/response type in Zod schemas and export inferred TS types. The web app imports from `@bx1/contracts`, the API validates with the same Zod schemas (via a tiny Python parser is out of scope — instead, hand-mirror in Pydantic in `apps/api/app/models.py` and add a CI step that diffs field names; if any drift, fail the build).
+
+# 12. ENV VARS
+
+Root `.env.example`:
+```
+# Web
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+VITE_SUPABASE_GOOGLE_OAUTH=false
+VITE_API_BASE_URL=http://localhost:8000/api/v1
+VITE_OFFLINE_DEMO=false
+VITE_SENTRY_DSN=
+
+# API
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_JWT_SECRET=
+WEB_ORIGIN=http://localhost:5173
+REDIS_URL=
+SMTP_PROXY_POOL=
+LOG_LEVEL=info
+```
+
+# 13. ACCEPTANCE CRITERIA — DO NOT SHIP UNTIL EVERY ITEM PASSES
+
+Landing (public):
+- [ ] Top nav sticky, blurs canvas color, mobile drawer works
+- [ ] Hero: world map visible, 11 hubs pulse, 12 arcs animate dashes, packets fly along arcs and spawn ripples on arrival
+- [ ] Hero counter animates digit-by-digit, sparkline updates
+- [ ] Hero event feed rotates 8 events with popLayout transition
+- [ ] TrustBar marquee scrolls infinitely, pauses on hover, edge-mask fades
+- [ ] PipelineScene: 7 gates positioned over image, packets travel, rejection animation, inspector panel updates, counters tick
+- [ ] Architecture: 4 stat counters animate from 0 on scroll-into-view, 4 feature cards in correct grid
+- [ ] PricingBand: 3 tiers, middle is highlighted Most Popular, links go to `#/signup`
+- [ ] CTABand: 2 buttons, both routes work
+- [ ] Footer: 5 columns, collapses to 1 on mobile, all links present
+- [ ] All text uses the design tokens; no gradients, no glass, no neon
+- [ ] `prefers-reduced-motion` disables all animations cleanly
+- [ ] Lighthouse Performance ≥ 90, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 90
+
+Auth:
+- [ ] Signup creates Supabase user, profile row, redirects to `/app`
+- [ ] Login authenticates, redirects to `/app` (or original target)
+- [ ] Logout clears session, redirects to `/`
+- [ ] Forgot password sends reset email (Supabase)
+- [ ] Boot splash shows while `booting`
+- [ ] Guard redirects work for all 3 cases
+- [ ] Field validation errors display below each input with red text + shake
+- [ ] Toasts appear for success/failure, dark themed
+
+User dashboard:
+- [ ] Sidebar collapses on md, all 7 nav items present
+- [ ] Overview stats animate, recent activity table loads from Supabase
+- [ ] Validator single: input validates, result card shows score gauge + 7-layer timeline + raw JSON toggle
+- [ ] Validator bulk: paste/CSV → progress → results table → CSV export
+- [ ] History: server-side pagination, filters work, row click opens detail drawer
+- [ ] Domains: 4 cards show MX/SPF/DMARC/DKIM, watchlist toggle works
+- [ ] ApiKeys: create modal reveals key once, list shows prefix only, rotate/revoke work
+- [ ] Settings: profile editable, change password works, 2FA enrollment works, delete account requires typed confirmation
+
+Admin dashboard:
+- [ ] Sidebar highlights active route
+- [ ] Overview charts render with real data
+- [ ] Users: filters work, impersonate writes audit log, suspend/restore works
+- [ ] Logs: polls every 5s, filters work, line click opens drawer
+- [ ] Blocklist: CRUD works, bulk paste works
+- [ ] Settings: 4 tabs render, engine layer toggles persist, rate-limit cells editable inline
+- [ ] Audit: append-only table, filters work, CSV export works
+
+API:
+- [ ] `/health` returns 200 with all fields populated
+- [ ] All endpoints validate JWT and return 401 on missing/invalid
+- [ ] Admin endpoints return 403 for non-admin
+- [ ] CORS allows web origin
+- [ ] OpenAPI docs at `/docs` and `/redoc` render
+
+Supabase:
+- [ ] `supabase/schema.sql` runs cleanly on a fresh project
+- [ ] `supabase/seed.sql` creates demo admin + user + 50 disposable domains + default settings
+- [ ] RLS denies cross-user reads (test with two accounts)
+- [ ] Triggers fire on signup and profile update
+
+Quality:
+- [ ] `pnpm typecheck` clean
+- [ ] `pnpm lint` clean
+- [ ] `pnpm test` passes (unit + component)
+- [ ] `pnpm test:e2e` passes (smoke: signup → validate → history → admin)
+- [ ] No console errors or warnings in any page
+- [ ] No `any`, no `@ts-ignore`, no `@ts-expect-error` without an inline justification comment
+- [ ] No TODO/FIXME left in shipped code
+- [ ] README explains: prerequisites, env setup, `supabase init && supabase db push`, `pnpm dev`, demo credentials
+
+# 14. EXECUTION ORDER (work in this order to avoid rework)
+
+1. Scaffold the repo (pnpm workspace, vite, fastapi, tailwind, eslint, prettier, vitest, playwright, ruff)
+2. Build the design system: `tokens.css`, primitives (`Button`, `Input`, `Card`, `Badge`, `Modal`, `Drawer`, `Tabs`, `Table`, `EmptyState`, `Skeleton`, `Stat`, `Logo`)
+3. Build `MarketingShell` + `AppShell` + `AdminShell` + the 3 navs
+4. Build the landing page sections in order: Nav, Hero (with imperative packet system), TrustBar, PipelineScene (with packet cubes + inspector), Architecture, PricingBand, CTABand, Footer
+5. Supabase schema + RLS + triggers + seed → apply to a fresh project, verify with SQL editor
+6. Auth pages + AuthProvider + Guard
+7. User dashboard pages in order: Overview, Validator, Bulk, History, Domains, ApiKeys, Settings
+8. Admin dashboard pages in order: Overview, Users, Logs, Blocklist, Settings, Audit
+9. API: validators, then routes, then admin routes, then `/health`
+10. Contracts package + wire web to API
+11. Tests: unit (engine), component (primitives, forms), e2e (Playwright smoke)
+12. Polish: empty states, error states, loading skeletons, toasts, reduced-motion pass, Lighthouse pass
+13. README + `.env.example` + `PROMPT.txt` (this file) committed
+
+# 15. DEBUG & FIX MANDATE (the user explicitly asked for this)
+
+After step 11, run a **debug pass** that includes:
+- Open every route, click every button, submit every form, verify expected behavior
+- Inspect network tab: any 4xx/5xx → fix
+- Inspect console: any error/warning → fix (even React key warnings, even framer-motion prop-type warnings)
+- Test on mobile (375), tablet (768), desktop (1280), wide (1536) widths
+- Test with `prefers-reduced-motion: reduce` enabled
+- Test signup → immediate login → validate → history → admin log entry → logout
+- Test admin: create user → suspend → restore → promote → demote → audit log entry
+- Test RLS: as user A, try to `select * from validation_results` filtered by user B's id → must return 0 rows
+- Run `pnpm test`, `pnpm test:e2e`, `uv run pytest`, `uv run ruff check .`
+- Run Lighthouse on `/`, `/login`, `/app`, `/admin` → fix anything below the targets in §13
+
+**Fix everything you find. Do not stop at "works on my machine."**
+
+# 16. FINAL DELIVERABLE
+
+A single repository that:
+- `pnpm install && pnpm dev` starts the web app at `http://localhost:5173`
+- The web app talks to Supabase (set `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`)
+- The web app calls the API at `VITE_API_BASE_URL` (set to `http://localhost:8000/api/v1` for local)
+- `cd apps/api && uv run uvicorn app.main:app --reload` starts the API at `http://localhost:8000`
+- `supabase db push` (after linking) creates the schema
+- `supabase/seed.sql` populates demo data
+- Demo login: `admin@demo.test` / `Demo!2026` (admin), `user@demo.test` / `Demo!2026` (user)
+- README explains everything in 5 minutes of reading
+
+# 17. CONTENT — use the live reference verbatim
+
+All copy in §4 is the live reference content. Use it exactly. Where the live reference has placeholder counters (e.g. "0123456789,012345678901234567890123456789validated today"), render the actual sliding number animation that **counts up from 0** on mount and increments over time as described.
+
+Where the live reference has obviously broken or placeholder text (e.g. "fraiadsingru" in the Global Edge Network card), **fix it to read clearly**: "24 global PoPs · <50ms p50 worldwide".
+
+# 18. NON-GOALS
+
+- No mobile native apps
+- No i18n (English only)
+- No dark/light theme switcher (dark-only is the brand)
+- No marketing CMS (all copy is in code)
+- No A/B testing framework
+- No analytics beyond a single Sentry init
+
+# 19. WHEN YOU ARE DONE
+
+Print, in your final message:
+- The exact `pnpm` / `uv` commands to run the app from a fresh clone
+- The demo credentials
+- A 1-paragraph summary of what was built
+- The Lighthouse scores for `/`, `/app`, `/admin`
+- A list of every file in the repo (use `git ls-files | sort`)
+- A list of any known limitations and the plan to address them
+
+**Build it. Debug it. Polish it. Ship it.**

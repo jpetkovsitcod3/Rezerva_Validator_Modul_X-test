@@ -159,7 +159,7 @@ function SingleCheck({ opts, onSpent }: { opts: EngineOptions | null; onSpent: (
               aria-pressed={mode === key}
               className={cn(
                 "rounded-lg px-3 py-2 text-left transition-all duration-200",
-                mode === key ? "bg-[#111111]" : "hover:bg-[#F1EFEA]"
+                mode === key ? "bg-[#111111]" : "hover:bg-white/5"
               )}
             >
               <span className={cn("block text-[13px] font-extrabold", mode === key ? "text-white" : "text-white/50")}>
@@ -469,7 +469,7 @@ function DomainIntel() {
                     {report.spf.mechanisms.map((m) => (
                       <span key={m} className="font-data rounded-md border border-white/[0.06] bg-[var(--bg-2)] px-2 py-1 text-[10px] text-white/50">{m}</span>
                     ))}
-                    <span className={cn("font-data ml-auto rounded-full px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", report.spf.strict ? "bg-[#5BC07E]/15 text-[#5BC07E]" : "bg-[#FBF3DB] text-[var(--amber)]")}>
+                    <span className={cn("font-data ml-auto rounded-full px-2.5 py-1 text-[9px] font-bold tracking-[0.12em] uppercase", report.spf.strict ? "bg-[#5BC07E]/15 text-[#5BC07E]" : "bg-[#E0BB8F]/15 text-[var(--amber)]")}>
                       {report.spf.strict ? "hard fail" : "soft fail"}
                     </span>
                   </div>
@@ -684,7 +684,7 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
             {running && (
               <button
                 onClick={() => (cancelRef.current = true)}
-                className="flex items-center gap-2 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-4 py-2.5 text-[12.5px] font-bold text-[#9F2F2D] transition-colors duration-200 hover:bg-[#F6DADB]"
+                className="flex items-center gap-2 rounded-lg border border-[var(--red)]/30 bg-[var(--red)]/10 px-4 py-2.5 text-[12.5px] font-bold text-[var(--red)] transition-colors duration-200 hover:bg-[var(--red)]/15"
               >
                 <Icon name="close" size={12} /> Cancel run
               </button>
@@ -701,9 +701,9 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
         </div>
 
         {err && (
-          <p id="bulk-error" role="alert" className="slide-up mt-3 flex items-start gap-2 rounded-lg border border-[#EAB9BB] bg-[#FDEBEC] px-3.5 py-2.5 text-[12px] font-semibold text-[#9F2F2D]">
-            <Icon name="alert" size={14} className="mt-0.5 shrink-0" /> {err}
-          </p>
+            <p id="bulk-error" role="alert" className="slide-up mt-3 flex items-start gap-2 rounded-lg border border-[var(--red)]/30 bg-[var(--red)]/10 px-3.5 py-2.5 text-[12px] font-semibold text-[var(--red)]">
+              <Icon name="alert" size={14} className="mt-0.5 shrink-0" /> {err}
+            </p>
         )}
 
         {(running || results.length > 0) && (
@@ -720,9 +720,9 @@ function BulkClean({ onSpent }: { onSpent: () => void }) {
         <Card className="p-4 sm:p-6">
           <div className="flex flex-wrap items-center gap-2.5">
             <h4 className="text-[14px] font-extrabold text-white">Results</h4>
-            <span className="font-data rounded-full bg-[#EDF3EC] px-2.5 py-1 text-[10px] font-bold text-[var(--green)]">{counts.valid} valid</span>
-            <span className="font-data rounded-full bg-[#FBF3DB] px-2.5 py-1 text-[10px] font-bold text-[var(--amber)]">{counts.risky} risky</span>
-            <span className="font-data rounded-full bg-[#FDEBEC] px-2.5 py-1 text-[10px] font-bold text-[var(--red)]">{counts.invalid} invalid</span>
+            <span className="font-data rounded-full bg-[#5BC07E]/15 px-2.5 py-1 text-[10px] font-bold text-[var(--green)]">{counts.valid} valid</span>
+            <span className="font-data rounded-full bg-[#E0BB8F]/15 px-2.5 py-1 text-[10px] font-bold text-[var(--amber)]">{counts.risky} risky</span>
+            <span className="font-data rounded-full bg-[#E68080]/15 px-2.5 py-1 text-[10px] font-bold text-[var(--red)]">{counts.invalid} invalid</span>
             <button
               onClick={() => exportRows(results.map((r) => ({ email: r.email, status: r.status, score: r.score })), `bridge-bulk-${new Date().toISOString().slice(0, 10)}.csv`)}
               className="ml-auto flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3.5 py-2 text-[12px] font-bold text-white transition-colors duration-200 hover:border-[#D4A574]/40"
@@ -837,7 +837,7 @@ export default function Validator() {
               {tab === key && (
                 <motion.span
                   layoutId="validator-tab"
-                  className="absolute inset-0 rounded-lg bg-[#F1EFEA]"
+                  className="absolute inset-0 rounded-lg bg-white/10 border border-white/15"
                   transition={springSnappy}
                   aria-hidden
                 />
